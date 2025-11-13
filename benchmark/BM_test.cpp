@@ -1,4 +1,4 @@
-#include <benchmark/benchmark.h>
+#include "benchmark/benchmark.h"
 
 #define N_SHOTS 1000
 
@@ -16,7 +16,7 @@ void bind_by_const_ref()
 {
     for (int i = 0; i < N_SHOTS; ++i)
     {
-        const Foo &foo = getafoo();
+        const Foo& foo = getafoo();
         benchmark::DoNotOptimize(foo);
     }
 }

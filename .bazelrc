@@ -1,2 +1,7 @@
 # Enable Bzlmod for every Bazel command
 common --enable_bzlmod
+
+build:unit_testing --test_output=all
+build:unit_testing --define=UNIT_TESTING=true
+
+build:benchmarking --define=BENCHMARKING=true

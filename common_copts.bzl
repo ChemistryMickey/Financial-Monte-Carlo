@@ -12,7 +12,6 @@ def copts():
         "-Wnull-dereference",
         "-Wconversion",
         "-Wformat=2",
-        # "-Werror",
 
         # Features
         "-fopenmp",
@@ -31,10 +30,9 @@ def copts():
             "-Werror",
             "-DUNIT_TESTING",
         ],
-        "//:profile": [
-            "-DPROFILE", # `#define PROFILE` before any code is compiled
-            "-g", # enable code instrumentation for perf flamegraph generation
-            "-fno-inline",
+        "//:benchmarking": [
+            "-O3",
+            "-DBENCHMARKING"
         ],
         "//conditions:default": []
     })
@@ -57,10 +55,9 @@ def linkopts():
             "-fno-sanitize-recover",
             "-Werror",
         ],
-        "//:profile": [
-            "-DPROFILE", # `#define PROFILE` before any code is compiled
-            "-g", # enable code instrumentation for perf flamegraph generation
-            "-fno-inline",
+        "//:benchmarking": [
+            "-flto",
+            "-O3"
         ],
         "//conditions:default": []
     })

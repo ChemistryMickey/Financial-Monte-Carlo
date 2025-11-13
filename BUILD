@@ -1,18 +1,10 @@
 config_setting(
     name="unit_testing",
-    values={
-        # enabled by --define flag  in .bazelrc
-        "define": "UNIT_TESTING=true",
-    },
+    define_values = {"UNIT_TESTING": "true"}
 )
-
-# compile with profiling flags. Adds -g to
 config_setting(
-    name="profile",
-    values={
-        # enabled by --define flag  in .bazelrc
-        "define": "PROFILE=true",
-    },
+    name="benchmarking",
+    define_values = {"BENCHMARKING": "true"}
 )
 
 load("//:common_copts.bzl", "copts", "linkopts")
@@ -24,5 +16,6 @@ cc_binary(
     copts = copts(),
     linkopts = linkopts(),
     deps = [],
-    visibility= ["//visibility:public"]
+    visibility= ["//visibility:public"],
+    linkstatic=True
 )

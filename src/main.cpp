@@ -1,7 +1,6 @@
-#include <iostream>
 #include "json.hpp"
+#include <iostream>
 
-int main()
-{
+int main() {
     std::cout << "Hello world!\n";
 }
