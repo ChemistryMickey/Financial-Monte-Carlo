@@ -9,13 +9,23 @@ config_setting(
 
 load("//:common_copts.bzl", "copts", "linkopts")
 
-cc_binary(
-    name = "main",
-    srcs = glob(["src/*.cpp"]) + glob(["include/*.hpp"]),
+cc_library(
+    name = "lib",
+    srcs = glob(["src/lib/*.cpp"]) + glob(["include/*.hpp"]),
     includes = ["include"],
     copts = copts(),
     linkopts = linkopts(),
     deps = [],
     visibility= ["//visibility:public"],
+    linkstatic=True
+)
+
+cc_binary(
+    name = "main",
+    srcs = ["src/main.cpp", "//:lib"],
+    includes = ["include"],
+    copts = copts(),
+    linkopts = linkopts(),
+    deps = ["//:lib", "//third_party/rttr:rttr_core"],
     linkstatic=True
 )

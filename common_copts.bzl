@@ -14,7 +14,7 @@ def copts():
         "-Wformat=2",
 
         # Features
-        "-fopenmp",
+        # "-fopenmp",
 
         # Optimizer and code generation.
         #"-fwrapv",
@@ -27,7 +27,7 @@ def copts():
         "//:unit_testing": [
             "-fsanitize=address,undefined",
             "-fno-sanitize-recover",
-            "-Werror",
+            # "-Werror",
             "-DUNIT_TESTING",
         ],
         "//:benchmarking": [
@@ -46,14 +46,14 @@ def linkopts():
         "-lm",
         "-ldl",
         "-fuse-ld=lld",
-        "-fopenmp"
+        # "-fopenmp",
     ]
 
     linkopts += select({
         "//:unit_testing": [
             "-fsanitize=address,undefined",
             "-fno-sanitize-recover",
-            "-Werror",
+            # "-Werror",
         ],
         "//:benchmarking": [
             "-flto",

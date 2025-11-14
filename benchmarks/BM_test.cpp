@@ -2,29 +2,23 @@
 
 #define N_SHOTS 1000
 
-struct Foo
-{
+struct Foo {
     double a[100] = {};
 };
 
-Foo getafoo()
-{
+Foo getafoo() {
     return Foo{};
 }
 
-void bind_by_const_ref()
-{
-    for (int i = 0; i < N_SHOTS; ++i)
-    {
+void bind_by_const_ref() {
+    for (int i = 0; i < N_SHOTS; ++i) {
         const Foo& foo = getafoo();
         benchmark::DoNotOptimize(foo);
     }
 }
 
-void bind_by_value()
-{
-    for (int i = 0; i < N_SHOTS; ++i)
-    {
+void bind_by_value() {
+    for (int i = 0; i < N_SHOTS; ++i) {
         const Foo foo = getafoo();
         benchmark::DoNotOptimize(foo);
     }

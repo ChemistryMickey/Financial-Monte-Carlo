@@ -1,0 +1,8 @@
+#! /usr/bin/bash
+
+target="cached"
+if [[ $# == 1 ]]; then
+	target="UT_$1"
+fi
+
+bazel test //tests:$target --config=unit_testing -j 6

@@ -2,7 +2,8 @@ load("//:common_copts.bzl", "copts", "linkopts")
 load("//tests:generate_tests.bzl", "generate_tests")
 
 deps = [
-    "//:main",
+    "//:lib",
+    "//third_party/rttr:rttr_core",
     "@googletest//:gtest",
     "@googletest//:gtest_main"
 ]
