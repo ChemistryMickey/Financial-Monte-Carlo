@@ -8,8 +8,10 @@ A Monte Carlo simulation of various financial projections which include things l
 
 The goal of this simulation is to demonstrate the following:
 - [ ] Clever logging without C++26 (reflection isn't supported even in gcc-15)
+    - Went with RTTR
 - [ ] A simulation scheduler
-- [ ] Some form of reflection? Or some way to runtime access properties via string (e.g. a map)
+- [ ] Some form of reflection (in particular for logging and dispersions)? Or some way to runtime access properties via string (e.g. a map)
+    - Went with RTTR
 - [/] Monte Carlo variable dispersions
 - [x] Bazel 8
 - [ ] .[C++23 funsies](https://youtu.be/vbHWDvY59SQ)

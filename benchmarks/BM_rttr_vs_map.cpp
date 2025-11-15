@@ -56,7 +56,7 @@ void access_via_rttr() {
     static Foo foo{};
 
     for (int i = 0; i < N_SHOTS; ++i) {
-        int a = rttr::type::get(foo).get_property_value("a").to_int();
+        int a = rttr::type::get(foo).get_property("a").get_value(foo).get_value<int>();
         benchmark::DoNotOptimize(a);
     }
 }
@@ -66,7 +66,18 @@ void access_via_rttr_caching() {
     rttr::property prop_a = rttr::type::get(foo).get_property("a");
 
     for (int i = 0; i < N_SHOTS; ++i) {
-        int a = prop_a.get_value(foo).to_int();
+        int a = prop_a.get_value(foo).get_value<int>();
+        benchmark::DoNotOptimize(a);
+    }
+}
+
+void access_via_rttr_ptr() {
+    static Foo foo{};
+    rttr::property prop_a = rttr::type::get(foo).get_property("a");
+    int* prop_a_ptr = prop_a.get_value(foo).get_value<int*>();
+
+    for (int i = 0; i < N_SHOTS; ++i) {
+        int a = *prop_a_ptr;
         benchmark::DoNotOptimize(a);
     }
 }
@@ -104,6 +115,16 @@ void assign_via_rttr_caching() {
     }
 }
 
+void assign_via_rttr_ptr() {
+    static Foo foo{};
+    rttr::property prop_a = rttr::type::get(foo).get_property("a");
+    int* prop_a_ptr = prop_a.get_value(foo).get_value<int*>();
+
+    for (int i = 0; i < N_SHOTS; ++i) {
+        *prop_a_ptr = i;
+    }
+}
+
 #define BM_TEST(func, ...)                         \
     static void BM_##func(benchmark::State &state) \
     {                                              \
@@ -115,10 +136,12 @@ void assign_via_rttr_caching() {
 BM_TEST(access_via_direct_access);
 BM_TEST(access_via_map);
 BM_TEST(access_via_rttr);
+BM_TEST(access_via_rttr_ptr);
 BM_TEST(access_via_rttr_caching);
 BM_TEST(assign_via_direct_access);
 BM_TEST(assign_via_map);
 BM_TEST(assign_via_rttr);
 BM_TEST(assign_via_rttr_caching);
+BM_TEST(assign_via_rttr_ptr);
 
 BENCHMARK_MAIN();

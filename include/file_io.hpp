@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -5,8 +7,13 @@
 #include <sstream>
 #include <vector>
 
+// File handling
+
+// Text files
+
+// CSVs
 template <typename T = double>
-void write_csv(const std::string& filename, const std::vector<std::pair<std::string, std::vector<T>>>& dataset) {
+inline void write_csv(const std::string& filename, const std::vector<std::pair<std::string, std::vector<T>>>& dataset) {
     static_assert(std::is_arithmetic<T>());
 
     // Open and check file
@@ -48,7 +55,7 @@ void write_csv(const std::string& filename, const std::vector<std::pair<std::str
 }
 
 template<typename T = double>
-std::vector<std::pair<std::string, std::vector<T>>> read_csv(const std::string& filename) {
+inline std::vector<std::pair<std::string, std::vector<T>>> read_csv(const std::string& filename) {
     std::vector<std::pair<std::string, std::vector<T>>> result;
 
     std::ifstream f(filename);
@@ -63,7 +70,7 @@ std::vector<std::pair<std::string, std::vector<T>>> read_csv(const std::string& 
         std::stringstream ss(line);
 
         while (std::getline(ss, colname, ',')) {
-            result.push_back({ colname, std::vector<T>{} });
+            result.push_back({colname, std::vector<T>{}});
         }
     }
 
