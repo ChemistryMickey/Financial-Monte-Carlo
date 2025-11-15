@@ -1,23 +1,54 @@
 #pragma once
 
 #include <fstream>
+#include <format>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <sstream>
 #include <vector>
+#include <filesystem>
+#include "json.hpp"
+
+#include "utils.hpp"
 
 // File handling
 
 // Text files
 
+// JSON files
+inline nlohmann::json read_json(const std::filesystem::path& filename) {
+    std::ifstream f{project_path(filename)};
+    if (!f.is_open()) {
+        throw std::runtime_error(std::format("Unable to open file {}", project_path(filename).string()));
+    }
+
+    nlohmann::json j;
+    f >> j;
+
+    return j;
+}
+
+inline void write_json(const std::filesystem::path& filename, const nlohmann::json& data) {
+    constexpr size_t indent_width = 3;
+
+    std::ofstream f{project_path(filename)};
+
+    if (f.is_open()) {
+        f << data.dump(indent_width);
+    }
+    else {
+        throw std::runtime_error(std::format("Unable to open file {}", project_path(filename).string()));
+    }
+}
+
 // CSVs
 template <typename T = double>
-inline void write_csv(const std::string& filename, const std::vector<std::pair<std::string, std::vector<T>>>& dataset) {
+inline void write_csv(const std::filesystem::path& filename, const std::vector<std::pair<std::string, std::vector<T>>>& dataset) {
     static_assert(std::is_arithmetic<T>());
 
     // Open and check file
-    std::ofstream f(filename);
+    std::ofstream f(project_path(filename));
     if (f.fail()) {
         std::cout << "Failed to open file " << filename << "!\n";
         throw std::runtime_error("Failed to open file!");
@@ -55,10 +86,10 @@ inline void write_csv(const std::string& filename, const std::vector<std::pair<s
 }
 
 template<typename T = double>
-inline std::vector<std::pair<std::string, std::vector<T>>> read_csv(const std::string& filename) {
+inline std::vector<std::pair<std::string, std::vector<T>>> read_csv(const std::filesystem::path& filename) {
     std::vector<std::pair<std::string, std::vector<T>>> result;
 
-    std::ifstream f(filename);
+    std::ifstream f(project_path(filename));
 
     if (!f.is_open()) throw std::runtime_error("Couldn't open file!");
 

@@ -6,13 +6,13 @@
 #include "utils.hpp"
 
 namespace fmc {
-    Logger logger{"test_output_log.log"};
+    Logger logger{"test_output_log.log", 5};
     TEST(Test_Logger, buffer_size) {
-        std::filesystem::path full_out_path = get_envvar("PROJECT_HOME") / std::filesystem::path{"test_output_log.log"};
-        logger.out_path = full_out_path;
+        std::filesystem::path out_path = std::filesystem::path{"test_output_log.log"};
+        logger.out_path = out_path;
         EXPECT_EQ(logger.buffer.size(), 0);
         INFO("Thingy");
-        EXPECT_FALSE(std::filesystem::exists(full_out_path));
+        EXPECT_FALSE(std::filesystem::exists(out_path));
 
         EXPECT_EQ(logger.buffer.size(), 1);
         INFO("msg");
@@ -20,7 +20,7 @@ namespace fmc {
         DEBUG("msg");
         WARN("msg");
         EXPECT_EQ(logger.buffer.size(), 0);
-        EXPECT_TRUE(std::filesystem::exists(full_out_path));
+        EXPECT_TRUE(std::filesystem::exists(out_path));
         ERROR("msg");
         EXPECT_EQ(logger.buffer.size(), 1);
     }

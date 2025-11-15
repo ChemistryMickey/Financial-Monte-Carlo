@@ -34,7 +34,7 @@ namespace fmc {
             // All unit tests are executed at logging level debug
             LoggingLevel::DEBUG;
 #else
-            LoggingLevel::INFO;
+            LoggingLevel::DEBUG;
 #endif
 
         std::filesystem::path out_path;

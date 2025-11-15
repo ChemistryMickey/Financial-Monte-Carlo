@@ -11,7 +11,7 @@
 
 namespace fmc {
     Logger::Logger(const std::filesystem::path& out_path_, size_t buffer_size) {
-        this->out_path = get_envvar("PROJECT_HOME") / out_path_;
+        this->out_path = project_path(out_path_);
 
         this->buffer.reserve(buffer_size);
 
