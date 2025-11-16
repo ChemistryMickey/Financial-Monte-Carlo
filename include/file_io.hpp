@@ -11,6 +11,7 @@
 #include "json.hpp"
 
 #include "utils.hpp"
+#include "math.hpp"
 
 // File handling
 
@@ -43,10 +44,8 @@ inline void write_json(const std::filesystem::path& filename, const nlohmann::js
 }
 
 // CSVs
-template <typename T = double>
+template <Numeric T = double>
 inline void write_csv(const std::filesystem::path& filename, const std::vector<std::pair<std::string, std::vector<T>>>& dataset) {
-    static_assert(std::is_arithmetic<T>());
-
     // Open and check file
     std::ofstream f(project_path(filename));
     if (f.fail()) {
@@ -66,6 +65,7 @@ inline void write_csv(const std::filesystem::path& filename, const std::vector<s
         }
     }
 
+    /// TODO: Make this append if the columns are already present
     // Send columns to CSV
     for (uint j = 0; j < dataset.size(); ++j) {
         f << dataset.at(j).first;
@@ -85,7 +85,7 @@ inline void write_csv(const std::filesystem::path& filename, const std::vector<s
     }
 }
 
-template<typename T = double>
+template<Numeric T = double>
 inline std::vector<std::pair<std::string, std::vector<T>>> read_csv(const std::filesystem::path& filename) {
     std::vector<std::pair<std::string, std::vector<T>>> result;
 
