@@ -34,6 +34,9 @@ def copts():
             "-O3",
             "-DBENCHMARKING"
         ],
+        "//:optimized": [
+            "-O3",
+        ],
         "//conditions:default": []
     })
 
@@ -56,6 +59,10 @@ def linkopts():
             # "-Werror",
         ],
         "//:benchmarking": [
+            "-flto",
+            "-O3"
+        ],
+        "//:optimized": [
             "-flto",
             "-O3"
         ],

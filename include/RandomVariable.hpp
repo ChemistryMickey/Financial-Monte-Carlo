@@ -1,6 +1,8 @@
 #pragma once
 #include "math.hpp"
 #include "test_utils.hpp"
+#include "json.hpp"
+
 namespace fmc {
     enum class DistributionType {
         Uniform,
@@ -54,6 +56,8 @@ namespace fmc {
             cur_val{initial_undispersed_value},
             rng_args{trunc_gauss_args},
             rng{rng_seed} {}
+
+        RandomVariable(const nlohmann::json& config);
 
         double next_value();
 

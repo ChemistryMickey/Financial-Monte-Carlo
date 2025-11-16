@@ -2,6 +2,11 @@
 
 #include <cmath>
 #include <random>
+#include <concepts>
+#include <type_traits>
+
+template <typename T>
+concept Numeric = std::integral<T> || std::floating_point<T>;
 
 namespace fmc {
     inline double erfinv(double x) {
@@ -105,5 +110,31 @@ namespace fmc {
 
     private:
         std::mt19937 engine;
+    };
+
+    template <Numeric T>
+    struct ClampedValue {
+        ClampedValue(T value_, std::pair<T, T> limits) : lower{limits.first}, upper{limits.second} {
+            this->set_value(value_);
+        }
+
+        void set_value(T value_) {
+            if (value_ < this->lower) {
+                this->value = lower;
+            }
+            else if (value_ > this->upper) {
+                this->value = upper;
+            }
+            else {
+                this->value = value_;
+            }
+        }
+        T get_value() { return this->value; }
+        std::pair<T, T> get_limits() { return {this->lower, this->upper}; }
+
+    private:
+        T value;
+        T lower;
+        T upper;
     };
 }

@@ -6,6 +6,10 @@ config_setting(
     name="benchmarking",
     define_values = {"BENCHMARKING": "true"}
 )
+config_setting(
+    name="optimized",
+    define_values = {"OPTIMIZED": "true"}
+)
 
 load("//:common_copts.bzl", "copts", "linkopts")
 
@@ -26,6 +30,10 @@ cc_binary(
     includes = ["include"],
     copts = copts(),
     linkopts = linkopts(),
-    deps = ["//:lib", "//third_party/rttr:rttr_core"],
+    deps = [
+        "//:lib", 
+        "//third_party/rttr:rttr_core",
+        "@cli11//:cli11"
+    ],
     linkstatic=True
 )
