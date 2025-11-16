@@ -1,4 +1,4 @@
-#include "include/RandomVariable.hpp"
+#include "RandomVariable.hpp"
 #include <stdexcept>
 namespace fmc {
     double RandomVariable::next_value() {

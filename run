@@ -5,6 +5,7 @@ config_path="$PROJECT_HOME/data/sim_config.json"
 output_path="$PROJECT_HOME/output"
 dry=""
 runs=1
+verbose=""
 while [[ $# -ne 0 ]]; do
     case "$1" in
         --release|-r)
@@ -13,6 +14,10 @@ while [[ $# -ne 0 ]]; do
             ;;
         --dry)
             dry="--dry"
+            shift 1
+            ;;
+        --verbose|-v)
+            verbose="--verbose"
             shift 1
             ;;
         --config)
@@ -35,4 +40,6 @@ while [[ $# -ne 0 ]]; do
     esac
 done
 
-bazel run //:main $optimize -- --config $config_path $dry --runs $runs -o $output_path
+set -xe
+
+bazel run //:main $optimize -- --config $config_path $dry --runs $runs -o $output_path $verbose

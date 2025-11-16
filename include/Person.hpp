@@ -36,9 +36,6 @@ namespace fmc {
         /// @brief The current net worth of the individual (assets and cash)
         Money current_net_worth() const;
 
-        /// @brief At the end of the simulation frame, update all relevant values
-        void update();
-
         friend struct std::formatter<Person>;
     };
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "test_utils.hpp"
+#include "CliArgs.hpp"
 #include <string>
 #include <filesystem>
 #include <vector>
@@ -14,7 +15,10 @@ namespace fmc {
 
     class Logger {
     public:
-        Logger(const std::filesystem::path& out_path_, size_t buffer_size = 100);
+        static constexpr size_t BUFFER_SIZE = 100;
+
+        Logger(const std::filesystem::path& out_path_, size_t buffer_size = BUFFER_SIZE);
+        Logger(const CliArgs& args, size_t buffer_size = BUFFER_SIZE);
         ~Logger() {
             this->flush();
         }
@@ -29,7 +33,7 @@ namespace fmc {
 
         TESTING_PUBLIC;
 
-        static const LoggingLevel cur_logging_level =
+        LoggingLevel cur_logging_level =
 #ifdef UNIT_TESTING
             // All unit tests are executed at logging level debug
             LoggingLevel::DEBUG;

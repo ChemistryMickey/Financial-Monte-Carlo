@@ -16,7 +16,8 @@ namespace fmc {
 
             // Optional options
             app.add_flag("--dry", this->dry, "Just generate dispersion configs");
-            app.add_option("--output,-o", this->out_directory, "The output directory relative to $PROJECT_HOME/output");
+            app.add_flag("--verbose,-v", this->verbose, "Set logging to DEBUG and logger buffer to 1 (useful if you think you're missing logs)");
+            app.add_option("--output,-o", this->out_directory, "The output directory relative to $PROJECT_HOME");
             app.add_option("--runs", this->runs, "Number of runs to execute");
 
             // Parse it up

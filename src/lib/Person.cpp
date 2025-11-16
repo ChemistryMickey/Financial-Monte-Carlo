@@ -1,4 +1,4 @@
-#include "include/Person.hpp"
+#include "Person.hpp"
 
 namespace fmc {
     Person::Person(const nlohmann::json& config) {

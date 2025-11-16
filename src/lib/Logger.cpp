@@ -17,6 +17,25 @@ namespace fmc {
         }
     }
 
+    Logger::Logger(const CliArgs& args, size_t buffer_size) {
+        this->out_path = args.out_directory / "output.log";
+
+        if (!std::filesystem::exists(args.out_directory)) {
+            std::filesystem::create_directories(args.out_directory);
+        }
+        if (std::filesystem::exists(this->out_path)) {
+            std::filesystem::remove(this->out_path);
+        }
+
+        if (args.verbose) {
+            this->cur_logging_level = LoggingLevel::DEBUG;
+            this->buffer.reserve(1); // dump to file as much as possible
+        }
+        else {
+            this->buffer.reserve(buffer_size);
+        }
+    }
+
     void Logger::log(const std::string& msg, LoggingLevel logging_level, const std::string& origin_file, size_t line_number) {
         if (logging_level > Logger::cur_logging_level) {
             return;
@@ -40,7 +59,6 @@ namespace fmc {
         }
 
         this->flush();
-
     }
 
     void Logger::flush() {

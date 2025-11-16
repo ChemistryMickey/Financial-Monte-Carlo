@@ -17,6 +17,7 @@ cc_library(
     name = "lib",
     srcs = glob(["src/lib/*.cpp"]) + glob(["include/*.hpp"]),
     includes = ["include"],
+    strip_include_prefix = "include",
     copts = copts(),
     linkopts = linkopts(),
     deps = [],
@@ -27,7 +28,6 @@ cc_library(
 cc_binary(
     name = "main",
     srcs = ["src/main.cpp", "//:lib"],
-    includes = ["include"],
     copts = copts(),
     linkopts = linkopts(),
     deps = [
