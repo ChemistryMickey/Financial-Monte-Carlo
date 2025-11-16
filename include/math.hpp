@@ -4,6 +4,7 @@
 #include <random>
 #include <concepts>
 #include <type_traits>
+#include <format>
 
 template <typename T>
 concept Numeric = std::integral<T> || std::floating_point<T>;
@@ -129,8 +130,19 @@ namespace fmc {
                 this->value = value_;
             }
         }
-        T get_value() { return this->value; }
-        std::pair<T, T> get_limits() { return {this->lower, this->upper}; }
+
+        const T get_value() const { return this->value; }
+        const std::pair<T, T> get_limits() const { return {this->lower, this->upper}; }
+
+        ClampedValue& operator=(double val) noexcept {
+            this->set_value(val);
+
+            return *this;
+        }
+
+        std::string to_string() const {
+            return std::format("{} [{}, {}]", this->get_value(), this->get_limits().first, this->get_limits().second);
+        }
 
     private:
         T value;

@@ -2,16 +2,21 @@
    "annual_inflation": 0.10575844727716636,
    "end_date": "2020-02-01",
    "person": {
-      "medical_event_initial_cost": 10543.077546650507,
-      "medical_event_probability": 0.12965429842878462,
-      "medical_event_scaling_factor": 1.296542984287846,
+      "medical_event": {
+         "initial_cost": 10543.077546650507,
+         "probability": 0.01,
+         "rng_seed": 42,
+         "scaling_factor": 1.001
+      },
       "starting_money": 222488.2752789753,
-      "stock_bond_ratio": 0.7186171937151384
+      "stock_bond_ratio": 0.7186171937151384,
+      "initial_yearly_expenses": 30000
    },
    "start_date": "2020-01-01",
    "stock_market": {
       "annual_time_scaling_factor": 0.10194580241272888,
       "position_price": 130.63741853577588,
-      "volatility": 0.3434939435365012
+      "volatility": 0.3434939435365012,
+      "rng_seed": 42
    }
 }

@@ -30,6 +30,18 @@ namespace fmc {
 
             return Money{sum_dollars, sum_cents};
         }
+
+        Money operator-(const Money& m) const {
+            int diff_dollars = this->dollars - m.dollars;
+            int diff_cents = this->cents - m.cents;
+
+            if (diff_cents < 0) {
+                diff_cents += 100;
+                diff_dollars -= 1;
+            }
+
+            return Money{diff_dollars, diff_cents};
+        }
     };
 }
 

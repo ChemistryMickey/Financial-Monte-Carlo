@@ -18,9 +18,11 @@ namespace fmc {
         std::chrono::sys_days start_date;
         std::chrono::sys_days end_date;
         Person person;
-        // fmc::StockMarket<T> stock_market;
-        // fmc::AnnualInflation<T> annual_inflation;
+        // fmc::StockMarket stock_market;
+        // fmc::BondMarket bond_market;
+        // fmc::AnnualInflation annual_inflation;
 
+        SimConfig() = default;
         SimConfig(const nlohmann::json& config);
     };
 
@@ -38,8 +40,8 @@ namespace std {
         }
 
         template <typename FormatContext>
-        auto format(const fmc::SimConfig& config, FormatContext& ctx) {
-            return format_to(ctx.out(), "Start Date: {}\n\tEnd Date: {}\n\tPerson: {}",
+        auto format(const fmc::SimConfig& config, FormatContext& ctx) const {
+            return format_to(ctx.out(), "Sim Config:\n\tStart Date: {}\n\tEnd Date: {}\n\t{}",
                 config.start_date,
                 config.end_date,
                 config.person

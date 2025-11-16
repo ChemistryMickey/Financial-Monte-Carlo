@@ -9,12 +9,22 @@ namespace fmc {
     void generate_dispersed_configs(const fmc::CliArgs& args, const nlohmann::json& config) {
         std::unordered_map<std::string, RandomVariable> monte_vars{};
         for (auto& [key, var] : config.at("person").items()) {
-            monte_vars.emplace(key, var);
+            DEBUG("Attempting to disperse {}", key);
+            if (key.contains("event")) {
+                for (auto& [event_key, event_var] : var.items()) {
+                    monte_vars.emplace(event_key, event_var);
+                }
+            }
+            else {
+                monte_vars.emplace(key, var);
+            }
         }
+
         for (auto& [key, var] : config.at("stock_market").items()) {
             monte_vars.emplace(key, var);
         }
         monte_vars.emplace("annual_inflation", config.at("annual_inflation"));
+        DEBUG("Created all Monte Carlo variables");
 
         for (uint run = 0; run < args.runs; ++run) {
             std::filesystem::path cur_out_dir = run_out_dir(args.out_directory, run);
@@ -24,9 +34,17 @@ namespace fmc {
                 {"end_date", config["end_date"]}
             };
 
-            for (auto& [key, _] : config.at("person").items()) {
-                out_config["person"][key] = monte_vars.at(key).next_value();
+            for (auto& [key, var] : config.at("person").items()) {
+                if (key.contains("event")) {
+                    for (auto& [event_key, _] : var.items()) {
+                        out_config["person"][key][event_key] = monte_vars.at(event_key).next_value();
+                    }
+                }
+                else {
+                    out_config["person"][key] = monte_vars.at(key).next_value();
+                }
             }
+
             for (auto& [key, _] : config.at("stock_market").items()) {
                 out_config["stock_market"][key] = monte_vars.at(key).next_value();
             }
