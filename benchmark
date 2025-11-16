@@ -2,8 +2,8 @@
 if [[ $# == 0 ]]; then
     # iterate through all benchmarks and benchmark
     for bm in $(ls benchmarks/BM_*); do
-        bazel run //benchmarks:$(basename $bm .cpp) --config=benchmarking
+        bazel run //benchmarks:$(basename $bm .cpp) --config=benchmarking -j 6
     done
 else
-    bazel run //benchmarks:BM_$1 --config=benchmarking
+    bazel run //benchmarks:BM_$1 --config=benchmarking -j 6
 fi

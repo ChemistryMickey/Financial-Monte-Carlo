@@ -1,6 +1,6 @@
 {
     "start_date": "2020-01-01",
-    "end_date": "2025-01-01",
+    "end_date": "2020-02-01",
     "person": {
         "starting_money": {
             "initial_undispersed_value": 250000,
@@ -51,9 +51,39 @@
         }
     },
     "stock_market": {
-        "position_price": 100,
-        "annual_time_scaling_factor": 0.12,
-        "volatility": 0.1
+        "position_price": {
+            "initial_undispersed_value": 100,
+            "dispersion_type": "truncated_gaussian",
+            "dispersion": {
+                "mean": 0,
+                "standard_deviation": 20,
+                "lower": 10,
+                "upper": 1000000
+            },
+            "seed": 42
+        },
+        "annual_time_scaling_factor": {
+            "initial_undispersed_value": 0.06,
+            "dispersion_type": "truncated_gaussian",
+            "dispersion": {
+                "mean": 0,
+                "standard_deviation": 0.2,
+                "lower": -0.2,
+                "upper": 0.1
+            },
+            "seed": 42
+        },
+        "volatility": {
+            "initial_undispersed_value": 0.1,
+            "dispersion_type": "truncated_gaussian",
+            "dispersion": {
+                "mean": 0,
+                "standard_deviation": 0.2,
+                "lower": 0.02,
+                "upper": 0.4
+            },
+            "seed": 42
+        }
     },
     "annual_inflation": {
         "initial_undispersed_value": 0.02,

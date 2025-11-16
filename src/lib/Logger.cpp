@@ -7,17 +7,7 @@
 #include <print>
 
 namespace fmc {
-    Logger::Logger(const std::filesystem::path& out_path_, size_t buffer_size) {
-        this->out_path = project_path(out_path_);
-
-        this->buffer.reserve(buffer_size);
-
-        if (std::filesystem::exists(this->out_path)) {
-            std::filesystem::remove(this->out_path);
-        }
-    }
-
-    Logger::Logger(const CliArgs& args, size_t buffer_size) {
+    void Logger::initialize(const CliArgs& args, size_t buffer_size) {
         this->out_path = args.out_directory / "output.log";
 
         if (!std::filesystem::exists(args.out_directory)) {
@@ -34,6 +24,21 @@ namespace fmc {
         else {
             this->buffer.reserve(buffer_size);
         }
+        this->initialized = true;
+
+        INFO("Logger successfully initialized, outputting to {}", this->out_path);
+    }
+
+    void Logger::initialize(const std::filesystem::path& out_path_, size_t buffer_size) {
+        this->out_path = project_path(out_path_);
+
+        this->buffer.reserve(buffer_size);
+
+        if (std::filesystem::exists(this->out_path)) {
+            std::filesystem::remove(this->out_path);
+        }
+
+        this->initialized = true;
     }
 
     void Logger::log(const std::string& msg, LoggingLevel logging_level, const std::string& origin_file, size_t line_number) {
@@ -48,6 +53,12 @@ namespace fmc {
             line_number,
             msg
         );
+
+        if (!this->initialized) {
+            std::string err_msg = std::format("Attempting to use the logger before it's initialized! {}", tagged_msg);
+            throw std::runtime_error(err_msg);
+        }
+
 
 #ifndef BENCHMARKING
         std::print("{}\n", tagged_msg);

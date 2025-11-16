@@ -1,6 +1,7 @@
 #pragma once
 #include <filesystem>
 #include <CLI/CLI.hpp>
+#include "utils.hpp"
 
 namespace fmc {
     struct CliArgs {
@@ -22,9 +23,38 @@ namespace fmc {
 
             // Parse it up
             app.parse(argc, argv);
+
+            this->out_directory = project_path("output" / this->out_directory);
         }
 
     private:
         CLI::App app{"A Monte Carlo simulator for financial stability"};
     };
 }
+
+namespace std {
+    template<>
+    struct formatter<fmc::CliArgs> {
+        constexpr auto parse(format_parse_context& ctx) {
+            return ctx.begin(); // no custom format specifiers
+        }
+
+        template <typename FormatContext>
+        auto format(const fmc::CliArgs& args, FormatContext& ctx) const {
+            return std::format_to(
+                ctx.out(),
+                "Args:\n\t"
+                "Config Path: {}\n\t"
+                "Output: {}\n\t"
+                "Runs: {}\n\t"
+                "Dry: {}\n\t"
+                "Verbose: {}",
+                args.config_path,
+                args.out_directory,
+                args.runs,
+                args.dry,
+                args.verbose
+            );
+        }
+    };
+} // namespace std

@@ -35,3 +35,33 @@ inline std::string get_current_time() {
 
     return ss.str();
 }
+
+inline std::filesystem::path run_out_dir(const std::filesystem::path& top_out_dir, size_t run) {
+    return top_out_dir / std::format("RUN_{:09}", run);
+}
+
+inline std::chrono::sys_days string2sys_days(const std::string& s) {
+    std::istringstream iss{s};
+    std::chrono::sys_days days;
+    iss >> std::chrono::parse("%Y-%m-%d", days);
+
+    if (iss.fail()) {
+        std::string err_msg = std::format("Invalid date format: {}", s);
+        throw std::runtime_error(err_msg);
+    }
+
+    return days;
+}
+
+inline std::chrono::year_month_day string2ymd(const std::string& s) {
+    return string2sys_days(s); // implicitly converted
+}
+
+namespace std {
+    template<>
+    struct formatter<std::filesystem::path> : formatter<std::string> {
+        auto format(const std::filesystem::path& p, auto& ctx) const {
+            return formatter<std::string>::format(p.string(), ctx);
+        }
+    };
+} // namespace std

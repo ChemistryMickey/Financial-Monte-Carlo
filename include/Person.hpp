@@ -40,18 +40,20 @@ namespace fmc {
     };
 }
 
-template<>
-struct std::formatter<fmc::Person> : std::formatter<std::string> {
-    constexpr auto parse(std::format_parse_context& ctx) {
-        return ctx.begin();
-    }
+namespace std {
+    template <>
+    struct formatter<fmc::Person> {
+        constexpr auto parse(format_parse_context& ctx) {
+            return ctx.begin();
+        }
 
-    template <typename FormatContext>
-    auto format(const fmc::Person& p, FormatContext& ctx) {
-        return std::format_to(ctx.out(), "Person:\n\tNet Worth: {}\n\tCash on hand: {}\n\tStock/Bond Ratio: {}",
-            p.current_net_worth(),
-            p.cash_on_hand,
-            p.stock_bond_ratio
-        );
-    }
-};
+        template <typename FormatContext>
+        auto format(const fmc::Person& p, FormatContext& ctx) {
+            return format_to(ctx.out(), "Person:\n\tNet Worth: {}\n\tCash on hand: {}\n\tStock/Bond Ratio: {}",
+                p.current_net_worth(),
+                p.cash_on_hand,
+                p.stock_bond_ratio
+            );
+        }
+    };
+} // namespace std

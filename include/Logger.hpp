@@ -17,10 +17,16 @@ namespace fmc {
     public:
         static constexpr size_t BUFFER_SIZE = 100;
 
-        Logger(const std::filesystem::path& out_path_, size_t buffer_size = BUFFER_SIZE);
-        Logger(const CliArgs& args, size_t buffer_size = BUFFER_SIZE);
+        Logger() = default;
         ~Logger() {
             this->flush();
+        }
+
+        /// @brief Get the global instance of the logger. You should never use this function directly. Please use the provided macros.
+        /// @return 
+        static Logger& instance() {
+            static Logger inst;
+            return inst;
         }
 
 
@@ -30,6 +36,12 @@ namespace fmc {
         /// @param origin_file 
         /// @param line_number 
         void log(const std::string& msg, LoggingLevel logging_level, const std::string& origin_file, size_t line_number);
+
+        /// @brief Do late initialization of the logger such that there can be a global one that's configured in main
+        /// @param args CLI arguments
+        /// @param buffer_size The size of the buffer before dumping
+        void initialize(const CliArgs& args, size_t buffer_size = BUFFER_SIZE);
+        void initialize(const std::filesystem::path& out_path, size_t buffer_size = BUFFER_SIZE);
 
         TESTING_PUBLIC;
 
@@ -43,16 +55,14 @@ namespace fmc {
 
         std::filesystem::path out_path;
         std::vector<std::string> buffer;
+        bool initialized = false;
         const char* logging_level_to_string(LoggingLevel ll);
         void flush();
     };
-
-    // This ensures there's only one logger defined across compilation units.
-    // It's initialized in main.cpp and in any unit tests.
-    extern Logger logger;
 }
-#define DEBUG(msg) logger.log(msg, fmc::LoggingLevel::DEBUG, __FILE__, __LINE__) 
-#define INFO(msg) logger.log(msg, fmc::LoggingLevel::INFO, __FILE__, __LINE__) 
-#define WARN(msg) logger.log(msg, fmc::LoggingLevel::WARNING, __FILE__, __LINE__) 
-#define ERROR(msg) logger.log(msg, fmc::LoggingLevel::ERROR, __FILE__, __LINE__) 
+
+#define DEBUG(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::DEBUG, __FILE__, __LINE__) 
+#define INFO(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::INFO, __FILE__, __LINE__) 
+#define WARN(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::WARNING, __FILE__, __LINE__) 
+#define ERROR(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::ERROR, __FILE__, __LINE__) 
 

@@ -33,14 +33,16 @@ namespace fmc {
     };
 }
 
-template<>
-struct std::formatter<fmc::Money> : std::formatter<std::string> {
-    constexpr auto parse(std::format_parse_context& ctx) {
-        return ctx.begin();
-    }
+namespace std {
+    template <>
+    struct formatter<fmc::Money> {
+        constexpr auto parse(format_parse_context& ctx) {
+            return ctx.begin(); // no custom format specifiers
+        }
 
-    template <typename FormatContext>
-    auto format(const fmc::Money& m, FormatContext& ctx) {
-        return std::format_to(ctx.out(), "${}.{}", m.dollars, m.cents);
-    }
-};
+        template <typename FormatContext>
+        auto format(const fmc::Money& m, FormatContext& ctx) const {
+            return std::format_to(ctx.out(), "${}.{}", m.dollars, m.cents);
+        }
+    };
+} // namespace std
