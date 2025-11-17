@@ -63,7 +63,7 @@ namespace fmc {
             std::ranges::to<std::string>(
                 this->signals_to_log
                 | std::views::transform([](auto& p) {
-                    return std::format("{}", p.second.get().dollars);
+                    return std::format("{}.{:02}", p.second.get().dollars, p.second.get().cents);
                     })
                 | std::views::join_with(','))
         );
