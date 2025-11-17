@@ -8,6 +8,7 @@
 #include "RandomVariable.hpp"
 #include "Person.hpp"
 #include "SimConfig.hpp"
+#include "TimeseriesDataLogger.hpp"
 
 void run_simulation(const std::filesystem::path& out_dir, const fmc::SimConfig& config);
 
@@ -55,7 +56,9 @@ void run_simulation(const std::filesystem::path& out_dir, const fmc::SimConfig& 
     // Initialize objects
     //stock_market.initialize();
     //bond_market.initialize();
-    // person.initialize();
+    person.initialize();
+
+    // Initialize timeseries logger
 
     // Simulation loop
     uint dt = 1; // [days]

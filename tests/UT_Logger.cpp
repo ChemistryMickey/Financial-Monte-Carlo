@@ -20,7 +20,14 @@ namespace fmc {
         WARN("msg");
         EXPECT_EQ(Logger::instance().buffer.size(), 0);
         EXPECT_TRUE(std::filesystem::exists(out_path));
-        ERROR("msg");
+        WARN("msg");
         EXPECT_EQ(Logger::instance().buffer.size(), 1);
+    }
+
+    TEST(Test_Logger, error) {
+        Logger::instance().initialize("test_output_log.log", 5);
+        EXPECT_THROW(ERROR("Testing"), std::runtime_error);
+
+        EXPECT_TRUE(std::filesystem::exists("test_output_log.log"));
     }
 }

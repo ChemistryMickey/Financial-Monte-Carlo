@@ -17,6 +17,7 @@ namespace fmc {
     struct SimConfig {
         std::chrono::sys_days start_date;
         std::chrono::sys_days end_date;
+        std::filesystem::path logging_channel_def_path;
         Person person;
         // fmc::StockMarket stock_market;
         // fmc::BondMarket bond_market;

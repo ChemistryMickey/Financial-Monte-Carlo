@@ -4,6 +4,7 @@ namespace fmc {
     SimConfig::SimConfig(const nlohmann::json& config) :
         start_date{string2sys_days(config.at("start_date").get<std::string>())},
         end_date{string2sys_days(config.at("end_date").get<std::string>())},
+        logging_channel_def_path{config.at("logging_channels")},
         person{config.at("person")} {}
 
     void generate_dispersed_configs(const fmc::CliArgs& args, const nlohmann::json& config) {
@@ -30,8 +31,9 @@ namespace fmc {
             std::filesystem::path cur_out_dir = run_out_dir(args.out_directory, run);
             std::filesystem::create_directories(cur_out_dir);
             nlohmann::json out_config{
-                {"start_date", config["start_date"]},
-                {"end_date", config["end_date"]}
+                {"start_date", config.at("start_date")},
+                {"end_date", config.at("end_date")},
+                {"logging_channels", config.at("logging_channels")}
             };
 
             for (auto& [key, var] : config.at("person").items()) {

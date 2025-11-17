@@ -8,6 +8,46 @@
 #include <chrono>
 #include <ctime>
 #include <sstream>
+#include <string>
+#include <vector>
+
+// Strings
+inline std::vector<std::string> split(const std::string& s, char delimiter) {
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream token_stream(s);
+
+    // Use getline to split by the delimiter
+    while (std::getline(token_stream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+inline std::pair<std::string, std::string> extract_first_entry(const std::string& s, char delimiter) {
+    size_t first_delimiter = s.find(delimiter);
+
+    return {s.substr(0, first_delimiter), s.substr(first_delimiter + 1, s.size())};
+}
+
+template <typename T>
+inline void print_vector(const std::vector<T>& v) {
+    size_t v_size = v.size();
+
+    std::cout << "[";
+    for (size_t i = 0; i < v_size; ++i) {
+        std::cout << v.at(i);
+
+        if (i != v_size - 1) {
+            std::cout << ", ";
+        }
+        else {
+            std::cout << "]";
+        }
+    }
+    std::cout << "\n";
+}
 
 // Environment && Path
 inline const char* get_envvar(const char* envvar) {

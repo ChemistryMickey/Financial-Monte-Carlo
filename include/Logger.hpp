@@ -64,5 +64,5 @@ namespace fmc {
 #define DEBUG(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::DEBUG, __FILE__, __LINE__) 
 #define INFO(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::INFO, __FILE__, __LINE__) 
 #define WARN(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::WARNING, __FILE__, __LINE__) 
-#define ERROR(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::ERROR, __FILE__, __LINE__) 
+#define ERROR(pattern, ...) {fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::ERROR, __FILE__, __LINE__); fmc::Logger::instance().flush(); throw std::runtime_error("");}
 

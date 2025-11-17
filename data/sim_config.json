@@ -1,6 +1,7 @@
 {
     "start_date": "2020-01-01",
     "end_date": "2020-02-01",
+    "logging_channels": "data/logging_channels.json",
     "person": {
         "medical_event": {
             "probability": {

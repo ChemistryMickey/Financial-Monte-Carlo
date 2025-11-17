@@ -1,6 +1,7 @@
 {
    "annual_inflation": 0.10575844727716636,
    "end_date": "2020-02-01",
+   "logging_channels": "data/logging_channels.json",
    "person": {
       "medical_event": {
          "initial_cost": 10543.077546650507,
