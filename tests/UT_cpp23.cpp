@@ -32,3 +32,9 @@ TEST(Test_cpp23, print_person) {
 TEST(Test_cpp23, print_config) {
     std::print("{}\n", fmc::SimConfig{});
 }
+
+TEST(Test_cpp23, format_chrono_days) {
+    using namespace std::chrono;
+    std::println("{}", sys_days{2025y / 1 / 1});
+    // There's even println? Now we're cookin' with gas
+}

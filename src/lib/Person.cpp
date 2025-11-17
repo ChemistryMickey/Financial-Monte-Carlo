@@ -1,12 +1,22 @@
 #include "Person.hpp"
 #include "Logger.hpp"
+#include <rttr/registration>
+
+RTTR_REGISTRATION{
+    rttr::registration::class_<fmc::Person>("Person")
+        .property("cash_on_hand", &fmc::Person::cash_on_hand);
+}
 
 namespace fmc {
     Person::Person(const nlohmann::json& config) {
-        this->cash_on_hand = config["starting_money"].get<double>();
-        this->yearly_expenses = config["initial_yearly_expenses"].get<double>();
-        this->stock_bond_ratio = {config["stock_bond_ratio"].get<double>(), this->stock_bond_ratio.get_limits()};
+        DEBUG("Constructing Person with config {}", config.dump(3));
+
+        this->cash_on_hand = config.at("starting_money").get<double>();
+        this->yearly_expenses = config.at("initial_yearly_expenses").get<double>();
+        this->stock_bond_ratio = {config.at("stock_bond_ratio").get<double>(), this->stock_bond_ratio.get_limits()};
         this->medical_event = Event<double>{config.at("medical_event")};
+
+        DEBUG("Constructed Person");
     }
 
     Money Person::current_net_worth() const {

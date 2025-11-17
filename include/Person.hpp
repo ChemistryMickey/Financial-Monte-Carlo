@@ -1,14 +1,17 @@
 #pragma once
 #include <numeric>
 #include <vector>
+#include <rttr/type>
+#include <rttr/registration_friend>
 
 #include "math.hpp"
 #include "json.hpp"
 #include "Money.hpp"
 #include "Event.hpp"
+#include "TimeseriesDataLogger.hpp"
 
 namespace fmc {
-    class Person {
+    class Person : public TimeseriesLoggable {
         /// @brief Reference to the stock market from which asset prices will be calculated
         // StockMarket& stock_market;
 
@@ -47,6 +50,9 @@ namespace fmc {
 
         // Allows access to private members
         friend struct std::formatter<Person>;
+
+        RTTR_ENABLE(TimeseriesLoggable);
+        RTTR_REGISTRATION_FRIEND;
     };
 }
 

@@ -18,7 +18,7 @@ namespace fmc {
         std::chrono::sys_days start_date;
         std::chrono::sys_days end_date;
         std::filesystem::path logging_channel_def_path;
-        Person person;
+        nlohmann::json person_config;
         // fmc::StockMarket stock_market;
         // fmc::BondMarket bond_market;
         // fmc::AnnualInflation annual_inflation;
@@ -42,10 +42,11 @@ namespace std {
 
         template <typename FormatContext>
         auto format(const fmc::SimConfig& config, FormatContext& ctx) const {
-            return format_to(ctx.out(), "Sim Config:\n\tStart Date: {}\n\tEnd Date: {}\n\t{}",
+            return format_to(ctx.out(), "Sim Config:\n\tStart Date: {}\n\tEnd Date: {}\n\tLogging config path: {}\n\tPerson:\n{}",
                 config.start_date,
                 config.end_date,
-                config.person
+                config.logging_channel_def_path,
+                config.person_config.dump(3)
             );
         }
     };

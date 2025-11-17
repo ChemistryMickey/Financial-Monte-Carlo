@@ -1,5 +1,6 @@
-#include "RandomVariable.hpp"
 #include <stdexcept>
+#include "RandomVariable.hpp"
+#include "Logger.hpp"
 namespace fmc {
     double RandomVariable::next_value() {
         switch (this->distribution_type) {
@@ -16,8 +17,7 @@ namespace fmc {
             this->cur_val = this->initial_undispersed_value + this->rng.truncated_normal(this->rng_args.normal.mean, this->rng_args.normal.stddev, this->rng_args.limits.lower, this->rng_args.limits.upper);
             return this->cur_val;
         }
-
-        throw std::runtime_error("Unexpected Distribution Type!");
+        ERROR("Unexpected Distribution Type!");
     }
 
     RandomVariable::RandomVariable(const nlohmann::json& config) :
@@ -59,7 +59,7 @@ namespace fmc {
             };
         }
         else {
-            throw std::runtime_error(std::format("Unrecognized dispersion type: {}", requested_distribution_type));
+            ERROR("Unrecognized dispersion type: {}", requested_distribution_type);
         }
     }
 }

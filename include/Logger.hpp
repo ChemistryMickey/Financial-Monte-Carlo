@@ -36,6 +36,7 @@ namespace fmc {
         /// @param origin_file 
         /// @param line_number 
         void log(const std::string& msg, LoggingLevel logging_level, const std::string& origin_file, size_t line_number);
+        void flush();
 
         /// @brief Do late initialization of the logger such that there can be a global one that's configured in main
         /// @param args CLI arguments
@@ -57,12 +58,11 @@ namespace fmc {
         std::vector<std::string> buffer;
         bool initialized = false;
         const char* logging_level_to_string(LoggingLevel ll);
-        void flush();
     };
 }
 
 #define DEBUG(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::DEBUG, __FILE__, __LINE__) 
 #define INFO(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::INFO, __FILE__, __LINE__) 
 #define WARN(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::WARNING, __FILE__, __LINE__) 
-#define ERROR(pattern, ...) {fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::ERROR, __FILE__, __LINE__); fmc::Logger::instance().flush(); throw std::runtime_error("");}
+#define ERROR(pattern, ...) {std::string err_msg = std::format((pattern) __VA_OPT__(,) __VA_ARGS__); fmc::Logger::instance().log(err_msg, fmc::LoggingLevel::ERROR, __FILE__, __LINE__); fmc::Logger::instance().flush(); throw std::runtime_error(err_msg);}
 

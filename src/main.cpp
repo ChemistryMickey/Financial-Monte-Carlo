@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
     DEBUG("\n{}", args);
 
     auto config_json = read_json(args.config_path);
+    DEBUG("Read sim config JSON");
 
     std::filesystem::remove_all(args.out_directory);
     if (args.runs == 1) {
@@ -26,6 +27,8 @@ int main(int argc, char** argv) {
         std::filesystem::create_directories(args.out_directory);
 
         fmc::SimConfig config{config_json};
+        DEBUG("Parsed config JSON into SimConfig");
+
         run_simulation(args.out_directory, config);
     }
     else {
@@ -51,7 +54,7 @@ void run_simulation(const std::filesystem::path& out_dir, const fmc::SimConfig& 
     // Copy out mutable simulation objects
     //fmc::StockMarket stock_market = config.stock_market
     //fmc::BondMarket bond_market = config.bond_market
-    fmc::Person person = config.person;
+    fmc::Person person{config.person_config};
 
     // Initialize objects
     //stock_market.initialize();
@@ -59,23 +62,33 @@ void run_simulation(const std::filesystem::path& out_dir, const fmc::SimConfig& 
     person.initialize();
 
     // Initialize timeseries logger
+    std::chrono::sys_days cur_date = config.start_date;
+    fmc::TimeseriesDataLogger ts_logger{
+        cur_date,
+        config.logging_channel_def_path,
+        out_dir / "timeseries_data.csv",
+        // The following key/value pairs must match EXACTLY
+        {{"person", person}}
+    };
+
 
     // Simulation loop
-    uint dt = 1; // [days]
-    for (
-        std::chrono::sys_days cur_date = config.start_date;
-        cur_date < config.end_date;
-        cur_date += std::chrono::days{dt}
-        ) {
+    uint dt{1}; // [days]
+    while (cur_date < config.end_date) {
         DEBUG("Starting day {}", cur_date);
 
         // Environment
         // stock_market.update()
         // bond_market.update()
         // inflation.update()
+
+        // Models
         person.update(dt);
 
-
         // Log state
+        ts_logger.log();
+
+        // Increment date
+        cur_date += std::chrono::days{dt};
     }
 }

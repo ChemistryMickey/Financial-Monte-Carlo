@@ -20,7 +20,9 @@ cc_library(
     strip_include_prefix = "include",
     copts = copts(),
     linkopts = linkopts(),
-    deps = [],
+    deps = [
+        "//third_party/rttr:rttr_core"
+    ],
     visibility= ["//visibility:public"],
     linkstatic=True
 )
