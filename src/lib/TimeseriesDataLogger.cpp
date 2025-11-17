@@ -38,7 +38,7 @@ namespace fmc {
             rttr::instance inst{obj};
             rttr::type obj_type = inst.get_derived_type();
 
-            this->signals_to_log.emplace(signal, obj_type.get_property(split_signal[1]).get_value(obj).get_value<double>());
+            this->signals_to_log.emplace(signal, obj_type.get_property(split_signal[1]).get_value(obj).get_value<std::reference_wrapper<Money>>());
         }
 
         // Write the header of the CSV so you don't need to do it again.
@@ -63,7 +63,7 @@ namespace fmc {
             std::ranges::to<std::string>(
                 this->signals_to_log
                 | std::views::transform([](auto& p) {
-                    return std::format("{}", p.second);
+                    return std::format("{}", p.second.get().dollars);
                     })
                 | std::views::join_with(','))
         );

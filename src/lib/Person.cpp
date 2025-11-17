@@ -4,7 +4,9 @@
 
 RTTR_REGISTRATION{
     rttr::registration::class_<fmc::Person>("Person")
-        .property("cash_on_hand", &fmc::Person::cash_on_hand);
+        .property_readonly("cash_on_hand", &fmc::Person::cash_on_hand) (
+            rttr::policy::prop::as_reference_wrapper
+        );
 }
 
 namespace fmc {

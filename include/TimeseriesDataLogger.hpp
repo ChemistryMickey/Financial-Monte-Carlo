@@ -7,6 +7,8 @@
 #include <map>
 #include <vector>
 
+#include "Money.hpp"
+
 namespace fmc {
     /// @brief This is a "trait" that allows the user to log properties through inheritance.
     ///
@@ -27,7 +29,7 @@ namespace fmc {
         static const uint BUFFER_SIZE = 100;
 
         std::chrono::sys_days& clock;
-        std::map<std::string, double> signals_to_log;
+        std::map<std::string, std::reference_wrapper<Money>> signals_to_log;
         std::filesystem::path log_out_path;
         std::vector<std::string> buffer;
 
