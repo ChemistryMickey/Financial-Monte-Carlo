@@ -8,3 +8,6 @@ build:unit_testing --define=UNIT_TESTING=true
 build:benchmarking --define=BENCHMARKING=true
 
 build:optimized --define=OPTIMIZED=true
+
+build:profile --define=PROFILE=true
+build:profile-optimized --define=PROFILE_OPTIMIZED=true

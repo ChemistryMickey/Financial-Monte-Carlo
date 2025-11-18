@@ -11,6 +11,16 @@ config_setting(
     define_values = {"OPTIMIZED": "true"}
 )
 
+config_setting(
+    name="profile",
+    define_values = {"PROFILE": "true"}
+)
+
+config_setting(
+    name="profile_optimized",
+    define_values = {"PROFILE_OPTIMIZED": "true"}
+)
+
 load("//:common_copts.bzl", "copts", "linkopts")
 
 cc_library(

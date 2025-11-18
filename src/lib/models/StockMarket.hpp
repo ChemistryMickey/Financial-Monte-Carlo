@@ -1,5 +1,5 @@
 #pragma once
-#include "json.hpp"
+#include "include/json.hpp" // dunno why this one needs the include/ in order for nlohmann to get properly found. :shrug:
 #include "Money.hpp"
 #include "math.hpp"
 #include "TimeseriesDataLogger.hpp"

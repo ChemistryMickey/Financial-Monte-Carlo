@@ -37,6 +37,15 @@ def copts():
         "//:optimized": [
             "-O3",
         ],
+        "//:profile": [
+            "-fno-omit-frame-pointer",
+            "-g"
+        ],
+        "//:profile_optimized": [
+            "-O3",
+            "-fno-omit-frame-pointer",
+            "-g"
+        ],
         "//conditions:default": []
     })
 
@@ -65,6 +74,16 @@ def linkopts():
         "//:optimized": [
             "-flto",
             "-O3"
+        ],
+        "//:profile": [
+            "-fno-omit-frame-pointer",
+            "-g"
+        ],
+        "//:profile_optimized": [
+            "-O3",
+            "-flto",
+            "-fno-omit-frame-pointer",
+            "-g"
         ],
         "//conditions:default": []
     })

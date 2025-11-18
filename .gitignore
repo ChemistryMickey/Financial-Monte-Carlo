@@ -3,3 +3,5 @@ bazel-*
 output/
 *.log
 task-list.md
+perf.*
+*.svg

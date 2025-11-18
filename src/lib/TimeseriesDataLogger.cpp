@@ -42,7 +42,7 @@ namespace fmc {
         }
 
         // Write the header of the CSV so you don't need to do it again.
-        std::string csv_header = std::format("time,{}",
+        std::string csv_header = std::format("Date,{}",
             std::ranges::to<std::string>(
                 this->signals_to_log
                 | std::views::transform([](auto& p) {
