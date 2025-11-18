@@ -5,6 +5,10 @@
 RTTR_REGISTRATION{
     rttr::registration::class_<fmc::Person>("Person")
         .property_readonly("cash_on_hand", &fmc::Person::cash_on_hand) (
+            // This means the value will be returned as a reference wrapper such that I can keep it in a table for logging! Slick.
+            rttr::policy::prop::as_reference_wrapper
+        )
+        .property_readonly("yearly_expenses", &fmc::Person::yearly_expenses) (
             rttr::policy::prop::as_reference_wrapper
         );
 }
@@ -46,6 +50,9 @@ namespace fmc {
         // Update asset prices
 
         // Given cash on hand, liquidate assets or invest where you can
+
+        // Update yearly expenses (just a simple linear update for now. A buck a day)
+        this->yearly_expenses = this->yearly_expenses + days_passed;
 
         // Update medical event probability
         this->medical_event.update(days_passed);

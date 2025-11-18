@@ -61,7 +61,7 @@ namespace fmc {
 
 
 #ifndef BENCHMARKING
-        std::print("{}\n", tagged_msg);
+        std::println("{}", tagged_msg);
 #endif
 
         buffer.push_back(tagged_msg);

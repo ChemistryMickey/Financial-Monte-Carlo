@@ -11,7 +11,7 @@ namespace fmc {
     void generate_dispersed_configs(const fmc::CliArgs& args, const nlohmann::json& config) {
         std::unordered_map<std::string, RandomVariable> monte_vars{};
         for (auto& [key, var] : config.at("person").items()) {
-            DEBUG("Attempting to disperse {}", key);
+            DEBUG("Attempting to disperse {} with value {}", key, var.dump(3));
             if (key.contains("event")) {
                 for (auto& [event_key, event_var] : var.items()) {
                     monte_vars.emplace(event_key, event_var);

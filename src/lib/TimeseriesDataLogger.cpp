@@ -81,8 +81,7 @@ namespace fmc {
         std::string batched_out_str = std::ranges::to<std::string>(this->buffer | std::views::join_with('\n'));
 
         std::ofstream f{this->log_out_path, std::fstream::app}; // Just append
-        /// NOTE: No println here because each of the strings in the buffer are \n terminated
-        std::print(f, "{}", batched_out_str);
+        std::println(f, "{}", batched_out_str);
 
         this->buffer.clear();
     }
