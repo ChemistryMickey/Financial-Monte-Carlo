@@ -14,7 +14,8 @@ RTTR_REGISTRATION{
 }
 
 namespace fmc {
-    Person::Person(const nlohmann::json& config) {
+    Person::Person(StockMarket& stock_market_, const nlohmann::json& config) :
+        stock_market{stock_market_} {
         DEBUG("Constructing Person with config {}", config.dump(3));
 
         this->cash_on_hand = config.at("starting_money").get<double>();

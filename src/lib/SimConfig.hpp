@@ -6,7 +6,6 @@
 #include <chrono>
 
 #include "CliArgs.hpp"
-#include "Person.hpp"
 #include "RandomVariable.hpp"
 #include "file_io.hpp"
 #include "Logger.hpp"
@@ -19,7 +18,7 @@ namespace fmc {
         std::chrono::sys_days end_date;
         std::filesystem::path logging_channel_def_path;
         nlohmann::json person_config;
-        // fmc::StockMarket stock_market;
+        nlohmann::json stock_market_config;
         // fmc::BondMarket bond_market;
         // fmc::AnnualInflation annual_inflation;
 

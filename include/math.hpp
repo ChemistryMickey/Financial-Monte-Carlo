@@ -81,11 +81,11 @@ namespace fmc {
             return dist(engine);
         }
 
-        // // Uniform integer in [a, b]
-        // int uniform_int(int a = 0, int b) {
-        //     std::uniform_int_distribution<int> dist(a, b);
-        //     return dist(engine);
-        // }
+        // Uniform integer in [a, b]
+        int uniform_int(int a, int b) {
+            std::uniform_int_distribution<int> dist(a, b);
+            return dist(engine);
+        }
 
         // Normal distribution
         double normal(double mean = 0.0, double stddev = 1.0) {
@@ -120,15 +120,7 @@ namespace fmc {
         }
 
         void set_value(T value_) {
-            if (value_ < this->lower) {
-                this->value = lower;
-            }
-            else if (value_ > this->upper) {
-                this->value = upper;
-            }
-            else {
-                this->value = value_;
-            }
+            this->value = std::clamp(value_, this->lower, this->upper);
         }
 
         const T get_value() const { return this->value; }
@@ -144,9 +136,10 @@ namespace fmc {
             return std::format("{} [{}, {}]", this->get_value(), this->get_limits().first, this->get_limits().second);
         }
 
-    private:
-        T value;
         T lower;
         T upper;
+    private:
+        /// @brief I really want to communicate that you must go through the setter for this or else it's not clamped.
+        T value;
     };
 }

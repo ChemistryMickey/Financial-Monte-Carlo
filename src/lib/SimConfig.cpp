@@ -5,8 +5,8 @@ namespace fmc {
         start_date{string2sys_days(config.at("start_date").get<std::string>())},
         end_date{string2sys_days(config.at("end_date").get<std::string>())},
         logging_channel_def_path{config.at("logging_channels").get<std::string>()},
-        person_config(config.at("person")) // This is a "most vexing parse". This must be parentheses"
-    {}
+        person_config(config.at("person")), // This is a "most vexing parse". This must be parentheses",
+        stock_market_config(config.at("stock_market")) {}
 
     void generate_dispersed_configs(const fmc::CliArgs& args, const nlohmann::json& config) {
         std::unordered_map<std::string, RandomVariable> monte_vars{};

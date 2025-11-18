@@ -9,11 +9,12 @@
 #include "Money.hpp"
 #include "Event.hpp"
 #include "TimeseriesDataLogger.hpp"
+#include "StockMarket.hpp"
 
 namespace fmc {
     class Person : public TimeseriesLoggable {
         /// @brief Reference to the stock market from which asset prices will be calculated
-        // StockMarket& stock_market;
+        StockMarket& stock_market;
 
         // BondMarket& bond_market;
 
@@ -35,8 +36,7 @@ namespace fmc {
 
     public:
         // Person(StockMarket& stock_market_, BondMarket& bond_market_, const nlohmann::json& config);
-        Person() = default;
-        Person(const nlohmann::json& config);
+        Person(StockMarket& stock_market_, const nlohmann::json& config);
 
         /// @brief Move money from cash on hand to stocks/bonds before starting the simulation loop
         void initialize();

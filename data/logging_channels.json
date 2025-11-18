@@ -1,4 +1,5 @@
 [
     "person.cash_on_hand",
-    "person.yearly_expenses"
+    "person.yearly_expenses",
+    "stock_market.position_price"
 ]
