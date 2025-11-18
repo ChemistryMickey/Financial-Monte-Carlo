@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include <string>
 #include <print>
-#include "Person.hpp"
 #include "Money.hpp"
 #include "SimConfig.hpp"
 

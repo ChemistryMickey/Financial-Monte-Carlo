@@ -1,6 +1,6 @@
 #pragma once
 #include <filesystem>
-#include <CLI/CLI.hpp>
+#include "CLI/CLI.hpp"
 #include "utils.hpp"
 
 namespace fmc {

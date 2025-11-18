@@ -26,8 +26,8 @@ load("//:common_copts.bzl", "copts", "linkopts")
 cc_library(
     name = "lib",
     srcs = glob([
-        "src/**/*.cpp",
-        "src/**/*.hpp",
+        "src/lib/**/*.cpp",
+        "src/lib/**/*.hpp",
         "include/*.hpp"
     ]),
     includes = ["include", "src/lib"],
