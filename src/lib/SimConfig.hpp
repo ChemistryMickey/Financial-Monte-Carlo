@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <chrono>
 
-#include "CliArgs.hpp"
 #include "RandomVariable.hpp"
 #include "file_io.hpp"
 #include "Logger.hpp"
@@ -26,10 +25,7 @@ namespace fmc {
         SimConfig(const nlohmann::json& config);
     };
 
-    void generate_dispersed_configs(
-        const fmc::CliArgs& args,
-        const nlohmann::json& config
-    );
+    inline void generate_dispersed_configs(const std::filesystem::path& out_directory, uint runs, const nlohmann::json& config);
 }
 
 namespace std {

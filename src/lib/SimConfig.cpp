@@ -8,7 +8,7 @@ namespace fmc {
         person_config(config.at("person")), // This is a "most vexing parse". This must be parentheses",
         stock_market_config(config.at("stock_market")) {}
 
-    void generate_dispersed_configs(const fmc::CliArgs& args, const nlohmann::json& config) {
+    void generate_dispersed_configs(const std::filesystem::path& out_directory, uint runs, const nlohmann::json& config) {
         std::unordered_map<std::string, RandomVariable> monte_vars{};
         for (auto& [key, var] : config.at("person").items()) {
             DEBUG("Attempting to disperse {} with value {}", key, var.dump(3));
@@ -28,8 +28,8 @@ namespace fmc {
         monte_vars.emplace("annual_inflation", config.at("annual_inflation"));
         DEBUG("Created all Monte Carlo variables");
 
-        for (uint run = 0; run < args.runs; ++run) {
-            std::filesystem::path cur_out_dir = run_out_dir(args.out_directory, run);
+        for (uint run = 0; run < runs; ++run) {
+            std::filesystem::path cur_out_dir = run_out_dir(out_directory, run);
             std::filesystem::create_directories(cur_out_dir);
             nlohmann::json out_config{
                 {"start_date", config.at("start_date")},

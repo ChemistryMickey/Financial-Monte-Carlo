@@ -1,6 +1,5 @@
 #pragma once
 #include "test_utils.hpp"
-#include "CliArgs.hpp"
 #include <string>
 #include <filesystem>
 #include <vector>
@@ -41,8 +40,7 @@ namespace fmc {
         /// @brief Do late initialization of the logger such that there can be a global one that's configured in main
         /// @param args CLI arguments
         /// @param buffer_size The size of the buffer before dumping
-        void initialize(const CliArgs& args, size_t buffer_size = BUFFER_SIZE);
-        void initialize(const std::filesystem::path& out_path, size_t buffer_size = BUFFER_SIZE);
+        void initialize(const std::filesystem::path& out_path, size_t buffer_size = BUFFER_SIZE, bool verbose = false);
 
         TESTING_PUBLIC;
 

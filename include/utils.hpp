@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <string>
+#include <iostream>
 #include <format>
 #include <filesystem>
 #include <chrono>

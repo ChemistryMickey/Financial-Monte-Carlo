@@ -7,17 +7,16 @@
 
 namespace fmc {
     TEST(Test_Logger, buffer_size) {
-        Logger::instance().initialize("test_output_log.log", 5);
-        std::filesystem::path out_path = std::filesystem::path{"test_output_log.log"};
-        EXPECT_EQ(Logger::instance().buffer.size(), 0);
+        Logger::instance().initialize(".", 5);
+        std::filesystem::path out_path = std::filesystem::path{"output.log"};
+        EXPECT_EQ(Logger::instance().buffer.size(), 1);
         INFO("Thingy");
         EXPECT_FALSE(std::filesystem::exists(out_path));
 
-        EXPECT_EQ(Logger::instance().buffer.size(), 1);
+        EXPECT_EQ(Logger::instance().buffer.size(), 2);
         INFO("msg");
         INFO("msg");
         DEBUG("msg");
-        WARN("msg");
         EXPECT_EQ(Logger::instance().buffer.size(), 0);
         EXPECT_TRUE(std::filesystem::exists(out_path));
         WARN("msg");
@@ -25,9 +24,9 @@ namespace fmc {
     }
 
     TEST(Test_Logger, error) {
-        Logger::instance().initialize("test_output_log.log", 5);
+        Logger::instance().initialize(".", 5);
         EXPECT_THROW(ERROR("Testing"), std::runtime_error);
 
-        EXPECT_TRUE(std::filesystem::exists("test_output_log.log"));
+        EXPECT_TRUE(std::filesystem::exists("output.log"));
     }
 }
