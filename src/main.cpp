@@ -9,8 +9,8 @@
 #include "Person.hpp"
 #include "SimConfig.hpp"
 #include "TimeseriesDataLogger.hpp"
+#include "run_simulation.hpp"
 
-void run_simulation(const std::filesystem::path& out_dir, const fmc::SimConfig& config);
 
 int main(int argc, char** argv) {
     fmc::CliArgs args{argc, argv};
@@ -45,50 +45,5 @@ int main(int argc, char** argv) {
             fmc::SimConfig config{read_json(run_dir / "monte_config.lock")};
             run_simulation(run_dir, config);
         }
-    }
-}
-
-void run_simulation(const std::filesystem::path& out_dir, const fmc::SimConfig& config) {
-    DEBUG("Executing simulation with config:\n{}", config);
-
-    // Copy out mutable simulation objects
-    //fmc::StockMarket stock_market = config.stock_market
-    //fmc::BondMarket bond_market = config.bond_market
-    fmc::Person person{config.person_config};
-
-    // Initialize objects
-    //stock_market.initialize();
-    //bond_market.initialize();
-    person.initialize();
-
-    // Initialize timeseries logger
-    std::chrono::sys_days cur_date = config.start_date;
-    fmc::TimeseriesDataLogger ts_logger{
-        cur_date,
-        config.logging_channel_def_path,
-        out_dir / "timeseries_data.csv",
-        // The following key/value pairs must match EXACTLY
-        {{"person", person}}
-    };
-
-
-    // Simulation loop
-    uint dt{1}; // [days]
-    while (cur_date < config.end_date) {
-        DEBUG("Starting day {}", cur_date);
-
-        // Environment
-        // stock_market.update()
-        // bond_market.update()
-        // inflation.update()
-
-        // Models
-        person.update(dt);
-
-        // Log state
-        ts_logger.log();
-
-        // Increment date
-        cur_date += std::chrono::days{dt};
     }
 }
