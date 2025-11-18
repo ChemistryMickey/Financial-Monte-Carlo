@@ -7,7 +7,7 @@
 
 int main(int argc, char** argv) {
     fmc::CliArgs args{argc, argv};
-    fmc::Logger::instance().initialize(args);
+    fmc::Logger::instance().initialize(args.out_directory, 100, args.verbose);
 
     DEBUG("\n{}", args);
 
@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
         run_simulation(args.out_directory, config);
     }
     else {
-        fmc::generate_dispersed_configs(args, config_json);
+        fmc::generate_dispersed_configs(args.out_directory, args.runs, config_json);
         if (args.dry) {
             return 0;
         }

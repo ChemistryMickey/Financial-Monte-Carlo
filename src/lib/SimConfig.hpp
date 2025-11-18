@@ -25,7 +25,7 @@ namespace fmc {
         SimConfig(const nlohmann::json& config);
     };
 
-    inline void generate_dispersed_configs(const std::filesystem::path& out_directory, uint runs, const nlohmann::json& config);
+    void generate_dispersed_configs(const std::filesystem::path& out_directory, uint runs, const nlohmann::json& config);
 }
 
 namespace std {
