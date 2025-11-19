@@ -1,5 +1,5 @@
-[
-    "person.cash_on_hand",
-    "person.yearly_expenses",
-    "stock_market.position_price"
-]
+{
+    "person.cash_on_hand": "Cash on Hand [$]",
+    "person.yearly_expenses": "Yearly Expenses [$]",
+    "stock_market.position_price": "Stock Single Position Price [$]"
+}

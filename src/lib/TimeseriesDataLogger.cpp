@@ -25,7 +25,8 @@ namespace fmc {
 
         // Iterate through the map of loggables and detect if it's in the logging config.
         // If so, get a reference to its property and add it to your signals_to_log map
-        for (auto& [ind, signal] : logging_config.items()) {
+        std::vector<std::string> mapped_names{};
+        for (auto& [signal, mapped_name] : logging_config.items()) {
             // DEBUG("Attempting to register {}", signal);
             auto split_signal = split(signal, '.');
             if (!loggables.contains(split_signal.at(0))) {
@@ -39,14 +40,16 @@ namespace fmc {
             rttr::type obj_type = inst.get_derived_type();
 
             this->signals_to_log.emplace(signal, obj_type.get_property(split_signal[1]).get_value(obj).get_value<std::reference_wrapper<Money>>());
+            mapped_names.push_back(mapped_name);
         }
 
         // Write the header of the CSV so you don't need to do it again.
+        // But write the name-mapped columns. It doesn't matter in the logging, the order is preserved.
         std::string csv_header = std::format("Date,{}",
             std::ranges::to<std::string>(
-                this->signals_to_log
+                mapped_names
                 | std::views::transform([](auto& p) {
-                    return std::format("{}", p.first);
+                    return std::format("{}", p);
                     })
                 | std::views::join_with(','))
         );

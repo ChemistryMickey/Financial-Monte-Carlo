@@ -12,7 +12,7 @@ class PlotTimeSeriesArgs:
     title: str = "Time Series Plot"
     x_label: str = "Date [-]"
     y_label: str = "Value [$]"
-    save_path: str = None
+    save_dir: str = None
     use_logy: bool = False
 
 
@@ -22,14 +22,14 @@ def plot_time_series_from_path(
     x_label: str = "Date [-]",
     y_label: str = "Value [$]",
     show_plot: bool = True,
-    save_path: str | Path | None = None,
+    save_dir: str | Path | None = None,
     use_logy: bool = False,
 ):
     out_dir = "output" / Path(output_directory)
     runs = list(out_dir.glob("RUN_*"))
     if len(runs) == 0:
         # Then this is a single run
-        plot_time_series(
+        plot_single_time_series(
             pd.read_csv(
                 out_dir / "timeseries_data.csv",
                 float_precision="round_trip",
@@ -39,15 +39,21 @@ def plot_time_series_from_path(
             x_label,
             y_label,
             show_plot,
-            "output" / Path(save_path) if save_path is not None else None,
+            "output" / Path(save_dir) / "all_signals.png"
+            if save_dir is not None
+            else None,
             use_logy,
         )
     else:
+        # plot_monte_carlo(
+        #     out_dir,
+        #     runs,
+        # )
         msg = "Plotting Monte Carlos not yet implemented!"
         raise Exception(msg)
 
 
-def plot_time_series(
+def plot_single_time_series(
     df: pd.DataFrame,
     title: str = "Time Series Plot",
     x_label: str = "Date [-]",
@@ -92,7 +98,7 @@ def main():
         args.x_label,
         args.y_label,
         False,
-        args.save_path,
+        args.save_dir,
         args.use_logy,
     )
 

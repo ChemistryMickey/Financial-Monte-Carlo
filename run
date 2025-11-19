@@ -50,5 +50,5 @@ set -xe
 bazel run //:main $optimize -- --config $config_path $dry --runs $runs -o $output_path $verbose
 
 if [[ $visualize == 1 ]]; then
-    plot-timeseries --output_dir $output_path --save_path "$output_path/visualization/all_signal.png" --use_logy
+    plot-timeseries --output_dir $output_path --save_dir "$output_path/visualization" --use_logy
 fi
