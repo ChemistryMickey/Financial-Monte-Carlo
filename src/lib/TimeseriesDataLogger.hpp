@@ -32,7 +32,8 @@ namespace fmc {
         std::filesystem::path log_out_path;
         std::vector<std::string> buffer;
 
-        // Loggable types
+        // Loggable types. These must be const reference wrappers for property_readonly RTTR values
+        //      (and the logger should only ever be readonly)
         std::map<std::string, std::reference_wrapper<const Money>> money_signals_to_log;
         std::map<std::string, std::reference_wrapper<const double>> double_signals_to_log;
 

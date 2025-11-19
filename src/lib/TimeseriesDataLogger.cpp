@@ -43,10 +43,10 @@ namespace fmc {
             auto val_variant{obj_type.get_property(split_signal[1]).get_value(obj)};
             auto val_type = val_variant.get_type();
             if (val_type == rttr::type::get<std::reference_wrapper<const Money>>()) {
-                this->money_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<Money>>());
+                this->money_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<const Money>>());
             }
             else if (val_type == rttr::type::get<std::reference_wrapper<const double>>()) {
-                this->double_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<double>>());
+                this->double_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<const double>>());
             }
             else {
                 ERROR("Type {} is not supported by the Timeseries Data Logger", val_type.get_name().to_string());
@@ -73,7 +73,10 @@ namespace fmc {
     }
 
     void TimeseriesDataLogger::flush() {
-        std::string batched_out_str = std::ranges::to<std::string>(this->buffer | std::views::join_with('\n'));
+        std::string batched_out_str = std::ranges::to<std::string>(
+            this->buffer
+            | std::views::join_with('\n')
+        );
 
         std::ofstream f{this->log_out_path, std::fstream::app}; // Just append
         std::println(f, "{}", batched_out_str);
