@@ -29,12 +29,13 @@ def plot_time_series_from_path(
     runs = list(out_dir.glob("RUN_*"))
     if len(runs) == 0:
         # Then this is a single run
+        df = pd.read_csv(
+            out_dir / "timeseries_data.csv",
+            float_precision="round_trip",
+            index_col="Date",
+        )
         plot_single_time_series(
-            pd.read_csv(
-                out_dir / "timeseries_data.csv",
-                float_precision="round_trip",
-                index_col="Date",
-            ),
+            df,
             title,
             x_label,
             y_label,
@@ -44,6 +45,19 @@ def plot_time_series_from_path(
             else None,
             use_logy,
         )
+
+        for col in df.columns:
+            plot_single_time_series(
+                df[col],
+                title,
+                x_label,
+                col,
+                False,
+                "output" / Path(save_dir) / f"{col}.png"
+                if save_dir is not None
+                else None,
+                False,
+            )
     else:
         # plot_monte_carlo(
         #     out_dir,

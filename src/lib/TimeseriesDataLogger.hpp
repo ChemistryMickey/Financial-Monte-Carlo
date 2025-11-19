@@ -34,11 +34,18 @@ namespace fmc {
 
         // Loggable types. These must be const reference wrappers for property_readonly RTTR values
         //      (and the logger should only ever be readonly)
-        std::map<std::string, std::reference_wrapper<const Money>> money_signals_to_log;
-        std::map<std::string, std::reference_wrapper<const double>> double_signals_to_log;
+        template <typename T>
+        using RefMap = std::map <std::string, std::reference_wrapper<const T>>;
+
+        RefMap<Money> money_signals_to_log;
+        RefMap<double> double_signals_to_log;
+        RefMap<int> int_signals_to_log;
 
         template <typename T>
-        std::string signals_to_log_to_string();
+        std::string csv_header_string(const RefMap<T>&) const;
+
+        template <typename T>
+        std::string signals_to_log_to_string(const RefMap<T>&) const;
 
     public:
         TimeseriesDataLogger() = delete;
@@ -53,7 +60,6 @@ namespace fmc {
             this->flush();
         }
 
-        template <typename T>
         void log();
         void flush();
     };

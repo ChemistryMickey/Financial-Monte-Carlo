@@ -4,20 +4,20 @@
    "logging_channels": "data/logging_channels.json",
    "person": {
       "medical_event": {
-         "initial_cost": 10543.077546650507,
-         "probability": 0.01,
+         "initial_cost": 2000.00,
+         "probability": 0.0001,
          "rng_seed": 42,
-         "scaling_factor": 1.001
+         "scaling_factor": 1.000001
       },
       "starting_money": 222488.2752789753,
       "stock_bond_ratio": 0.7186171937151384,
-      "initial_yearly_expenses": 30000
+      "initial_yearly_expenses": 10000
    },
    "start_date": "2020-01-01",
    "stock_market": {
       "annual_time_scaling_factor": 0.10194580241272888,
       "position_price": 130.63741853577588,
-      "volatility": 0.3434939435365012,
+      "volatility": 0.01,
       "rng_seed": 42
    }
 }

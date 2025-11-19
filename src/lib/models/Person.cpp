@@ -10,6 +10,12 @@ RTTR_REGISTRATION{
         )
         .property_readonly("yearly_expenses", &fmc::Person::yearly_expenses) (
             rttr::policy::prop::as_reference_wrapper
+        )
+        .property_readonly("n_stocks", &fmc::Person::n_stocks) (
+            rttr::policy::prop::as_reference_wrapper
+        )
+        .property_readonly("current_net_worth", &fmc::Person::current_net_worth) (
+            rttr::policy::prop::as_reference_wrapper
         );
 }
 
@@ -26,12 +32,14 @@ namespace fmc {
         DEBUG("Constructed Person");
     }
 
-    Money Person::current_net_worth() const {
-        return this->cash_on_hand;
+    Money Person::value_in_stock() const {
+        return this->stock_market.position_price * this->n_stocks;
     }
 
     void Person::initialize() {
-
+        // Until you have a bond market, just drop all your cash in stocks.
+        this->n_stocks = (int) (this->cash_on_hand.to_double() / this->stock_market.position_price.to_double());
+        this->cash_on_hand -= this->stock_market.position_price * this->n_stocks;
     }
 
     void Person::update(uint days_passed) {
@@ -48,14 +56,28 @@ namespace fmc {
             );
         }
 
-        // Update asset prices
+        // Subtract off daily expenses
+        Money daily_expense{this->yearly_expenses.to_double() / 365.0};
+        this->cash_on_hand -= daily_expense;
 
         // Given cash on hand, liquidate assets or invest where you can
+        if (this->cash_on_hand < Money{0.0}) {
+            // Liquidate until you're solvent
+            double stock_price = this->stock_market.position_price.to_double();
+            int stock_to_sell = -this->cash_on_hand.to_double() / stock_price + 1;
+            this->n_stocks -= stock_to_sell;
+
+            DEBUG("Liquidating {} stock at ${}", stock_to_sell, stock_price);
+            this->cash_on_hand += stock_price * stock_to_sell;
+        }
 
         // Update yearly expenses (just a simple linear update for now. A buck a day)
         this->yearly_expenses = this->yearly_expenses + days_passed;
 
         // Update medical event probability
         this->medical_event.update(days_passed);
+
+        // Update your net worth
+        this->current_net_worth = this->cash_on_hand + this->value_in_stock();
     }
 }

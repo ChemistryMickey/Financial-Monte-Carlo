@@ -1,5 +1,7 @@
 {
     "person.cash_on_hand": "Cash on Hand [$]",
     "person.yearly_expenses": "Yearly Expenses [$]",
+    "person.current_net_worth": "Current Net Worth [$]",
+    "person.n_stocks": "Open Positions [-]",
     "stock_market.position_price": "Stock Single Position Price [$]"
 }

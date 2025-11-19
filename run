@@ -7,6 +7,7 @@ dry=""
 runs=1
 verbose=""
 visualize=0
+use_logy=""
 while [[ $# -ne 0 ]]; do
     case "$1" in
         --release|-r)
@@ -37,6 +38,10 @@ while [[ $# -ne 0 ]]; do
             visualize=1
             shift 1
             ;;
+        --use_logy)
+            use_logy="--use_logy"
+            shift 1
+            ;;
         *)
             echo "Unrecognized command! $1"
             echo "./run [--release|-r] [--config $config_path] [--output|-o $output_path] [--dry] [--runs $runs] [--visualize]"
@@ -50,5 +55,5 @@ set -xe
 bazel run //:main $optimize -- --config $config_path $dry --runs $runs -o $output_path $verbose
 
 if [[ $visualize == 1 ]]; then
-    plot-timeseries --output_dir $output_path --save_dir "$output_path/visualization" --use_logy
+    plot-timeseries --output_dir $output_path --save_dir "$output_path/visualization" $use_logy
 fi

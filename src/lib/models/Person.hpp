@@ -26,6 +26,7 @@ namespace fmc {
         /// @brief The amount you expect to spend every year without special events (your "burn rate") before inflation
         Money yearly_expenses{0.0};
 
+
         /// @brief The current portfolio of stocks
         // std::vector<SimpleStock> stock_portfolio{};
 
@@ -45,9 +46,15 @@ namespace fmc {
         /// Additionally updates the probability of a medical event and applies inflation
         void update(uint days_passed);
 
-        /// @brief The current net worth of the individual (assets and cash)
-        Money current_net_worth() const;
+        Money value_in_stock() const;
 
+        // Termination conditions
+        /// @brief Takes into account the value of stocks and bonds.
+        Money current_net_worth{0.0};
+        // Why not a uint? I don't want a negative wrap round issue
+        int n_stocks = 0;
+
+        // Formatting and RTTR things
         // Allows access to private members
         friend struct std::formatter<Person>;
 
@@ -66,7 +73,7 @@ namespace std {
         template <typename FormatContext>
         auto format(const fmc::Person& p, FormatContext& ctx) const {
             return format_to(ctx.out(), "Person:\n\tNet Worth: {}\n\tCash on hand: {}\n\tYearly Expenses: {}\n\tStock/Bond Ratio: {}\n\tMedical Event probability: {}",
-                p.current_net_worth(),
+                p.current_net_worth,
                 p.cash_on_hand,
                 p.yearly_expenses,
                 p.stock_bond_ratio.to_string(),

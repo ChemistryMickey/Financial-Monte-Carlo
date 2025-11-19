@@ -53,10 +53,16 @@ namespace fmc {
 
             // Models
             person.update(dt);
+            if (person.current_net_worth < Money{0.0} || person.n_stocks < 0) {
+                WARN("Went bankrupt on {} with a net worth of ${} and {} stocks",
+                    cur_date,
+                    person.current_net_worth,
+                    person.n_stocks);
+                return;
+            }
 
             // Log state
-            ts_logger.log<Money>();
-            // ts_logger.log<double>();
+            ts_logger.log();
 
             // Increment date
             cur_date += std::chrono::days{dt};

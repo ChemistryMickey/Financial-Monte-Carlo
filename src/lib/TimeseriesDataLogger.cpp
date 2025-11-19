@@ -25,7 +25,6 @@ namespace fmc {
 
         // Iterate through the map of loggables and detect if it's in the logging config.
         // If so, get a reference to its property and add it to your signals_to_log map
-        std::vector<std::string> mapped_names{};
         for (auto& [signal, mapped_name] : logging_config.items()) {
             // DEBUG("Attempting to register {}", signal);
             auto split_signal = split(signal, '.');
@@ -43,28 +42,33 @@ namespace fmc {
             auto val_variant{obj_type.get_property(split_signal[1]).get_value(obj)};
             auto val_type = val_variant.get_type();
             if (val_type == rttr::type::get<std::reference_wrapper<const Money>>()) {
-                this->money_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<const Money>>());
+                this->money_signals_to_log.emplace(mapped_name, val_variant.get_value<std::reference_wrapper<const Money>>());
             }
             else if (val_type == rttr::type::get<std::reference_wrapper<const double>>()) {
-                this->double_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<const double>>());
+                this->double_signals_to_log.emplace(mapped_name, val_variant.get_value<std::reference_wrapper<const double>>());
+            }
+            else if (val_type == rttr::type::get<std::reference_wrapper<const int>>()) {
+                this->int_signals_to_log.emplace(mapped_name, val_variant.get_value<std::reference_wrapper<const int>>());
             }
             else {
                 ERROR("Type {} is not supported by the Timeseries Data Logger", val_type.get_name().to_string());
             }
-
-            mapped_names.push_back(mapped_name);
         }
 
         // Write the header of the CSV so you don't need to do it again.
         // But write the name-mapped columns. It doesn't matter in the logging, the order is preserved.
-        std::string csv_header = std::format("Date,{}",
-            std::ranges::to<std::string>(
-                mapped_names
-                | std::views::transform([](auto& p) {
-                    return std::format("{}", p);
-                    })
-                | std::views::join_with(','))
-        );
+
+        /// WARNING: This MUST be in the same order as the logging function or else columns won't line up!
+        std::string csv_header = "Date";
+        if (!this->money_signals_to_log.empty()) {
+            csv_header += "," + this->csv_header_string<Money>(this->money_signals_to_log);
+        }
+        if (!this->double_signals_to_log.empty()) {
+            csv_header += "," + this->csv_header_string<double>(this->double_signals_to_log);
+        }
+        if (!this->int_signals_to_log.empty()) {
+            csv_header += "," + this->csv_header_string<int>(this->int_signals_to_log);
+        }
 
         std::ofstream f{logging_out_path, std::fstream::out}; // Completely overwrites file
         std::println(f, "{}", csv_header);
@@ -85,25 +89,24 @@ namespace fmc {
     }
 
     // Templated functions:
-    template <>
-    std::string TimeseriesDataLogger::signals_to_log_to_string<Money>() {
-        return std::format("{},{}",
-            this->clock,
+    template <typename T>
+    std::string TimeseriesDataLogger::csv_header_string(const RefMap<T>& map) const {
+        return std::format("{}",
             std::ranges::to<std::string>(
-                this->money_signals_to_log
+                map
                 | std::views::transform([](auto& p) {
-                    return std::format("{}.{:02}", p.second.get().dollars, p.second.get().cents);
+                    return std::format("{}", p.first);
                     })
-                | std::views::join_with(','))
+                | std::views::join_with(',')
+            )
         );
     }
 
-    template <>
-    std::string TimeseriesDataLogger::signals_to_log_to_string<double>() {
-        return std::format("{},{}",
-            this->clock,
+    template <typename T>
+    std::string TimeseriesDataLogger::signals_to_log_to_string(const RefMap<T>& signals_to_log) const {
+        return std::format("{}",
             std::ranges::to<std::string>(
-                this->double_signals_to_log
+                signals_to_log
                 | std::views::transform([](auto& p) {
                     return std::format("{}", p.second.get());
                     })
@@ -111,9 +114,20 @@ namespace fmc {
         );
     }
 
-    template<typename T>
     void TimeseriesDataLogger::log() {
-        this->buffer.push_back(this->signals_to_log_to_string<T>());
+        std::string out = std::format("{}", this->clock);
+
+        /// WARNING: This MUST be in the same order as the header function or else columns won't line up!
+        if (!this->money_signals_to_log.empty()) {
+            out += "," + this->signals_to_log_to_string<Money>(this->money_signals_to_log);
+        }
+        if (!this->double_signals_to_log.empty()) {
+            out += "," + this->signals_to_log_to_string<double>(this->double_signals_to_log);
+        }
+        if (!this->int_signals_to_log.empty()) {
+            out += "," + this->signals_to_log_to_string<int>(this->int_signals_to_log);
+        }
+        this->buffer.push_back(out);
 
         if (this->buffer.size() < this->buffer.capacity()) {
             return;
@@ -121,6 +135,4 @@ namespace fmc {
 
         this->flush();
     }
-    template void TimeseriesDataLogger::log<Money>();
-    template void TimeseriesDataLogger::log<double>();
 }
