@@ -43,4 +43,4 @@ set -xe
 
 bazel build //:main $optimize
 flamegraph --flamechart -- --no-kernel $PROJECT_HOME/bazel-bin/main --config $config_path $dry --runs $runs -o $output_path $verbose
-
+rm $PROJECT_HOME/perf.*

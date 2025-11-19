@@ -6,6 +6,7 @@ output_path="default"
 dry=""
 runs=1
 verbose=""
+visualize=0
 while [[ $# -ne 0 ]]; do
     case "$1" in
         --release|-r)
@@ -32,9 +33,13 @@ while [[ $# -ne 0 ]]; do
             output_path="$2"
             shift 2
             ;;
+        --visualize)
+            visualize=1
+            shift 1
+            ;;
         *)
             echo "Unrecognized command! $1"
-            echo "./run [--release|-r] [--config $config_path] [--output|-o $output_path] [--dry] [--runs $runs]"
+            echo "./run [--release|-r] [--config $config_path] [--output|-o $output_path] [--dry] [--runs $runs] [--visualize]"
             exit 1
             ;;
     esac
@@ -43,3 +48,7 @@ done
 set -xe
 
 bazel run //:main $optimize -- --config $config_path $dry --runs $runs -o $output_path $verbose
+
+if [[ $visualize == 1 ]]; then
+    plot-timeseries --output_dir $output_path --save_path "$output_path/visualization/all_signal.png" --use_logy
+fi
