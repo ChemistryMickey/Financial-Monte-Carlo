@@ -1,0 +1,41 @@
+#! /usr/bin/bash
+build=0
+run=0
+container_prog="podman"
+
+function print_help_text {
+    echo "./container [--build|-b] [--run|-r] [--container_prog (the container program to use; default: podman)]"
+}
+
+if [[ $# == 0 ]]; then
+    print_help_text
+    exit 1
+fi
+
+while [[ $# -ne 0 ]]; do
+    case "$1" in
+        --build|-b)
+            build=1
+            shift 1
+            ;;
+        --run|-r)
+            run=1
+            shift 1
+            ;;
+        *)
+            echo "Unrecognized command! $1"
+            print_help_text
+            exit 1
+            ;;
+    esac
+done
+
+set -xe
+
+if [[ $build == 1 ]]; then
+    $container_prog build -t $USER-finance_monte_carlo $PROJECT_HOME
+fi
+
+if [[ $run == 1 ]]; then
+    $container_prog run -it -v $PROJECT_HOME:/finance_monte_carlo $USER-finance_monte_carlo:latest
+fi

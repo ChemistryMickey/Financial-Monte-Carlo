@@ -1,4 +1,0 @@
-#! /usr/bin/bash
-
-podman build -t $USER-finance_monte_carlo $PROJECT_HOME
-podman run -it -v $PROJECT_HOME:/finance_monte_carlo $USER-finance_monte_carlo:latest
