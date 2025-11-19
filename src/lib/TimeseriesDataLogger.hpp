@@ -29,9 +29,15 @@ namespace fmc {
         static const uint BUFFER_SIZE = 100;
 
         std::chrono::sys_days& clock;
-        std::map<std::string, std::reference_wrapper<Money>> signals_to_log;
         std::filesystem::path log_out_path;
         std::vector<std::string> buffer;
+
+        // Loggable types
+        std::map<std::string, std::reference_wrapper<const Money>> money_signals_to_log;
+        std::map<std::string, std::reference_wrapper<const double>> double_signals_to_log;
+
+        template <typename T>
+        std::string signals_to_log_to_string();
 
     public:
         TimeseriesDataLogger() = delete;
@@ -46,6 +52,7 @@ namespace fmc {
             this->flush();
         }
 
+        template <typename T>
         void log();
         void flush();
     };

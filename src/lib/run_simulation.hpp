@@ -55,7 +55,8 @@ namespace fmc {
             person.update(dt);
 
             // Log state
-            ts_logger.log();
+            ts_logger.log<Money>();
+            // ts_logger.log<double>();
 
             // Increment date
             cur_date += std::chrono::days{dt};

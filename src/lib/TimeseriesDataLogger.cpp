@@ -39,7 +39,19 @@ namespace fmc {
             rttr::instance inst{obj};
             rttr::type obj_type = inst.get_derived_type();
 
-            this->signals_to_log.emplace(signal, obj_type.get_property(split_signal[1]).get_value(obj).get_value<std::reference_wrapper<Money>>());
+            // Kinda jank to just do this; it should probably be a map.
+            auto val_variant{obj_type.get_property(split_signal[1]).get_value(obj)};
+            auto val_type = val_variant.get_type();
+            if (val_type == rttr::type::get<std::reference_wrapper<const Money>>()) {
+                this->money_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<Money>>());
+            }
+            else if (val_type == rttr::type::get<std::reference_wrapper<const double>>()) {
+                this->double_signals_to_log.emplace(signal, val_variant.get_value<std::reference_wrapper<double>>());
+            }
+            else {
+                ERROR("Type {} is not supported by the Timeseries Data Logger", val_type.get_name().to_string());
+            }
+
             mapped_names.push_back(mapped_name);
         }
 
@@ -60,26 +72,6 @@ namespace fmc {
         DEBUG("Initialized TimeseriesDataLogger outputting at {}", logging_out_path);
     }
 
-    void TimeseriesDataLogger::log() {
-        std::string out = std::format("{},{}",
-            this->clock,
-            std::ranges::to<std::string>(
-                this->signals_to_log
-                | std::views::transform([](auto& p) {
-                    return std::format("{}.{:02}", p.second.get().dollars, p.second.get().cents);
-                    })
-                | std::views::join_with(','))
-        );
-
-        this->buffer.push_back(out);
-
-        if (this->buffer.size() < this->buffer.capacity()) {
-            return;
-        }
-
-        this->flush();
-    }
-
     void TimeseriesDataLogger::flush() {
         std::string batched_out_str = std::ranges::to<std::string>(this->buffer | std::views::join_with('\n'));
 
@@ -88,4 +80,44 @@ namespace fmc {
 
         this->buffer.clear();
     }
+
+    // Templated functions:
+    template <>
+    std::string TimeseriesDataLogger::signals_to_log_to_string<Money>() {
+        return std::format("{},{}",
+            this->clock,
+            std::ranges::to<std::string>(
+                this->money_signals_to_log
+                | std::views::transform([](auto& p) {
+                    return std::format("{}.{:02}", p.second.get().dollars, p.second.get().cents);
+                    })
+                | std::views::join_with(','))
+        );
+    }
+
+    template <>
+    std::string TimeseriesDataLogger::signals_to_log_to_string<double>() {
+        return std::format("{},{}",
+            this->clock,
+            std::ranges::to<std::string>(
+                this->double_signals_to_log
+                | std::views::transform([](auto& p) {
+                    return std::format("{}", p.second.get());
+                    })
+                | std::views::join_with(','))
+        );
+    }
+
+    template<typename T>
+    void TimeseriesDataLogger::log() {
+        this->buffer.push_back(this->signals_to_log_to_string<T>());
+
+        if (this->buffer.size() < this->buffer.capacity()) {
+            return;
+        }
+
+        this->flush();
+    }
+    template void TimeseriesDataLogger::log<Money>();
+    template void TimeseriesDataLogger::log<double>();
 }
