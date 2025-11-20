@@ -49,13 +49,18 @@ namespace fmc {
         return *this;
     }
 
-    Money Money::operator*(double d) const {
-        int dol = this->dollars * d;
-        int cen = this->cents * d;
+    Money Money::operator*(int i) const {
+        int new_dol = this->dollars * i;
+        int new_cents = this->cents * i;
 
-        dol += cen / 100;
-        cen %= 100;
-        return Money{dol, cen};
+        new_dol += new_cents / 100;
+        new_cents %= 100;
+
+        return {new_dol, new_cents};
+    }
+
+    Money Money::operator*(double d) const {
+        return this->to_double() * d;
     }
 
     Money& Money::operator*=(double d) {

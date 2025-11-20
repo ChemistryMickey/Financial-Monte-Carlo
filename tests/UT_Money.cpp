@@ -134,6 +134,23 @@ namespace fmc {
             EXPECT_EQ(m2.dollars, 84);
             EXPECT_EQ(m2.cents, 60);
         }
+        {
+            Money m{40, 80};
+            EXPECT_EQ(m.cents, 80);
+            Money m2 = m * 0.25;
+
+            EXPECT_EQ(m2.dollars, 10);
+            // Wait, wut? Floating point maths my dude. If you must use doubles, you get double problems.
+            EXPECT_EQ(m2.cents, 19);
+        }
+        {
+            Money m{40, 80};
+            EXPECT_EQ(m.cents, 80);
+            Money m2 = m * 0.025;
+
+            EXPECT_EQ(m2.dollars, 1);
+            EXPECT_EQ(m2.cents, 2);
+        }
     }
 
     TEST(Test_Money, equal_do_operators_plus) {

@@ -24,11 +24,11 @@ namespace fmc {
             {"bust_scaling_event", {
                 {"event_val", -1.0},
                 {"probability" , 0.0},
-                { "rng_seed" , 42 },
-                { "scaling_factor" , 1.1 },
-                { "duration" , 30 },
-                { "cooldown" , 1800 },
-                { "knockdown" , -0.05 }
+                {"rng_seed" , 42},
+                {"scaling_factor" , 1.1},
+                {"duration" , 30},
+                {"cooldown" , 1800},
+                {"knockdown" , -0.05}
             }}
         };
 

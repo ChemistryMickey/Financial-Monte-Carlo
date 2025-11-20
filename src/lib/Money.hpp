@@ -18,6 +18,7 @@ namespace fmc {
         Money operator-(const Money& m) const;
         Money& operator-=(const Money& m);
 
+        Money operator*(int i) const;
         Money operator*(double d) const;
         Money& operator*=(double d);
 

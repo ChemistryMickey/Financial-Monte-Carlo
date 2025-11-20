@@ -2,6 +2,8 @@
 #include "Logger.hpp"
 #include <rttr/registration>
 
+#include <print>
+
 RTTR_REGISTRATION{
     rttr::registration::class_<fmc::StockMarket>("StockMarket")
         .property_readonly("position_price", &fmc::StockMarket::position_price) (
@@ -22,15 +24,14 @@ namespace fmc {
     void StockMarket::update(uint days_passed) {
         double effective_time_scaling_factor = this->annual_time_scaling_factor;
         if (boom_scaling_event.occurred()) {
-            DEBUG("Boom StockMarket event in progress");
             effective_time_scaling_factor += this->boom_scaling_event.effect_val;
         }
         if (bust_scaling_event.occurred()) {
-            DEBUG("Bust StockMarket event in progress");
             effective_time_scaling_factor += this->bust_scaling_event.effect_val;
         }
+        effective_time_scaling_factor /= 365.0;
 
-        Money scale_adjustment = this->position_price * (effective_time_scaling_factor / 365.0);
+        Money scale_adjustment = this->position_price * effective_time_scaling_factor;
         Money volatility_adjustment = this->position_price * this->rng.normal(0, this->volatility);
 
         this->position_price += scale_adjustment + volatility_adjustment;
