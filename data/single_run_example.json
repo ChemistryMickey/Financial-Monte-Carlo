@@ -1,6 +1,26 @@
 {
-   "annual_inflation": 0.02,
-   "end_date": "2075-02-01",
+   "annual_inflation": {
+      "rate": 0.02,
+      "inflation_event": {
+         "event_val": 0.10,
+         "probability": 0.00001,
+         "rng_seed": 42,
+         "scaling_factor": 1.00001,
+         "duration": 0,
+         "cooldown": 30,
+         "knockdown": -0.05
+      },
+      "deflation_event": {
+         "event_val": -0.10,
+         "probability": 0.00001,
+         "rng_seed": 42,
+         "scaling_factor": 1.00001,
+         "duration": 0,
+         "cooldown": 30,
+         "knockdown": -0.05
+      }
+   },
+   "end_date": "2100-02-01",
    "logging_channels": "data/logging_channels.json",
    "person": {
       "medical_event": {

@@ -19,7 +19,7 @@ namespace fmc {
         nlohmann::json person_config;
         nlohmann::json stock_market_config;
         // BondMarket bond_market;
-        double annual_inflation_config; // for now
+        nlohmann::json annual_inflation_config;
 
         SimConfig() = default;
         SimConfig(const nlohmann::json& config);
@@ -42,7 +42,7 @@ namespace std {
                 config.end_date,
                 config.logging_channel_def_path,
                 config.person_config.dump(3),
-                config.annual_inflation_config
+                config.annual_inflation_config.dump(3)
             );
         }
     };

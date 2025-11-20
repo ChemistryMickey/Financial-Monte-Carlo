@@ -19,6 +19,12 @@ namespace fmc {
         this->cooldown = config.at("cooldown").get<uint>();
 
         this->rng.reseed(config.at("rng_seed").get<uint>());
+
+        this->arm_event();
+    }
+
+    void Event::arm_event() {
+        this->days_since_last_proc = this->cooldown + this->duration;
     }
 
     /// @brief Has this event occurred?

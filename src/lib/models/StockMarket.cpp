@@ -23,13 +23,15 @@ namespace fmc {
 
     void StockMarket::update(uint days_passed) {
         double effective_time_scaling_factor = this->annual_time_scaling_factor;
-        if (boom_scaling_event.occurred()) {
+        if (this->boom_scaling_event.occurred()) {
+            DEBUG("Boom event proc-ed");
             effective_time_scaling_factor += this->boom_scaling_event.effect_val;
         }
-        if (bust_scaling_event.occurred()) {
+        if (this->bust_scaling_event.occurred()) {
+            DEBUG("Bust event proc-ed");
             effective_time_scaling_factor += this->bust_scaling_event.effect_val;
         }
-        effective_time_scaling_factor /= 365.0;
+        effective_time_scaling_factor *= days_passed / 365.0;
 
         Money scale_adjustment = this->position_price * effective_time_scaling_factor;
         Money volatility_adjustment = this->position_price * this->rng.normal(0, this->volatility);

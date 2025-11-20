@@ -4,22 +4,23 @@
 
 #include "Money.hpp"
 #include "models/StockMarket.hpp"
+#include "Logger.hpp"
 
 namespace fmc {
     struct Test_StockMarket : public ::testing::Test {
         nlohmann::json config = {
-            {"annual_time_scaling_factor", 1},
+            {"annual_time_scaling_factor", 1.0},
             {"position_price", 100.00},
             {"volatility", 0.1},
             {"rng_seed", 42},
             {"boom_scaling_event", {
                 {"event_val", 1.0},
                 {"probability" , 0.0},
-                { "rng_seed" , 42 },
-                { "scaling_factor" , 1.1 },
-                { "duration" , 30 },
-                { "cooldown" , 1800 },
-                { "knockdown" , -0.05 }
+                {"rng_seed" , 42},
+                {"scaling_factor" , 1.1},
+                {"duration" , 30},
+                {"cooldown" , 1800},
+                {"knockdown" , -0.05}
             }},
             {"bust_scaling_event", {
                 {"event_val", -1.0},
@@ -33,6 +34,10 @@ namespace fmc {
         };
 
         StockMarket stock_market{config};
+
+        Test_StockMarket() {
+            Logger::instance().initialize(std::string(__FILE__) + ".log");
+        }
 
         // void SetUp() override {} // Run before each test
         // void TearDown() override {} // Run after each test
@@ -53,7 +58,6 @@ namespace fmc {
         // Doubles every year, so 100 / 365 per day
         double val = 100.0;
         Money expected = Money{val + (val / 365.0)};
-        std::println("Expected: ${}.{}", expected.dollars, expected.cents);
 
         EXPECT_EQ(stock_market.position_price.dollars, expected.dollars);
         EXPECT_EQ(stock_market.position_price.cents, expected.cents);
@@ -75,7 +79,6 @@ namespace fmc {
         stock_market.update(1);
 
         Money expected = Money{94.50};
-        std::println("Expected: ${}.{}", expected.dollars, expected.cents);
 
         EXPECT_EQ(stock_market.position_price.dollars, expected.dollars);
         EXPECT_EQ(stock_market.position_price.cents, expected.cents);
@@ -93,6 +96,26 @@ namespace fmc {
     }
 
     TEST_F(Test_StockMarket, boom_event) {
+        stock_market.volatility = 0;
+        stock_market.boom_scaling_event.probability.set_value(1);
+        stock_market.bust_scaling_event.probability.set_value(0);
 
+        // The Boom event will now happen for 30 days
+        double effective_time_scaling_factor = 2.0 / 365.0;
+        Money expected{100, 0};
+        for (int i = 0; i < 30; ++i) {
+            stock_market.update(1);
+            Money scale_adjustment = expected * effective_time_scaling_factor;
+            expected += scale_adjustment;
+
+            EXPECT_EQ(stock_market.position_price.dollars, expected.dollars);
+            EXPECT_EQ(stock_market.position_price.cents, expected.cents);
+        }
+
+        // Now it should be over.
+        stock_market.update(1);
+        expected *= (1.0 + effective_time_scaling_factor);
+        EXPECT_NE(stock_market.position_price.dollars, expected.dollars);
+        EXPECT_NE(stock_market.position_price.cents, expected.cents);
     }
 }

@@ -3,5 +3,6 @@
     "person.yearly_expenses": "Yearly Expenses [$]",
     "person.current_net_worth": "Current Net Worth [$]",
     "person.n_stocks": "Open Positions [-]",
-    "stock_market.position_price": "Stock Single Position Price [$]"
+    "stock_market.position_price": "Stock Single Position Price [$]",
+    "inflation.annual_inflation_rate": "Annual Inflation Rate [-]"
 }

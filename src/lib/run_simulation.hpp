@@ -24,7 +24,7 @@ namespace fmc {
         // Initialize objects
         stock_market.initialize();
         //bond_market.initialize();
-        //inflation.initialize();
+        inflation.initialize();
         person.initialize();
 
         // Initialize timeseries logger
@@ -36,7 +36,8 @@ namespace fmc {
             // The following key/value pairs must match EXACTLY
             {
                 {"person", person},
-                {"stock_market", stock_market}
+                {"stock_market", stock_market},
+                {"inflation", inflation}
             }
         };
 
@@ -53,13 +54,11 @@ namespace fmc {
             // Environment
             stock_market.update(dt);
             // bond_market.update()
-            // inflation.update()
+            inflation.update(dt);
 
             // Models
             person.update(dt);
 
-            // Log state
-            ts_logger.log();
 
             // Termination Conditions
             if (person.current_net_worth < Money{0.0} || person.n_stocks < 0) {
@@ -74,6 +73,9 @@ namespace fmc {
                 INFO("Died on {} with ${} net worth", cur_date, person.current_net_worth);
                 return;
             }
+
+            // Log state
+            ts_logger.log();
 
             // Increment date
             cur_date += std::chrono::days{dt};

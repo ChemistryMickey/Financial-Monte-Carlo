@@ -24,7 +24,7 @@ namespace fmc {
         ClampedValue<double> knockdown = {0.0, {-1, 1}};
 
         /// @brief The last time this event occurred. Incremented each update. Reset when event procs.
-        uint days_since_last_proc = std::numeric_limits<uint>::max();
+        uint days_since_last_proc = 0;
 
         /// @brief How long does this event last? For example, a cancer diagnosis might result in small, consistent medical costs. 0 is "instantaneous" (just on the day it procs).
         uint duration = 0;
@@ -46,6 +46,9 @@ namespace fmc {
         bool occurred();
 
         void update(uint days_passed);
+
+        /// @brief Set the days_since_last_proc to a value such that it can naturally trip.
+        void arm_event();
 
         RTTR_ENABLE(TimeseriesLoggable);
         RTTR_REGISTRATION_FRIEND;
