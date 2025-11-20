@@ -18,8 +18,8 @@ namespace fmc {
         std::filesystem::path logging_channel_def_path;
         nlohmann::json person_config;
         nlohmann::json stock_market_config;
-        // fmc::BondMarket bond_market;
-        // fmc::AnnualInflation annual_inflation;
+        // BondMarket bond_market;
+        double annual_inflation_config; // for now
 
         SimConfig() = default;
         SimConfig(const nlohmann::json& config);
@@ -37,11 +37,12 @@ namespace std {
 
         template <typename FormatContext>
         auto format(const fmc::SimConfig& config, FormatContext& ctx) const {
-            return format_to(ctx.out(), "Sim Config:\n\tStart Date: {}\n\tEnd Date: {}\n\tLogging config path: {}\n\tPerson:\n{}",
+            return format_to(ctx.out(), "Sim Config:\n\tStart Date: {}\n\tEnd Date: {}\n\tLogging config path: {}\n\tPerson:\n{}\n\tAnnual Inflation: {}",
                 config.start_date,
                 config.end_date,
                 config.logging_channel_def_path,
-                config.person_config.dump(3)
+                config.person_config.dump(3),
+                config.annual_inflation_config
             );
         }
     };

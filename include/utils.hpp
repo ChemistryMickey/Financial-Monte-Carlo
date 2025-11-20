@@ -65,6 +65,13 @@ inline std::filesystem::path project_path(const std::filesystem::path& filename)
 }
 
 // Time
+inline bool is_jan_1st(std::chrono::sys_days d) {
+    using namespace std::chrono;
+
+    year_month_day ymd{d};
+    return (ymd.month() == January) && (ymd.day() == 1d);
+}
+
 inline std::string get_current_time() {
     auto now = std::chrono::system_clock::now();
     std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);

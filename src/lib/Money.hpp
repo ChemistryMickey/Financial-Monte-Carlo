@@ -76,6 +76,10 @@ namespace fmc {
             return this->to_double() * d;
         }
 
+        Money operator*=(double d) const {
+            return *this * d;
+        }
+
         // This is so trucking cool.
         auto operator<=>(const Money& other) const = default;
     };

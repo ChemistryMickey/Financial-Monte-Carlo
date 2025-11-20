@@ -9,6 +9,9 @@
 
 #include "Money.hpp"
 
+/// TODO:
+///     - More elegant way of logging multiple types
+
 namespace fmc {
     /// @brief This is a "trait" that allows the user to log properties through inheritance.
     ///

@@ -18,8 +18,8 @@ namespace fmc {
         // Build simulation objects
         StockMarket stock_market{config.stock_market_config};
         // BondMarket bond_market{config.bond_market_config};
-        // AnnualInflation inflation{config.annual_inflation_config};
-        Person person{stock_market, config.person_config};
+        AnnualInflation inflation{config.annual_inflation_config};
+        Person person{stock_market, inflation, config.person_config};
 
         // Initialize objects
         stock_market.initialize();
@@ -45,6 +45,10 @@ namespace fmc {
         uint dt = 1; // [days]
         while (cur_date < config.end_date) {
             DEBUG("Starting day {}", cur_date);
+            // January 1st updates
+            if (is_jan_1st(cur_date)) {
+                person.yearly_update();
+            }
 
             // Environment
             stock_market.update(dt);
@@ -53,6 +57,11 @@ namespace fmc {
 
             // Models
             person.update(dt);
+
+            // Log state
+            ts_logger.log();
+
+            // Termination Conditions
             if (person.current_net_worth < Money{0.0} || person.n_stocks < 0) {
                 WARN("Went bankrupt on {} with a net worth of ${} and {} stocks",
                     cur_date,
@@ -61,8 +70,10 @@ namespace fmc {
                 return;
             }
 
-            // Log state
-            ts_logger.log();
+            if (person.dead()) {
+                INFO("Died on {} with ${} net worth", cur_date, person.current_net_worth);
+                return;
+            }
 
             // Increment date
             cur_date += std::chrono::days{dt};

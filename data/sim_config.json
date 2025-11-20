@@ -71,6 +71,64 @@
                 "upper": 0.2
             },
             "seed": 42
+        },
+        "income_until_retirement": {
+            "initial_undispersed_value": 120000,
+            "dispersion_type": "gaussian",
+            "dispersion": {
+                "mean": 0,
+                "standard_deviation": 30000
+            },
+            "seed": 42
+        },
+        "desired_cash_on_hand": {
+            "initial_undispersed_value": 50000,
+            "dispersion_type": "truncated_gaussian",
+            "dispersion": {
+                "mean": 0,
+                "standard_deviation": 10000,
+                "lower": 30000,
+                "upper": 30000
+            },
+            "seed": 42
+        },
+        "yearly_raise_percent": {
+            "initial_undispersed_value": 0.0,
+            "dispersion_type": "truncated_gaussian",
+            "dispersion": {
+                "mean": 0.02,
+                "standard_deviation": 0.05,
+                "lower": -0.10,
+                "upper": 0.05
+            },
+            "seed": 42
+        },
+        "current_age": {
+            "initial_undispersed_value": 30,
+            "dispersion_type": "uniform",
+            "dispersion": {
+                "lower": -5,
+                "upper": 5
+            },
+            "seed": 42
+        },
+        "retirement_age": {
+            "initial_undispersed_value": 75,
+            "dispersion_type": "uniform",
+            "dispersion": {
+                "lower": -10,
+                "upper": 5
+            },
+            "seed": 42
+        },
+        "death_age": {
+            "initial_undispersed_value": 90,
+            "dispersion_type": "uniform",
+            "dispersion": {
+                "lower": -10,
+                "upper": 10
+            },
+            "seed": 42
         }
     },
     "stock_market": {

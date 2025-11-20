@@ -3,6 +3,11 @@
 #include "math.hpp"
 #include "json.hpp"
 
+/// TODO:
+///     - Cooldowns (events shouldn't be able to happen back to back)
+///     - Update "cost" name. Not all events have monetary costs. Some do things like trip inflation.
+///     - Actually unit test this because I'm not sure the update is doing what you expect
+
 namespace fmc {
     template<Numeric T>
     struct Event {
