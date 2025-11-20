@@ -11,30 +11,39 @@ namespace fmc {
 
     void generate_dispersed_configs(const std::filesystem::path& out_directory, uint runs, const nlohmann::json& config) {
         std::unordered_map<std::string, RandomVariable> monte_vars{};
-        for (auto& [key, var] : config.at("person").items()) {
-            DEBUG("Attempting to disperse {} with value {}", key, var.dump(3));
-            if (key.contains("event")) {
-                for (auto& [event_key, event_var] : var.items()) {
-                    monte_vars.emplace(event_key, event_var);
+        auto append_monte_var = [&](const char* root_key) {
+            for (auto& [key, var] : config.at(root_key).items()) {
+                DEBUG("Attempting to disperse {} with value {}", key, var.dump(3));
+                if (key.contains("event")) {
+                    for (auto& [event_key, event_var] : var.items()) {
+                        monte_vars.emplace(key + "_" + event_key, event_var);
+                    }
+                }
+                else {
+                    monte_vars.emplace(key, var);
                 }
             }
-            else {
-                monte_vars.emplace(key, var);
-            }
-        }
+            };
 
-        for (auto& [key, var] : config.at("stock_market").items()) {
-            if (key.contains("event")) {
-                for (auto& [event_key, event_var] : var.items()) {
-                    monte_vars.emplace(event_key, event_var);
-                }
-            }
-            else {
-                monte_vars.emplace(key, var);
-            }
-        }
+        append_monte_var("person");
+        append_monte_var("stock_market");
+
         monte_vars.emplace("annual_inflation", config.at("annual_inflation"));
         DEBUG("Created all Monte Carlo variables");
+
+        auto output_monte_var = [&](const char* root_key, nlohmann::json& out_config) {
+            for (auto& [key, var] : config.at(root_key).items()) {
+                if (key.contains("event")) {
+                    for (auto& [event_key, _] : var.items()) {
+                        out_config[root_key][key][event_key] = monte_vars.at(key + "_" + event_key).next_value();
+                    }
+                }
+                else {
+                    out_config[root_key][key] = monte_vars.at(key).next_value();
+                }
+            }
+
+            };
 
         for (uint run = 0; run < runs; ++run) {
             std::filesystem::path cur_out_dir = run_out_dir(out_directory, run);
@@ -45,27 +54,9 @@ namespace fmc {
                 {"logging_channels", config.at("logging_channels")}
             };
 
-            for (auto& [key, var] : config.at("person").items()) {
-                if (key.contains("event")) {
-                    for (auto& [event_key, _] : var.items()) {
-                        out_config["person"][key][event_key] = monte_vars.at(event_key).next_value();
-                    }
-                }
-                else {
-                    out_config["person"][key] = monte_vars.at(key).next_value();
-                }
-            }
+            output_monte_var("person", out_config);
+            output_monte_var("stock_market", out_config);
 
-            for (auto& [key, var] : config.at("stock_market").items()) {
-                if (key.contains("event")) {
-                    for (auto& [event_key, _] : var.items()) {
-                        out_config["stock_market"][key][event_key] = monte_vars.at(event_key).next_value();
-                    }
-                }
-                else {
-                    out_config["stock_market"][key] = monte_vars.at(key).next_value();
-                }
-            }
             out_config["annual_inflation"] = monte_vars.at("annual_inflation").next_value();
 
             write_json(cur_out_dir / "monte_config.lock", out_config);
