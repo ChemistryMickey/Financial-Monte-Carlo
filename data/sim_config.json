@@ -200,6 +200,140 @@
                 "upper": 10000000
             },
             "seed": 42
+        },
+        "boom_scaling_event": {
+            "probability": {
+                "initial_undispersed_value": 0.05,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.1
+                },
+                "seed": 42
+            },
+            "rng_seed": {
+                "initial_undispersed_value": 42,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": -42,
+                    "upper": 10000000
+                },
+                "seed": 42
+            },
+            "scaling_factor": {
+                "initial_undispersed_value": 1,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.01
+                },
+                "seed": 42
+            },
+            "event_val": {
+                "initial_undispersed_value": 5000,
+                "dispersion_type": "truncated_gaussian",
+                "dispersion": {
+                    "mean": 0,
+                    "standard_deviation": 3000,
+                    "lower": 3000,
+                    "upper": 1000000
+                },
+                "seed": 42
+            },
+            "duration": {
+                "initial_undispersed_value": 0,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "seed": 42
+            },
+            "cooldown": {
+                "initial_undispersed_value": 0,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "seed": 42
+            },
+            "knockdown": {
+                "initial_undispersed_value": -0.05,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": -0.1,
+                    "upper": 0.05
+                },
+                "seed": 42
+            }
+        },
+        "bust_scaling_event": {
+            "probability": {
+                "initial_undispersed_value": 0.05,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.1
+                },
+                "seed": 42
+            },
+            "rng_seed": {
+                "initial_undispersed_value": 42,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": -42,
+                    "upper": 10000000
+                },
+                "seed": 42
+            },
+            "scaling_factor": {
+                "initial_undispersed_value": 1,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.01
+                },
+                "seed": 42
+            },
+            "event_val": {
+                "initial_undispersed_value": 5000,
+                "dispersion_type": "truncated_gaussian",
+                "dispersion": {
+                    "mean": 0,
+                    "standard_deviation": 3000,
+                    "lower": 3000,
+                    "upper": 1000000
+                },
+                "seed": 42
+            },
+            "duration": {
+                "initial_undispersed_value": 0,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "seed": 42
+            },
+            "cooldown": {
+                "initial_undispersed_value": 0,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "seed": 42
+            },
+            "knockdown": {
+                "initial_undispersed_value": -0.05,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": -0.1,
+                    "upper": 0.05
+                },
+                "seed": 42
+            }
         }
     },
     "annual_inflation": {
