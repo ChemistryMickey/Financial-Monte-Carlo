@@ -1,45 +1,68 @@
 #pragma once
+#include <chrono>
+#include "rttr/type"
+#include "rttr/registration_friend"
+
+#include "TimeseriesDataLogger.hpp"
+
 #include "utils.hpp"
 #include "math.hpp"
 #include "json.hpp"
 
 /// TODO:
 ///     - Cooldowns (events shouldn't be able to happen back to back)
-///     - Update "cost" name. Not all events have monetary costs. Some do things like trip inflation.
 ///     - Actually unit test this because I'm not sure the update is doing what you expect
 
 namespace fmc {
-    template<Numeric T>
-    struct Event {
+    class Event : public TimeseriesLoggable {
         /// @brief On a given day, how likely are you to encounter this event [0, 1]?
-        ClampedValue<T> probability = {0, {0, 1}};
+        ClampedValue<double> probability = {0, {0, 1}};
+
+        /// @brief Year on year, what's the geometric increase in events [0, \inf]? For example, in a medical sense this is aging.
+        ClampedValue<double> scaling_factor = {0, {0, std::numeric_limits<double>::max()}};
+
+        /// @brief The last time this event occurred. Incremented each update.
+        uint last_occurred = 0;
+
+        /// @brief How long does this event last? For example, a cancer diagnosis might result in some
+        uint duration = 1;
+
+        /// @brief When an event occurs, by how much should the probability of it happening again be reduced?
+        double knockdown = 0.0;
 
         /// @brief The RNG used to determine if this event occurs on a given day
         RNG rng{};
 
-        /// @brief Year on year, what's the geometric increase in events [0, \inf]? For example, in a medical sense this is aging.
-        ClampedValue<T> scaling_factor = {0, {0, std::numeric_limits<double>::max()}};
-
-        /// @brief If you encounter this event, what's the price for it [0, \inf] (before inflation)?
-        ClampedValue<T> cost = {0, {0, std::numeric_limits<double>::max()}};
-
+    public:
         Event() = default;
-        Event(const nlohmann::json& config) {
-            this->probability = {config.at("probability").get<double>(), this->probability.get_limits()};
-            this->scaling_factor = {config.at("scaling_factor").get<double>(), this->scaling_factor.get_limits()};
-            this->cost = {config.at("initial_cost").get<double>(), this->cost.get_limits()};
+        Event(const nlohmann::json& config);
 
-            this->rng.reseed(config.at("rng_seed").get<uint>());
-        }
+        /// @brief If you encounter this event, what's the effect of it?
+        double effect_val = 0.0;
 
         /// @brief Has this event occurred?
         /// @return true if the event has occurred and it should be handled. false if the event hasn't occurred
-        bool occurred() {
-            return this->rng.uniform_real(0, 1) < this->probability.get_value();
-        }
+        bool occurred();
 
-        void update(uint days_passed) {
-            this->probability = this->probability.get_value() * (this->scaling_factor.get_value() * (1.0 + (double) days_passed / (double) 365));
-        }
+        void update(uint days_passed);
+
+        RTTR_ENABLE(TimeseriesLoggable);
+        RTTR_REGISTRATION_FRIEND;
+
+        friend struct std::formatter<Event>;
     };
 }
+
+namespace std {
+    template <>
+    struct formatter<fmc::Event> {
+        constexpr auto parse(format_parse_context& ctx) {
+            return ctx.begin();
+        }
+
+        template <typename FormatContext>
+        auto format(const fmc::Event& e, FormatContext& ctx) const {
+            return format_to(ctx.out(), "");
+        }
+    };
+} // namespace std

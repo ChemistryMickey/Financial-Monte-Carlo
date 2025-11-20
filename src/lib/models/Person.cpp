@@ -31,7 +31,7 @@ namespace fmc {
         this->cash_on_hand = config.at("starting_money").get<double>();
         this->yearly_expenses = config.at("initial_yearly_expenses").get<double>();
         this->stock_bond_ratio = {config.at("stock_bond_ratio").get<double>(), this->stock_bond_ratio.get_limits()};
-        this->medical_event = Event<double>{config.at("medical_event")};
+        this->medical_event = Event{config.at("medical_event")};
         this->income_until_retirement = config.at("income_until_retirement").get<double>();
         this->yearly_raise_percent = config.at("yearly_raise_percent").get<double>();
         this->current_age = config.at("current_age").get<uint>();
@@ -66,11 +66,11 @@ namespace fmc {
         // if (medical_event_v < this->medical_event.probability.get_value()) {
         if (this->medical_event.occurred()) {
             // Then unfortunately yes, subtract the value from the cash on hand
-            this->cash_on_hand = this->cash_on_hand - this->medical_event.cost.get_value();
-            DEBUG("Medical event. Previous cash: {}, New cash: {}, Medical event probability: {}",
-                this->cash_on_hand + this->medical_event.cost.get_value(),
+            this->cash_on_hand = this->cash_on_hand - this->medical_event.effect_val;
+            DEBUG("Medical event. Previous cash: {}, New cash: {}, Event: {}",
+                this->cash_on_hand + this->medical_event.effect_val,
                 this->cash_on_hand,
-                this->medical_event.probability.get_value()
+                this->medical_event
             );
         }
 

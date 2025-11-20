@@ -53,7 +53,7 @@ namespace fmc {
         /// @brief The stock/bond ratio you try to maintain each day [0, 1]. 1 means "all stocks"
         ClampedValue<double> stock_bond_ratio{0, {0, 1}};
 
-        Event<double> medical_event{};
+        Event medical_event{};
 
     public:
         // Person(StockMarket& stock_market_, BondMarket& bond_market_, const nlohmann::json& config);
