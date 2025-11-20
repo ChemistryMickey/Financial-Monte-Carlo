@@ -96,7 +96,7 @@ namespace fmc {
         }
 
         bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;
-        if (this->cash_on_hand > stock_price && sufficient_cash_on_hand) {
+        if ((this->cash_on_hand - stock_price) > stock_price && sufficient_cash_on_hand) {
             int stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand).to_double() / stock_price + 1;
             this->n_stocks += stock_to_buy;
 

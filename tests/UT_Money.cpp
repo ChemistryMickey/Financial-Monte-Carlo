@@ -110,4 +110,69 @@ namespace fmc {
         EXPECT_EQ(d.dollars, -1);
         EXPECT_EQ(d.cents, 50);
     }
+
+    TEST(Test_Money, multiplication) {
+        {
+            Money m{42};
+            Money m2 = m * 2;
+
+            EXPECT_EQ(m2.dollars, 84);
+            EXPECT_EQ(m2.cents, 0);
+        }
+        {
+            Money m{42.5};
+            Money m2 = m * 2;
+
+            EXPECT_EQ(m2.dollars, 85);
+            EXPECT_EQ(m2.cents, 0);
+        }
+        {
+            Money m{42, 30};
+            EXPECT_EQ(m.cents, 30);
+            Money m2 = m * 2;
+
+            EXPECT_EQ(m2.dollars, 84);
+            EXPECT_EQ(m2.cents, 60);
+        }
+    }
+
+    TEST(Test_Money, equal_do_operators_plus) {
+        {
+            Money m{42, 0};
+            m += 2;
+            EXPECT_EQ(m.dollars, 44);
+        }
+        {
+            Money m{42, 47};
+            m += 2.5;
+            EXPECT_EQ(m.dollars, 44);
+            EXPECT_EQ(m.cents, 97);
+        }
+    }
+    TEST(Test_Money, equal_do_operators_minus) {
+        {
+            Money m{42, 0};
+            m -= 2;
+            EXPECT_EQ(m.dollars, 40);
+        }
+        {
+            Money m{42, 0};
+            m -= 2.5;
+            EXPECT_EQ(m.dollars, 39);
+            EXPECT_EQ(m.cents, 50);
+        }
+    }
+    TEST(Test_Money, equal_do_operators_multiply) {
+        {
+            Money m{42, 0};
+            m *= 2;
+            EXPECT_EQ(m.dollars, 84);
+        }
+        {
+            Money m{42, 0};
+            m *= 2.5;
+            EXPECT_EQ(m.dollars, 105);
+            EXPECT_EQ(m.cents, 0);
+        }
+    }
 }
