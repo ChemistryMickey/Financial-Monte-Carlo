@@ -61,9 +61,7 @@ namespace fmc {
     }
 
     void Person::update(uint days_passed) {
-        // Did a medical event happen?
-        // double medical_event_v = this->medical_event.rng.uniform_real(0, 1);
-        // if (medical_event_v < this->medical_event.probability.get_value()) {
+        // Event handling
         if (this->medical_event.occurred()) {
             // Then unfortunately yes, subtract the value from the cash on hand
             this->cash_on_hand = this->cash_on_hand - this->medical_event.effect_val;
@@ -84,7 +82,7 @@ namespace fmc {
             this->cash_on_hand += daily_income;
         }
 
-        // Given cash on hand, liquidate assets or invest where you can
+        // Given cash on hand, liquidate assets or invest
         double stock_price = this->stock_market.position_price.to_double();
         if (this->cash_on_hand < Money{0.0}) {
             // Liquidate until you're solvent
@@ -111,14 +109,18 @@ namespace fmc {
             DEBUG("Liquidating {} stock at ${}. New cash on hand: ${}", stock_to_sell, stock_price, this->cash_on_hand);
         }
 
+        // Inflation Influenced Updates
+        double inflation_multiplier = (1 + this->annual_inflation.annual_inflation_rate / 365.0);
+
         // Update yearly expenses and desired cash on hand based on inflation
-        this->yearly_expenses *= (1 + this->annual_inflation.annual_inflation_rate / 365.0);
-        this->desired_cash_on_hand *= (1 + this->annual_inflation.annual_inflation_rate / 365.0);
+        this->yearly_expenses *= inflation_multiplier;
+        this->desired_cash_on_hand *= inflation_multiplier;
 
-        // Update medical event probability
+        // Update medical event probability and value
+        this->medical_event.effect_val *= inflation_multiplier;
+
+        // Event updates
         this->medical_event.update(days_passed);
-
-        // Update your net worth
         this->current_net_worth = this->cash_on_hand + this->value_in_stock();
     }
 }

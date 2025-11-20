@@ -11,8 +11,27 @@ namespace fmc {
             {"annual_time_scaling_factor", 1},
             {"position_price", 100.00},
             {"volatility", 0.1},
-            {"rng_seed", 42}
+            {"rng_seed", 42},
+            {"boom_scaling_event", {
+                {"event_val", 1.0},
+                {"probability" , 0.0},
+                { "rng_seed" , 42 },
+                { "scaling_factor" , 1.1 },
+                { "duration" , 30 },
+                { "cooldown" , 1800 },
+                { "knockdown" , -0.05 }
+            }},
+            {"bust_scaling_event", {
+                {"event_val", -1.0},
+                {"probability" , 0.0},
+                { "rng_seed" , 42 },
+                { "scaling_factor" , 1.1 },
+                { "duration" , 30 },
+                { "cooldown" , 1800 },
+                { "knockdown" , -0.05 }
+            }}
         };
+
         StockMarket stock_market{config};
 
         // void SetUp() override {} // Run before each test
@@ -71,5 +90,9 @@ namespace fmc {
         Money expected = Money{100.0 - 5.50 + 0.275};
         EXPECT_EQ(stock_market.position_price.dollars, expected.dollars);
         EXPECT_EQ(stock_market.position_price.cents, expected.cents);
+    }
+
+    TEST_F(Test_StockMarket, boom_event) {
+
     }
 }

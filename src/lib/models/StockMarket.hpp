@@ -1,6 +1,7 @@
 #pragma once
 #include "include/json.hpp" // dunno why this one needs the include/ in order for nlohmann to get properly found. :shrug:
 #include "Money.hpp"
+#include "Event.hpp"
 #include "math.hpp"
 #include "TimeseriesDataLogger.hpp"
 
@@ -13,6 +14,8 @@
 namespace fmc {
     struct StockMarket : public TimeseriesLoggable {
         Money position_price;
+        Event boom_scaling_event;
+        Event bust_scaling_event;
         double volatility;
         double annual_time_scaling_factor;
         RNG rng;

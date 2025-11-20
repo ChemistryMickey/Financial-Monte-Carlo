@@ -31,7 +31,7 @@
                 },
                 "seed": 42
             },
-            "initial_cost": {
+            "event_val": {
                 "initial_undispersed_value": 5000,
                 "dispersion_type": "truncated_gaussian",
                 "dispersion": {
@@ -39,6 +39,33 @@
                     "standard_deviation": 3000,
                     "lower": 3000,
                     "upper": 1000000
+                },
+                "seed": 42
+            },
+            "duration": {
+                "initial_undispersed_value": 0,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "seed": 42
+            },
+            "cooldown": {
+                "initial_undispersed_value": 0,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "seed": 42
+            },
+            "knockdown": {
+                "initial_undispersed_value": -0.05,
+                "dispersion_type": "uniform",
+                "dispersion": {
+                    "lower": -0.1,
+                    "upper": 0.05
                 },
                 "seed": 42
             }

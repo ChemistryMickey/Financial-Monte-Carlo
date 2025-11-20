@@ -14,6 +14,9 @@ namespace fmc {
         /// @brief On a given day, how likely are you to encounter this event [0, 1]?
         ClampedValue<double> probability = {0, {0, 1}};
 
+        /// @brief Don't want knockdown to drop you below your original probability of an event.
+        ClampedValue<double> initial_probability = {0, {0, 1}};
+
         /// @brief Year on year, what's the geometric increase in events [0, \inf]? For example, in a medical sense this is aging.
         ClampedValue<double> scaling_factor = {0, {0, std::numeric_limits<double>::max()}};
 

@@ -91,4 +91,12 @@ namespace fmc {
         EXPECT_FALSE(event.occurred()); // On cooldown
         EXPECT_EQ(event.days_since_last_proc, 4);
     }
+
+    TEST_F(Test_Event, knockdown) {
+        event.probability.set_value(1);
+        event.knockdown.set_value(-0.5);
+
+        event.occurred();
+        EXPECT_EQ(event.probability.get_value(), 0.5);
+    }
 }
