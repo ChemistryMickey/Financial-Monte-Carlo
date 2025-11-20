@@ -78,6 +78,7 @@ namespace fmc {
         // Termination conditions
         /// @brief Takes into account the value of stocks and bonds.
         Money current_net_worth{0.0};
+
         // Why not a uint? I don't want a negative wrap round issue
         int n_stocks = 0;
 

@@ -9,36 +9,34 @@
 #include "math.hpp"
 #include "json.hpp"
 
-/// TODO:
-///     - Cooldowns (events shouldn't be able to happen back to back)
-///     - Actually unit test this because I'm not sure the update is doing what you expect
-
 namespace fmc {
-    class Event : public TimeseriesLoggable {
+    struct Event : public TimeseriesLoggable {
         /// @brief On a given day, how likely are you to encounter this event [0, 1]?
         ClampedValue<double> probability = {0, {0, 1}};
 
         /// @brief Year on year, what's the geometric increase in events [0, \inf]? For example, in a medical sense this is aging.
         ClampedValue<double> scaling_factor = {0, {0, std::numeric_limits<double>::max()}};
 
-        /// @brief The last time this event occurred. Incremented each update.
-        uint last_occurred = 0;
+        /// @brief When an event occurs, by how much should the probability of it happening again be changed (+ is increasing prob, - is decreasing)?
+        ClampedValue<double> knockdown = {0.0, {-1, 1}};
 
-        /// @brief How long does this event last? For example, a cancer diagnosis might result in some
-        uint duration = 1;
+        /// @brief The last time this event occurred. Incremented each update. Reset when event procs.
+        uint days_since_last_proc = std::numeric_limits<uint>::max();
 
-        /// @brief When an event occurs, by how much should the probability of it happening again be reduced?
-        double knockdown = 0.0;
+        /// @brief How long does this event last? For example, a cancer diagnosis might result in small, consistent medical costs. 0 is "instantaneous" (just on the day it procs).
+        uint duration = 0;
+
+        /// @brief When this event procs, what's the shortest time (in days) before it can proc again?
+        uint cooldown = 0;
+
+        /// @brief If you encounter this event, what's the effect of it?
+        double effect_val = 0.0;
 
         /// @brief The RNG used to determine if this event occurs on a given day
         RNG rng{};
 
-    public:
         Event() = default;
         Event(const nlohmann::json& config);
-
-        /// @brief If you encounter this event, what's the effect of it?
-        double effect_val = 0.0;
 
         /// @brief Has this event occurred?
         /// @return true if the event has occurred and it should be handled. false if the event hasn't occurred
@@ -48,8 +46,6 @@ namespace fmc {
 
         RTTR_ENABLE(TimeseriesLoggable);
         RTTR_REGISTRATION_FRIEND;
-
-        friend struct std::formatter<Event>;
     };
 }
 

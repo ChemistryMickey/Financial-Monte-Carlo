@@ -4,10 +4,13 @@
    "logging_channels": "data/logging_channels.json",
    "person": {
       "medical_event": {
-         "initial_cost": 500.00,
+         "event_val": 500.00,
          "probability": 0.00000001,
          "rng_seed": 42,
-         "scaling_factor": 1.000000000001
+         "scaling_factor": 1.000000000001,
+         "duration": 0,
+         "cooldown": 30,
+         "knockdown": -0.05
       },
       "starting_money": 250000,
       "desired_cash_on_hand": 50000,

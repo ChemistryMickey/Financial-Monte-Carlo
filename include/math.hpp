@@ -132,6 +132,20 @@ namespace fmc {
             return *this;
         }
 
+        ClampedValue operator+(const ClampedValue& other) const noexcept {
+            return {this->value + other.value, this->get_limits()};
+        }
+
+        ClampedValue& operator+=(const ClampedValue& other) noexcept {
+            this->set_value(this->value + other.value);
+            return *this;
+        }
+
+        ClampedValue& operator*=(double d) noexcept {
+            this->set_value(this->value * d);
+            return *this;
+        }
+
         std::string to_string() const {
             return std::format("{} [{}, {}]", this->get_value(), this->get_limits().first, this->get_limits().second);
         }
