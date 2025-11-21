@@ -8,6 +8,7 @@ from tools.visualization.plot_mc_kpis import plot_mc_kpis_to_html_str
 from tools.visualization.plot_mc_runs import (
     plot_mc_runs_to_html_str,
 )
+from tools.visualization.make_mc_summary import make_mc_summary
 
 
 @cli_dataclass
@@ -68,6 +69,7 @@ def plot_time_series_from_path(args: PlotTimeSeriesArgs):
 
         timeseries_data_exist = list(runs[0].glob("timeseries*.csv")).__len__() != 0
         if timeseries_data_exist:
+            report_html_str = make_mc_summary(out_dir, report_html_str)
             report_html_str = plot_mc_kpis_to_html_str(out_dir, report_html_str)
             report_html_str = plot_mc_runs_to_html_str(out_dir, report_html_str)
 

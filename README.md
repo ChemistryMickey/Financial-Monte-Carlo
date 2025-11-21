@@ -21,7 +21,7 @@ The goal of this simulation is to demonstrate the following:
     - It's pretty slick.
 - [x] "Pretty comprehensive" unit testing. This isn't an enterprise project though.
 - [x] Benchmark capabilities for high-quality performance decisions
-- [ ] Disperse a large number of potential variables and evaluate an overall probability of success w/ statistical enclosures to demonstrate that confidence.
+- [x] Disperse a large number of potential variables and evaluate an overall probability of success w/ statistical enclosures to demonstrate that confidence.
 
 This is also meant to "put your money where your mouth is" w.r.t. simulation architecture and understanding that it's not going to be correct the first time.
 This is an attempt to get the wrong decisions out of the way.
@@ -51,7 +51,13 @@ to build and run the Google Benchmark RTTR reflection vs Map.
 
 There is no option to run all benchmarks because these are expensive.
 
-## TODO / Known Bugs
+## TODO / Known Bugs (in Prio order)
 - [ ] Seems like sometimes, Money's cents can be negative and that borks everything
-- [ ] Tune the dispersions. Right now many of them are nonsense.
+- [ ] Integration testing using the `Person`
+- [ ] Tune the dispersions better. Right now the median stock market goes down which seems wrong. Inflation also tends deflationary which seems wrong.
 - [ ] Add a bond market to supplement the stock market. Maybe also a non-liquid asset market such as art/long-term investments?
+- [ ] Come up with a more clever way of seeding the RNGs than "42"
+
+## Design flaws / Kinda jank
+- Adding a dispersion is very manual. Gotta add it to the object config parse, then add it to the SimConfig.cpp parse.
+- Adding a loggable is also quite manual. It can probably be wrapped in a couplea macros.
