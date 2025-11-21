@@ -8,3 +8,4 @@ perf.*
 
 finance_monte_carlo.egg-info
 __pycache__
+*.html

@@ -3,6 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from dataclasses import dataclass
 from tools.utils import cli_dataclass
+from tools.visualization.plot_dispersions import plot_dispersions_to_html
+from tools.visualization.plot_mc_kpis import plot_mc_kpis_to_html_str
+from tools.visualization.plot_mc_runs import (
+    plot_mc_runs_to_html_str,
+)
 
 
 @cli_dataclass
@@ -14,18 +19,11 @@ class PlotTimeSeriesArgs:
     y_label: str = "Value [$]"
     save_dir: str = None
     use_logy: bool = False
+    plot_all_subruns: bool = False
 
 
-def plot_time_series_from_path(
-    output_directory: str,
-    title: str = "Time Series Plot",
-    x_label: str = "Date [-]",
-    y_label: str = "Value [$]",
-    show_plot: bool = True,
-    save_dir: str | Path | None = None,
-    use_logy: bool = False,
-):
-    out_dir = "output" / Path(output_directory)
+def plot_time_series_from_path(args: PlotTimeSeriesArgs):
+    out_dir = "output" / Path(args.output_dir)
     runs = list(out_dir.glob("RUN_*"))
     if len(runs) == 0:
         # Then this is a single run
@@ -36,35 +34,50 @@ def plot_time_series_from_path(
         )
         plot_single_time_series(
             df,
-            title,
-            x_label,
-            y_label,
-            show_plot,
-            "output" / Path(save_dir) / "all_signals.png"
-            if save_dir is not None
+            args.title,
+            args.x_label,
+            args.y_label,
+            False,
+            "output" / Path(args.save_dir) / "all_signals.png"
+            if args.save_dir is not None
             else None,
-            use_logy,
+            args.use_logy,
         )
 
         for col in df.columns:
             plot_single_time_series(
                 df[col],
-                title,
-                x_label,
+                args.title,
+                args.x_label,
                 col,
                 False,
-                "output" / Path(save_dir) / f"{col}.png"
-                if save_dir is not None
+                "output" / Path(args.save_dir) / f"{col}.png"
+                if args.save_dir is not None
                 else None,
                 False,
             )
     else:
-        # plot_monte_carlo(
-        #     out_dir,
-        #     runs,
-        # )
-        msg = "Plotting Monte Carlos not yet implemented!"
-        raise Exception(msg)
+        viz_dir = Path("output") / args.save_dir
+        viz_dir.mkdir(parents=True, exist_ok=True)
+
+        report_html_str = """
+<html>
+<body>
+<h1>Monte Carlo Report</h1>
+"""
+
+        timeseries_data_exist = list(runs[0].glob("timeseries*.csv")).__len__() != 0
+        if timeseries_data_exist:
+            report_html_str = plot_mc_kpis_to_html_str(out_dir, report_html_str)
+            report_html_str = plot_mc_runs_to_html_str(out_dir, report_html_str)
+
+        report_html_str = plot_dispersions_to_html(out_dir, report_html_str)
+
+        report_html_str += """
+</body>
+</html>
+"""
+        (viz_dir / "report.html").write_text(report_html_str)
 
 
 def plot_single_time_series(
@@ -106,15 +119,7 @@ def plot_single_time_series(
 
 def main():
     args: PlotTimeSeriesArgs = PlotTimeSeriesArgs.from_cli()
-    plot_time_series_from_path(
-        args.output_dir,
-        args.title,
-        args.x_label,
-        args.y_label,
-        False,
-        args.save_dir,
-        args.use_logy,
-    )
+    plot_time_series_from_path(args)
 
 
 if __name__ == "__main__":
