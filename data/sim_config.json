@@ -1,486 +1,486 @@
 {
-    "start_date": "2020-01-01",
-    "end_date": "2025-02-01",
-    "logging_channels": "data/logging_channels.json",
-    "person": {
-        "medical_event": {
-            "probability": {
-                "initial_undispersed_value": 0.05,
-                "dispersion_type": "uniform",
+    "annual_inflation": {
+        "deflation_event": {
+            "cooldown": {
                 "dispersion": {
                     "lower": 0,
-                    "upper": 0.1
+                    "upper": 0
                 },
-                "seed": 42
-            },
-            "rng_seed": {
-                "initial_undispersed_value": 42,
                 "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": -42,
-                    "upper": 10000000
-                },
-                "seed": 42
-            },
-            "scaling_factor": {
-                "initial_undispersed_value": 1,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0.01
-                },
-                "seed": 42
-            },
-            "event_val": {
-                "initial_undispersed_value": 5000,
-                "dispersion_type": "truncated_gaussian",
-                "dispersion": {
-                    "mean": 0,
-                    "standard_deviation": 3000,
-                    "lower": 3000,
-                    "upper": 1000000
-                },
+                "initial_undispersed_value": 90,
                 "seed": 42
             },
             "duration": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
                 "dispersion": {
                     "lower": 0,
                     "upper": 0
                 },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0,
                 "seed": 42
             },
-            "cooldown": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
+            "event_val": {
                 "dispersion": {
-                    "lower": 0,
-                    "upper": 0
+                    "lower": -0.3,
+                    "mean": 0,
+                    "standard_deviation": 0.3,
+                    "upper": 0.0
                 },
+                "dispersion_type": "truncated_gaussian",
+                "initial_undispersed_value": -0.1,
                 "seed": 42
             },
             "knockdown": {
-                "initial_undispersed_value": -0.05,
-                "dispersion_type": "uniform",
                 "dispersion": {
                     "lower": -0.1,
                     "upper": 0.05
                 },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": -0.05,
+                "seed": 42
+            },
+            "probability": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.1
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0.05,
+                "seed": 42
+            },
+            "rng_seed": {
+                "dispersion": {
+                    "lower": -42,
+                    "upper": 10000000
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 42,
+                "seed": 42
+            },
+            "scaling_factor": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.01
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 1,
                 "seed": 42
             }
         },
-        "starting_money": {
-            "initial_undispersed_value": 250000,
-            "dispersion_type": "gaussian",
-            "dispersion": {
-                "mean": 0,
-                "standard_deviation": 50000
+        "inflation_event": {
+            "cooldown": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 90,
+                "seed": 42
             },
-            "seed": 42
-        },
-        "initial_yearly_expenses": {
-            "initial_undispersed_value": 30000,
-            "dispersion_type": "truncated_gaussian",
-            "dispersion": {
-                "mean": 0,
-                "standard_deviation": 10000,
-                "lower": -10000,
-                "upper": 30000
+            "duration": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0,
+                "seed": 42
             },
-            "seed": 42
+            "event_val": {
+                "dispersion": {
+                    "lower": 0.0,
+                    "mean": 0,
+                    "standard_deviation": 0.03,
+                    "upper": 0.3
+                },
+                "dispersion_type": "truncated_gaussian",
+                "initial_undispersed_value": 0.1,
+                "seed": 42
+            },
+            "knockdown": {
+                "dispersion": {
+                    "lower": -0.1,
+                    "upper": 0.05
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": -0.05,
+                "seed": 42
+            },
+            "probability": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.1
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0.05,
+                "seed": 42
+            },
+            "rng_seed": {
+                "dispersion": {
+                    "lower": -42,
+                    "upper": 10000000
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 42,
+                "seed": 42
+            },
+            "scaling_factor": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.01
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 1,
+                "seed": 42
+            }
         },
-        "stock_bond_ratio": {
-            "initial_undispersed_value": 0.6,
-            "dispersion_type": "uniform",
+        "rate": {
             "dispersion": {
-                "lower": -0.2,
+                "lower": -0.04,
+                "mean": 0,
+                "standard_deviation": 0.05,
                 "upper": 0.2
             },
-            "seed": 42
-        },
-        "income_until_retirement": {
-            "initial_undispersed_value": 120000,
-            "dispersion_type": "gaussian",
-            "dispersion": {
-                "mean": 0,
-                "standard_deviation": 30000
-            },
-            "seed": 42
-        },
-        "desired_cash_on_hand": {
-            "initial_undispersed_value": 50000,
             "dispersion_type": "truncated_gaussian",
-            "dispersion": {
-                "mean": 0,
-                "standard_deviation": 10000,
-                "lower": 30000,
-                "upper": 30000
-            },
+            "initial_undispersed_value": 0.02,
             "seed": 42
-        },
-        "yearly_raise_percent": {
-            "initial_undispersed_value": 0.0,
-            "dispersion_type": "truncated_gaussian",
-            "dispersion": {
-                "mean": 0.02,
-                "standard_deviation": 0.05,
-                "lower": -0.10,
-                "upper": 0.05
-            },
-            "seed": 42
-        },
+        }
+    },
+    "end_date": "2025-02-01",
+    "logging_channels": "data/logging_channels.json",
+    "person": {
         "current_age": {
-            "initial_undispersed_value": 30,
-            "dispersion_type": "uniform",
             "dispersion": {
                 "lower": -5,
                 "upper": 5
             },
-            "seed": 42
-        },
-        "retirement_age": {
-            "initial_undispersed_value": 75,
             "dispersion_type": "uniform",
-            "dispersion": {
-                "lower": -10,
-                "upper": 5
-            },
+            "initial_undispersed_value": 30,
             "seed": 42
         },
         "death_age": {
-            "initial_undispersed_value": 90,
-            "dispersion_type": "uniform",
             "dispersion": {
                 "lower": -10,
                 "upper": 10
             },
-            "seed": 42
-        }
-    },
-    "stock_market": {
-        "position_price": {
-            "initial_undispersed_value": 100,
-            "dispersion_type": "truncated_gaussian",
-            "dispersion": {
-                "mean": 0,
-                "standard_deviation": 20,
-                "lower": 10,
-                "upper": 1000000
-            },
-            "seed": 42
-        },
-        "annual_time_scaling_factor": {
-            "initial_undispersed_value": 0.06,
-            "dispersion_type": "truncated_gaussian",
-            "dispersion": {
-                "mean": 0,
-                "standard_deviation": 0.2,
-                "lower": -0.2,
-                "upper": 0.1
-            },
-            "seed": 42
-        },
-        "volatility": {
-            "initial_undispersed_value": 0.1,
-            "dispersion_type": "truncated_gaussian",
-            "dispersion": {
-                "mean": 0,
-                "standard_deviation": 0.2,
-                "lower": 0.02,
-                "upper": 0.4
-            },
-            "seed": 42
-        },
-        "rng_seed": {
-            "initial_undispersed_value": 42,
             "dispersion_type": "uniform",
-            "dispersion": {
-                "lower": -42,
-                "upper": 10000000
-            },
+            "initial_undispersed_value": 90,
             "seed": 42
         },
-        "boom_scaling_event": {
-            "probability": {
-                "initial_undispersed_value": 0.05,
-                "dispersion_type": "uniform",
+        "desired_cash_on_hand": {
+            "dispersion": {
+                "lower": 30000,
+                "mean": 0,
+                "standard_deviation": 10000,
+                "upper": 30000
+            },
+            "dispersion_type": "truncated_gaussian",
+            "initial_undispersed_value": 50000,
+            "seed": 42
+        },
+        "income_until_retirement": {
+            "dispersion": {
+                "mean": 0,
+                "standard_deviation": 30000
+            },
+            "dispersion_type": "gaussian",
+            "initial_undispersed_value": 120000,
+            "seed": 42
+        },
+        "initial_yearly_expenses": {
+            "dispersion": {
+                "lower": -10000,
+                "mean": 0,
+                "standard_deviation": 10000,
+                "upper": 30000
+            },
+            "dispersion_type": "truncated_gaussian",
+            "initial_undispersed_value": 30000,
+            "seed": 42
+        },
+        "medical_event": {
+            "cooldown": {
                 "dispersion": {
                     "lower": 0,
-                    "upper": 0.1
+                    "upper": 0
                 },
-                "seed": 42
-            },
-            "rng_seed": {
-                "initial_undispersed_value": 42,
                 "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": -42,
-                    "upper": 10000000
-                },
-                "seed": 42
-            },
-            "scaling_factor": {
-                "initial_undispersed_value": 1,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0.01
-                },
-                "seed": 42
-            },
-            "event_val": {
-                "initial_undispersed_value": 5000,
-                "dispersion_type": "truncated_gaussian",
-                "dispersion": {
-                    "mean": 0,
-                    "standard_deviation": 3000,
-                    "lower": 3000,
-                    "upper": 1000000
-                },
+                "initial_undispersed_value": 0,
                 "seed": 42
             },
             "duration": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
                 "dispersion": {
                     "lower": 0,
                     "upper": 0
                 },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0,
                 "seed": 42
             },
-            "cooldown": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
+            "event_val": {
                 "dispersion": {
-                    "lower": 0,
-                    "upper": 0
+                    "lower": 3000,
+                    "mean": 0,
+                    "standard_deviation": 3000,
+                    "upper": 1000000
                 },
+                "dispersion_type": "truncated_gaussian",
+                "initial_undispersed_value": 5000,
                 "seed": 42
             },
             "knockdown": {
-                "initial_undispersed_value": -0.05,
-                "dispersion_type": "uniform",
                 "dispersion": {
                     "lower": -0.1,
                     "upper": 0.05
                 },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": -0.05,
+                "seed": 42
+            },
+            "probability": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.1
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0.05,
+                "seed": 42
+            },
+            "rng_seed": {
+                "dispersion": {
+                    "lower": -42,
+                    "upper": 10000000
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 42,
+                "seed": 42
+            },
+            "scaling_factor": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.01
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 1,
+                "seed": 42
+            }
+        },
+        "retirement_age": {
+            "dispersion": {
+                "lower": -10,
+                "upper": 5
+            },
+            "dispersion_type": "uniform",
+            "initial_undispersed_value": 75,
+            "seed": 42
+        },
+        "starting_money": {
+            "dispersion": {
+                "mean": 0,
+                "standard_deviation": 50000
+            },
+            "dispersion_type": "gaussian",
+            "initial_undispersed_value": 250000,
+            "seed": 42
+        },
+        "stock_bond_ratio": {
+            "dispersion": {
+                "lower": -0.2,
+                "upper": 0.2
+            },
+            "dispersion_type": "uniform",
+            "initial_undispersed_value": 0.6,
+            "seed": 42
+        },
+        "yearly_raise_percent": {
+            "dispersion": {
+                "lower": -0.1,
+                "mean": 0.02,
+                "standard_deviation": 0.05,
+                "upper": 0.05
+            },
+            "dispersion_type": "truncated_gaussian",
+            "initial_undispersed_value": 0.0,
+            "seed": 42
+        }
+    },
+    "start_date": "2020-01-01",
+    "stock_market": {
+        "annual_time_scaling_factor": {
+            "dispersion": {
+                "lower": -0.2,
+                "mean": 0,
+                "standard_deviation": 0.2,
+                "upper": 0.1
+            },
+            "dispersion_type": "truncated_gaussian",
+            "initial_undispersed_value": 0.06,
+            "seed": 42
+        },
+        "boom_scaling_event": {
+            "cooldown": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0,
+                "seed": 42
+            },
+            "duration": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0,
+                "seed": 42
+            },
+            "event_val": {
+                "dispersion": {
+                    "lower": 3000,
+                    "mean": 0,
+                    "standard_deviation": 3000,
+                    "upper": 1000000
+                },
+                "dispersion_type": "truncated_gaussian",
+                "initial_undispersed_value": 5000,
+                "seed": 42
+            },
+            "knockdown": {
+                "dispersion": {
+                    "lower": -0.1,
+                    "upper": 0.05
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": -0.05,
+                "seed": 42
+            },
+            "probability": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.1
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0.05,
+                "seed": 42
+            },
+            "rng_seed": {
+                "dispersion": {
+                    "lower": -42,
+                    "upper": 10000000
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 42,
+                "seed": 42
+            },
+            "scaling_factor": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.01
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 1,
                 "seed": 42
             }
         },
         "bust_scaling_event": {
-            "probability": {
-                "initial_undispersed_value": 0.05,
-                "dispersion_type": "uniform",
+            "cooldown": {
                 "dispersion": {
                     "lower": 0,
-                    "upper": 0.1
+                    "upper": 0
                 },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0,
                 "seed": 42
             },
-            "rng_seed": {
-                "initial_undispersed_value": 42,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": -42,
-                    "upper": 10000000
-                },
-                "seed": 42
-            },
-            "scaling_factor": {
-                "initial_undispersed_value": 1,
-                "dispersion_type": "uniform",
+            "duration": {
                 "dispersion": {
                     "lower": 0,
-                    "upper": 0.01
+                    "upper": 0
                 },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0,
                 "seed": 42
             },
             "event_val": {
-                "initial_undispersed_value": 5000,
-                "dispersion_type": "truncated_gaussian",
                 "dispersion": {
+                    "lower": 3000,
                     "mean": 0,
                     "standard_deviation": 3000,
-                    "lower": 3000,
                     "upper": 1000000
                 },
-                "seed": 42
-            },
-            "duration": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0
-                },
-                "seed": 42
-            },
-            "cooldown": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0
-                },
+                "dispersion_type": "truncated_gaussian",
+                "initial_undispersed_value": 5000,
                 "seed": 42
             },
             "knockdown": {
-                "initial_undispersed_value": -0.05,
-                "dispersion_type": "uniform",
                 "dispersion": {
                     "lower": -0.1,
                     "upper": 0.05
                 },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": -0.05,
+                "seed": 42
+            },
+            "probability": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.1
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 0.05,
+                "seed": 42
+            },
+            "rng_seed": {
+                "dispersion": {
+                    "lower": -42,
+                    "upper": 10000000
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 42,
+                "seed": 42
+            },
+            "scaling_factor": {
+                "dispersion": {
+                    "lower": 0,
+                    "upper": 0.01
+                },
+                "dispersion_type": "uniform",
+                "initial_undispersed_value": 1,
                 "seed": 42
             }
-        }
-    },
-    "annual_inflation": {
-        "rate": {
-            "initial_undispersed_value": 0.02,
-            "dispersion_type": "truncated_gaussian",
+        },
+        "position_price": {
             "dispersion": {
+                "lower": 10,
                 "mean": 0,
-                "standard_deviation": 0.05,
-                "lower": -0.04,
-                "upper": 0.2
+                "standard_deviation": 20,
+                "upper": 1000000
             },
+            "dispersion_type": "truncated_gaussian",
+            "initial_undispersed_value": 100,
             "seed": 42
         },
-        "inflation_event": {
-            "probability": {
-                "initial_undispersed_value": 0.05,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0.1
-                },
-                "seed": 42
+        "rng_seed": {
+            "dispersion": {
+                "lower": -42,
+                "upper": 10000000
             },
-            "rng_seed": {
-                "initial_undispersed_value": 42,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": -42,
-                    "upper": 10000000
-                },
-                "seed": 42
-            },
-            "scaling_factor": {
-                "initial_undispersed_value": 1,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0.01
-                },
-                "seed": 42
-            },
-            "event_val": {
-                "initial_undispersed_value": 0.10,
-                "dispersion_type": "truncated_gaussian",
-                "dispersion": {
-                    "mean": 0,
-                    "standard_deviation": 0.03,
-                    "lower": 0.0,
-                    "upper": 0.30
-                },
-                "seed": 42
-            },
-            "duration": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0
-                },
-                "seed": 42
-            },
-            "cooldown": {
-                "initial_undispersed_value": 90,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0
-                },
-                "seed": 42
-            },
-            "knockdown": {
-                "initial_undispersed_value": -0.05,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": -0.1,
-                    "upper": 0.05
-                },
-                "seed": 42
-            }
+            "dispersion_type": "uniform",
+            "initial_undispersed_value": 42,
+            "seed": 42
         },
-        "deflation_event": {
-            "probability": {
-                "initial_undispersed_value": 0.05,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0.1
-                },
-                "seed": 42
+        "volatility": {
+            "dispersion": {
+                "lower": 0.02,
+                "mean": 0,
+                "standard_deviation": 0.2,
+                "upper": 0.4
             },
-            "rng_seed": {
-                "initial_undispersed_value": 42,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": -42,
-                    "upper": 10000000
-                },
-                "seed": 42
-            },
-            "scaling_factor": {
-                "initial_undispersed_value": 1,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0.01
-                },
-                "seed": 42
-            },
-            "event_val": {
-                "initial_undispersed_value": -0.10,
-                "dispersion_type": "truncated_gaussian",
-                "dispersion": {
-                    "mean": 0,
-                    "standard_deviation": 0.3,
-                    "lower": -0.30,
-                    "upper": 0.0
-                },
-                "seed": 42
-            },
-            "duration": {
-                "initial_undispersed_value": 0,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0
-                },
-                "seed": 42
-            },
-            "cooldown": {
-                "initial_undispersed_value": 90,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": 0,
-                    "upper": 0
-                },
-                "seed": 42
-            },
-            "knockdown": {
-                "initial_undispersed_value": -0.05,
-                "dispersion_type": "uniform",
-                "dispersion": {
-                    "lower": -0.1,
-                    "upper": 0.05
-                },
-                "seed": 42
-            }
+            "dispersion_type": "truncated_gaussian",
+            "initial_undispersed_value": 0.1,
+            "seed": 42
         }
     }
 }
