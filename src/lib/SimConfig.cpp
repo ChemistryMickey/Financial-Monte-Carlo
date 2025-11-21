@@ -27,8 +27,8 @@ namespace fmc {
 
         append_monte_var("person");
         append_monte_var("stock_market");
+        append_monte_var("annual_inflation");
 
-        monte_vars.emplace("annual_inflation", config.at("annual_inflation"));
         DEBUG("Created all Monte Carlo variables");
 
         auto output_monte_var = [&](const char* root_key, nlohmann::json& out_config) {
@@ -56,8 +56,7 @@ namespace fmc {
 
             output_monte_var("person", out_config);
             output_monte_var("stock_market", out_config);
-
-            out_config["annual_inflation"] = monte_vars.at("annual_inflation").next_value();
+            output_monte_var("annual_inflation", out_config);
 
             write_json(cur_out_dir / "monte_config.lock", out_config);
         }
