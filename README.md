@@ -3,7 +3,7 @@
 A Monte Carlo simulation of various financial projections which include things like:
 - Stocks / Bonds
 - Medical events
-- Inflation / Inflation events
+- Inflation / Deflation events
 - Asset value appreciation/depreciation
 
 The goal of this simulation is to demonstrate the following:
