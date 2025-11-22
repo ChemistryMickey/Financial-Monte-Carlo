@@ -71,7 +71,7 @@ namespace fmc {
 
         // Subtract off daily expenses
         Money daily_expense{this->yearly_expenses.to_double() / 365.0};
-        this->cash_on_hand -= daily_expense;
+        this->cash_on_hand -= daily_expense * days_passed;
 
         // Add income
         if (this->current_age < this->retirement_age) {

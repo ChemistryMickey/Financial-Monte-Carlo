@@ -1,15 +1,32 @@
 #include "Money.hpp"
+#include <cmath>
 
 namespace fmc {
 
-    Money::Money(int dollars_, int cents_) : dollars{dollars_}, cents{cents_} {}
+    Money::Money(int dollars_, int cents_) : dollars{dollars_}, cents{cents_} {
+        this->normalize();
+    }
     Money::Money(double v) {
-        // Doing this without loss is actually kinda rough.
-        this->dollars = (int) v;
-        this->cents = (int) ((v - ((double) (int) v)) * 100);
-        if (v < 0) {
+        int total = std::round(v * 100);
+        this->dollars = total / 100;
+        this->cents = total % 100;
+        this->normalize();
+    }
+
+    void Money::normalize() {
+        int total = this->dollars * 100 + this->cents;
+
+        this->dollars = total / 100;
+        this->cents = total % 100;
+
+        // Sign consistency
+        if (this->dollars > 0 && this->cents < 0) {
             this->dollars -= 1;
             this->cents += 100;
+        }
+        if (this->dollars < 0 && this->cents > 0) {
+            this->dollars += 1;
+            this->cents -= 100;
         }
     }
 
@@ -18,13 +35,10 @@ namespace fmc {
     }
 
     Money Money::operator+(const Money& m) const {
-        int sum_dollars = m.dollars + this->dollars;
-        int sum_cents = m.cents + this->cents;
+        Money result{this->dollars + m.dollars, this->cents + m.cents};
+        result.normalize();
 
-        sum_dollars += sum_cents / 100;
-        sum_cents %= 100;
-
-        return Money{sum_dollars, sum_cents};
+        return result;
     }
     Money& Money::operator+=(const Money& m) {
         *this = *this + m;
@@ -33,15 +47,10 @@ namespace fmc {
     }
 
     Money Money::operator-(const Money& m) const {
-        int diff_dollars = this->dollars - m.dollars;
-        int diff_cents = this->cents - m.cents;
+        Money result{this->dollars - m.dollars, this->cents - m.cents};
+        result.normalize();
 
-        if (diff_cents < 0) {
-            diff_cents += 100;
-            diff_dollars -= 1;
-        }
-
-        return Money{diff_dollars, diff_cents};
+        return result;
     }
     Money& Money::operator-=(const Money& m) {
         *this = *this - m;
@@ -49,14 +58,23 @@ namespace fmc {
         return *this;
     }
 
+    Money Money::operator*(uint i) const {
+        int total = this->dollars * 100 + this->cents;
+        total *= i;
+
+        Money result{total / 100, total % 100};
+        result.normalize();
+
+        return result;
+    }
     Money Money::operator*(int i) const {
-        int new_dol = this->dollars * i;
-        int new_cents = this->cents * i;
+        int total = this->dollars * 100 + this->cents;
+        total *= i;
 
-        new_dol += new_cents / 100;
-        new_cents %= 100;
+        Money result{total / 100, total % 100};
+        result.normalize();
 
-        return {new_dol, new_cents};
+        return result;
     }
 
     Money Money::operator*(double d) const {

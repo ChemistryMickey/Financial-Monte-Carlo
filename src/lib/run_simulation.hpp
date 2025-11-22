@@ -59,6 +59,9 @@ namespace fmc {
             // Models
             person.update(dt);
 
+            // Log state
+            ts_logger.log();
+
             // Termination Conditions
             if (person.bankrupt()) {
                 WARN("Went bankrupt on {} with a net worth of ${} and {} stocks",
@@ -72,9 +75,6 @@ namespace fmc {
                 INFO("Died on {} with ${} net worth", cur_date, person.current_net_worth);
                 return;
             }
-
-            // Log state
-            ts_logger.log();
 
             // Increment date
             cur_date += std::chrono::days{dt};

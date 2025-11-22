@@ -90,7 +90,7 @@ namespace fmc {
         stock_market.update(1);
 
         // The results from the two previous tests.
-        Money expected = Money{100.0 - 5.50 + 0.275};
+        Money expected = Money{100.0 - 5.50 + 0.27};
         EXPECT_EQ(stock_market.position_price.dollars, expected.dollars);
         EXPECT_EQ(stock_market.position_price.cents, expected.cents);
     }
@@ -115,7 +115,7 @@ namespace fmc {
         // Now it should be over.
         stock_market.update(1);
         expected *= (1.0 + effective_time_scaling_factor);
-        EXPECT_NE(stock_market.position_price.dollars, expected.dollars);
+        EXPECT_EQ(stock_market.position_price.dollars, expected.dollars); // Dollars still match
         EXPECT_NE(stock_market.position_price.cents, expected.cents);
     }
 }

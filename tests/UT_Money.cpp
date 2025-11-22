@@ -6,12 +6,12 @@ namespace fmc {
         { // Positive
             Money m{42.808};
             EXPECT_EQ(m.dollars, 42);
-            EXPECT_EQ(m.cents, 80);
+            EXPECT_EQ(m.cents, 81);
         }
         { // Negative
             Money m{-42.808};
-            EXPECT_EQ(m.dollars, -43);
-            EXPECT_EQ(m.cents, 20);
+            EXPECT_EQ(m.dollars, -42);
+            EXPECT_EQ(m.cents, -81);
         }
     }
 
@@ -61,18 +61,16 @@ namespace fmc {
     }
     TEST(Test_money, negative_addition) {
         Money m1{-0.8};
-        EXPECT_EQ(m1.dollars, -1);
-        EXPECT_EQ(m1.cents, 20);
+        EXPECT_EQ(m1.dollars, 0);
+        EXPECT_EQ(m1.cents, -80);
         Money m2{-0.541247788};
-        EXPECT_EQ(m2.dollars, -1);
-        EXPECT_EQ(m2.cents, 46);
+        EXPECT_EQ(m2.dollars, 0);
+        EXPECT_EQ(m2.cents, -54);
 
         Money s = m1 + m2;
 
-        // This is kinda funky, but it means the dollars will be the only negative portion.
-        // So the human-like answer is "$-1.34" but here, "$-2.00 + $0.66" is equivalent
-        EXPECT_EQ(s.dollars, -2);
-        EXPECT_EQ(s.cents, 66);
+        EXPECT_EQ(s.dollars, -1);
+        EXPECT_EQ(s.cents, -34);
     }
 
     TEST(Test_Money, subtraction) {
@@ -107,8 +105,8 @@ namespace fmc {
         Money m2{42.5};
 
         Money d = m1 - m2;
-        EXPECT_EQ(d.dollars, -1);
-        EXPECT_EQ(d.cents, 50);
+        EXPECT_EQ(d.dollars, 0);
+        EXPECT_EQ(d.cents, -50);
     }
 
     TEST(Test_Money, multiplication) {
@@ -140,8 +138,7 @@ namespace fmc {
             Money m2 = m * 0.25;
 
             EXPECT_EQ(m2.dollars, 10);
-            // Wait, wut? Floating point maths my dude. If you must use doubles, you get double problems.
-            EXPECT_EQ(m2.cents, 19);
+            EXPECT_EQ(m2.cents, 20);
         }
         {
             Money m{40, 80};
@@ -191,5 +188,31 @@ namespace fmc {
             EXPECT_EQ(m.dollars, 105);
             EXPECT_EQ(m.cents, 0);
         }
+    }
+
+    TEST(Test_Money, across_zero) {
+        Money m1{5, 47};
+        Money m2{10, 80};
+
+        Money m3 = m1 - m2;
+        EXPECT_TRUE(m3.cents < 0);
+        EXPECT_TRUE(m3.dollars < 0);
+
+        Money expected{-5, -33};
+        EXPECT_EQ(m3.dollars, expected.dollars);
+        EXPECT_EQ(m3.cents, expected.cents);
+    }
+
+    TEST(Test_Money, close) {
+        Money m1{5, 47};
+        Money m2{5, 49};
+
+        Money m3 = m1 - m2;
+        EXPECT_TRUE(m3.cents < 0);
+        EXPECT_TRUE(m3.dollars == 0);
+
+        Money expected{0, -2};
+        EXPECT_EQ(m3.dollars, expected.dollars);
+        EXPECT_EQ(m3.cents, expected.cents);
     }
 }
