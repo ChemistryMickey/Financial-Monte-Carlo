@@ -23,6 +23,8 @@ namespace fmc {
         Money operator*(double d) const;
         Money& operator*=(double d);
 
+        double operator/(const Money& m) const;
+
         // This is so trucking cool.
         auto operator<=>(const Money& other) const = default;
 

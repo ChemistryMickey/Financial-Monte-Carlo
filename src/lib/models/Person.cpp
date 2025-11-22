@@ -80,11 +80,11 @@ namespace fmc {
         }
 
         // Given cash on hand, liquidate assets or invest
-        double stock_price = this->stock_market.position_price.to_double();
+        const Money stock_price = this->stock_market.position_price;
         if (this->cash_on_hand < Money{0.0}) {
             // Liquidate until you're solvent
-            int stock_to_sell = -this->cash_on_hand.to_double() / stock_price + 1;
-            this->n_stocks -= stock_to_sell;
+            int stock_to_sell = this->cash_on_hand / stock_price + 1;
+            this->n_stocks -= std::max(stock_to_sell, this->n_stocks);
 
             this->cash_on_hand += stock_price * stock_to_sell;
             DEBUG("Dissolving {} stock at ${}. New cash on hand: ${}", stock_to_sell, stock_price, this->cash_on_hand);
@@ -92,14 +92,14 @@ namespace fmc {
 
         bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;
         if ((this->cash_on_hand - stock_price) > stock_price && sufficient_cash_on_hand) {
-            int stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand).to_double() / stock_price + 1;
+            int stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand) / stock_price + 1;
             this->n_stocks += stock_to_buy;
 
             this->cash_on_hand -= stock_price * stock_to_buy;
         }
 
         if (!sufficient_cash_on_hand && this->n_stocks > 0) {
-            int stock_to_sell = (this->desired_cash_on_hand - this->cash_on_hand).to_double() / stock_price + 1;
+            int stock_to_sell = (this->desired_cash_on_hand - this->cash_on_hand) / stock_price + 1;
             this->n_stocks -= stock_to_sell;
 
             this->cash_on_hand += stock_price * stock_to_sell;

@@ -85,7 +85,6 @@ to build and run the Google Benchmark RTTR reflection vs Map.
 There is no option to run all benchmarks because these are expensive.
 
 ## TODO / Known Bugs (in Prio order)
-- [ ] Seems like sometimes, Money's cents can be negative and that borks everything
 - [ ] Integration testing using the `Person`. There's probably some jank in there w.r.t. updates and deciding when to enter and exit stock positions.
 - [ ] Tune the dispersions better. Right now the median stock market goes down which seems wrong. Inflation also tends deflationary which seems wrong.
 - [ ] Add separate "failed run" section in MC report to further investigate reasons why you went bankrupt.

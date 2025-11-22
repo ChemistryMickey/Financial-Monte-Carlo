@@ -85,4 +85,11 @@ namespace fmc {
         *this = *this * d;
         return *this;
     }
+
+    double Money::operator/(const Money& m) const {
+        int cur_total = this->dollars * 100 + this->cents;
+        int other_total = m.dollars * 100 + m.cents;
+
+        return ((double) cur_total) / ((double) other_total);
+    }
 }
