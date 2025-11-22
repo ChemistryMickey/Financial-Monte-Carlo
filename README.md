@@ -26,6 +26,39 @@ The goal of this simulation is to demonstrate the following:
 This is also meant to "put your money where your mouth is" w.r.t. simulation architecture and understanding that it's not going to be correct the first time.
 This is an attempt to get the wrong decisions out of the way.
 
+## Running
+### Requirements
+- Bazel (8.4.2 at time of writing, but refer to the .bazelversion file)
+- g++
+- C++23
+- `uv` (Python package management for viz)
+- `perf` (for profiling)
+
+### Running
+This should probably be streamlined via the Dockerfile but it doesn't currently work.
+
+#### Setup
+1. (if you want to visualize) Activate your Python venv: `source .venv/bin/activate`
+1. Make sure that `PROJECT_HOME` (envvar) is defined: `source envvars.sh`
+1. (if you need to push to GitHub) Activate your ssh agent: `eval "$(ssh-agent -s)"`, `ssh-add ~/.ssh/<key_file>`
+
+#### Single Run
+1. Compile/run the single-run: `./run`
+
+You may additionally specify `--visualize` to output png plots of the plotted signals. 
+This requires the `uv` venv to be setup though.
+
+There's additionally a `--release` flag to build with optimizations but the single run is so fast it's probably not worth doing.
+
+#### Monte Carlo
+1. (if you want to run a Monte Carlo) Run the Monte Carlo: `./run --runs <desired_n_runs> --config $PROJECT_HOME/data/sim_config.json --visualize`
+    1. `--runs` specifies the number of runs you'd like (duh)
+    1. `--config` specifies the configuration input file (in this case, `sim_config.json` is a dispersion definition JSON which is necessary for Monte Carlos)
+    1. `--visualize` specifies that you'd like to output an HTML report containing plots and analysis after the Monte Carlo completes. `--visualize` is also available for a single run, but it's more powerful in a Monte Carlo context.
+
+There's additionally a `--release` flag to build with optimizations. 
+A single-threaded 1k MC running over 65 years takes about 45 seconds optimized at time of writing.
+
 ## Testing
 Unit test names are automatically generated from each of the UT_*.cpp files in the tests directory.
 
@@ -53,11 +86,14 @@ There is no option to run all benchmarks because these are expensive.
 
 ## TODO / Known Bugs (in Prio order)
 - [ ] Seems like sometimes, Money's cents can be negative and that borks everything
-- [ ] Integration testing using the `Person`
+- [ ] Integration testing using the `Person`. There's probably some jank in there w.r.t. updates and deciding when to enter and exit stock positions.
 - [ ] Tune the dispersions better. Right now the median stock market goes down which seems wrong. Inflation also tends deflationary which seems wrong.
+- [ ] Add separate "failed run" section in MC report to further investigate reasons why you went bankrupt.
 - [ ] Add a bond market to supplement the stock market. Maybe also a non-liquid asset market such as art/long-term investments?
+- [ ] "Simulation Controller" such that `run_simulation` is controlled in a more "registration" manner than a bespoke function.
 - [ ] Come up with a more clever way of seeding the RNGs than "42"
 
 ## Design flaws / Kinda jank
 - Adding a dispersion is very manual. Gotta add it to the object config parse, then add it to the SimConfig.cpp parse.
 - Adding a loggable is also quite manual. It can probably be wrapped in a couplea macros.
+- Setup/envvars is kinda jank.

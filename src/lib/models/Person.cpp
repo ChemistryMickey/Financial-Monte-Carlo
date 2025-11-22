@@ -26,7 +26,6 @@ namespace fmc {
         const nlohmann::json& config) :
         stock_market{stock_market_},
         annual_inflation{annual_inflation_} {
-        DEBUG("Constructing Person with config {}", config.dump(3));
 
         this->cash_on_hand = config.at("starting_money").get<double>();
         this->yearly_expenses = config.at("initial_yearly_expenses").get<double>();
@@ -37,8 +36,6 @@ namespace fmc {
         this->current_age = config.at("current_age").get<uint>();
         this->retirement_age = config.at("retirement_age").get<uint>();
         this->death_age = config.at("death_age").get<uint>();
-
-        DEBUG("Constructed Person");
     }
 
     Money Person::value_in_stock() const {

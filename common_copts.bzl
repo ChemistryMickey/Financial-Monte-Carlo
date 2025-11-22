@@ -39,10 +39,12 @@ def copts():
         ],
         "//:benchmarking": [
             "-O3",
-            "-DBENCHMARKING"
+            "-DBENCHMARKING",
+            "-DOPTIMIZE"
         ],
         "//:optimized": [
             "-O3",
+            "-DOPTIMIZE"
         ],
         "//:profile": [
             "-fno-omit-frame-pointer",
@@ -51,7 +53,8 @@ def copts():
         "//:profile_optimized": [
             "-O3",
             "-fno-omit-frame-pointer",
-            "-g"
+            "-g",
+            "-DOPTIMIZE"
         ],
         "//conditions:default": []
     })

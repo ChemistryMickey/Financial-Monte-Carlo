@@ -59,9 +59,8 @@ namespace fmc {
             // Models
             person.update(dt);
 
-
             // Termination Conditions
-            if (person.current_net_worth < Money{0.0} || person.n_stocks < 0) {
+            if (person.bankrupt()) {
                 WARN("Went bankrupt on {} with a net worth of ${} and {} stocks",
                     cur_date,
                     person.current_net_worth,

@@ -1,7 +1,8 @@
 #pragma once
-#include "include/json.hpp" // dunno why this one needs the include/ in order for nlohmann to get properly found. :shrug:
+#include "json.hpp" 
 #include "Money.hpp"
 #include "Event.hpp"
+#include "Model.hpp"
 #include "math.hpp"
 #include "TimeseriesDataLogger.hpp"
 
@@ -12,7 +13,7 @@
 ///     - Add events that shock the stock market. Ideally every 20 years or so.
 
 namespace fmc {
-    struct StockMarket : public TimeseriesLoggable {
+    struct StockMarket : public TimeseriesLoggable, public Model {
         Money position_price;
         Event boom_scaling_event;
         Event bust_scaling_event;
@@ -21,8 +22,8 @@ namespace fmc {
         RNG rng;
 
         StockMarket(const nlohmann::json& config);
-        void update(uint days_passed);
-        void initialize();
+        void update(uint days_passed) override;
+        void initialize() override;
 
         RTTR_ENABLE(TimeseriesLoggable);
         RTTR_REGISTRATION_FRIEND;

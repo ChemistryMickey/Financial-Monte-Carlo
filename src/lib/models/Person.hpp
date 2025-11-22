@@ -7,13 +7,14 @@
 #include "math.hpp"
 #include "json.hpp"
 #include "Money.hpp"
+#include "Model.hpp"
 #include "Event.hpp"
 #include "TimeseriesDataLogger.hpp"
 #include "StockMarket.hpp"
 #include "AnnualInflation.hpp"
 
 namespace fmc {
-    class Person : public TimeseriesLoggable {
+    class Person : public TimeseriesLoggable, public Model {
         /// @brief Reference to the stock market from which asset prices will be calculated
         StockMarket& stock_market;
 
@@ -60,11 +61,11 @@ namespace fmc {
         Person(StockMarket& stock_market_, AnnualInflation& annual_inflation_, const nlohmann::json& config);
 
         /// @brief Move money from cash on hand to stocks/bonds before starting the simulation loop
-        void initialize();
+        void initialize() override;
 
         /// @brief Update the person based on the status of the stock and bonds market. Also calculates events (e.g. medical) and subtracts from cash on hand.
         /// Additionally updates the probability of a medical event and applies inflation
-        void update(uint days_passed);
+        void update(uint days_passed) override;
 
         /// @brief At the top of the year, some things need to be proc-ed. Basically guaranteed events.
         void yearly_update();
@@ -73,6 +74,10 @@ namespace fmc {
 
         bool dead() const {
             return this->current_age >= this->death_age;
+        }
+
+        bool bankrupt() const {
+            return this->current_net_worth <= Money{0.0};
         }
 
         // Termination conditions

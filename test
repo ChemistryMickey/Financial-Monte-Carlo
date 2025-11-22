@@ -2,7 +2,10 @@
 
 target="cached"
 if [[ $# == 1 ]]; then
-	target="UT_$1"
+	target="$1"
+	for t in $(ls $PROJECT_HOME/tests/*$target*.cpp); do 
+		bazel test //tests:$(basename $t ".cpp") --config=unit_testing -j 6 --test_env=PROJECT_HOME=.
+	done
+else
+	bazel test //tests:$target --config=unit_testing -j 6 --test_env=PROJECT_HOME=.
 fi
-
-bazel test //tests:$target --config=unit_testing -j 6 --test_env=PROJECT_HOME=.
