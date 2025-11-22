@@ -97,3 +97,9 @@ There is no option to run all benchmarks because these are expensive.
 - Adding a dispersion is very manual. Gotta add it to the object config parse, then add it to the SimConfig.cpp parse.
 - Adding a loggable is also quite manual. It can probably be wrapped in a couplea macros.
 - Setup/envvars is kinda jank.
+
+## Lessons Learned
+- RTTR is nice but I don't think it's significantly more ergonomic than something like a Loggable struct that defines a series of `std::map<std::string, std::reference_wrapper<T>>` which each model would have and then a `TimeseriesDataLogger` which takes a map of these loggables. Then, at registration time, the TimeseriesDataLogger just has a small map of those enabled signals rather than the master map of all the possible loggable signals. The only potential downside I see to this scheme is that the maps would increase the size of the model objects by N reference wrapper sizes (which is pretty negligable?).
+- The CLI11 parsing is nice! I'll deffo be using this in future projects.
+- Bazel 8's MODULE.bazel is much more convenient than setting the http_library (or whatever) from earlier bazel versions.
+- C++23 has some very nice ergonomic improvements (ranges, print).
