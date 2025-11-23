@@ -215,4 +215,37 @@ namespace fmc {
         EXPECT_EQ(m3.dollars, expected.dollars);
         EXPECT_EQ(m3.cents, expected.cents);
     }
+
+    TEST(Test_Money, division) {
+        {
+            Money m1{10, 0};
+            Money m2{2, 0};
+
+            double div = m1 / m2;
+            EXPECT_EQ(div, 5.0);
+        }
+        {
+            Money m1{2, 0};
+            Money m2{10, 0};
+
+            double div = m1 / m2;
+            EXPECT_EQ(div, 0.2);
+        }
+        {
+            Money m1{2, 0};
+            Money m2{10, 0};
+
+            // Because this is how you resolve how many stock to dissolve
+            int div = m1 / m2 + 1;
+            EXPECT_EQ(div, 1);
+        }
+        {
+            Money m1{10, 0};
+            Money m2{2, 0};
+
+            // Because this is how you resolve how many stock to dissolve
+            int div = m1 / m2 + 1;
+            EXPECT_EQ(div, 6);
+        }
+    }
 }

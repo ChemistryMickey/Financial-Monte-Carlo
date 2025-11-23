@@ -3,18 +3,18 @@
 
 namespace fmc {
 
-    Money::Money(int dollars_, int cents_) : dollars{dollars_}, cents{cents_} {
+    Money::Money(long long int dollars_, int cents_) : dollars{dollars_}, cents{cents_} {
         this->normalize();
     }
     Money::Money(double v) {
-        int total = std::round(v * 100);
+        long long int total = std::llround(v * 100);
         this->dollars = total / 100;
         this->cents = total % 100;
         this->normalize();
     }
 
     void Money::normalize() {
-        int total = this->dollars * 100 + this->cents;
+        long long int total = this->dollars * 100 + this->cents;
 
         this->dollars = total / 100;
         this->cents = total % 100;
@@ -59,7 +59,7 @@ namespace fmc {
     }
 
     Money Money::operator*(uint i) const {
-        int total = this->dollars * 100 + this->cents;
+        long long int total = this->dollars * 100 + this->cents;
         total *= i;
 
         Money result{total / 100, total % 100};
@@ -67,8 +67,8 @@ namespace fmc {
 
         return result;
     }
-    Money Money::operator*(int i) const {
-        int total = this->dollars * 100 + this->cents;
+    Money Money::operator*(long long int i) const {
+        long long int total = this->dollars * 100 + this->cents;
         total *= i;
 
         Money result{total / 100, total % 100};
@@ -87,8 +87,8 @@ namespace fmc {
     }
 
     double Money::operator/(const Money& m) const {
-        int cur_total = this->dollars * 100 + this->cents;
-        int other_total = m.dollars * 100 + m.cents;
+        long long int cur_total = this->dollars * 100 + this->cents;
+        long long int other_total = m.dollars * 100 + m.cents;
 
         return ((double) cur_total) / ((double) other_total);
     }

@@ -45,6 +45,14 @@ namespace fmc {
         /// @return true if the event has occurred and it should be handled. false if the event hasn't occurred
         bool occurred();
 
+        /// @brief Is this event currently in progress?
+        /// @return true if the event is in progress (and therefore DoTs)
+        bool in_progress();
+
+        /// @brief Is this event currently on cooldown?
+        /// @return true if the event is on cooldown, false if it can be re-proced
+        bool on_cooldown();
+
         void update(uint days_passed);
 
         /// @brief Set the days_since_last_proc to a value such that it can naturally trip.

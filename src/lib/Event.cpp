@@ -27,12 +27,19 @@ namespace fmc {
         this->days_since_last_proc = this->cooldown + this->duration;
     }
 
+    bool Event::in_progress() {
+        return this->days_since_last_proc < this->duration;
+    }
+
+    bool Event::on_cooldown() {
+        return this->days_since_last_proc < this->cooldown;
+    }
+
     /// @brief Has this event occurred?
     /// @return true if the event has occurred and it should be handled. false if the event hasn't occurred
     bool Event::occurred() {
-        bool on_cooldown = this->days_since_last_proc < this->cooldown;
-        bool dot_proc = this->days_since_last_proc < this->duration;
-        if (on_cooldown) {
+        bool dot_proc = this->in_progress();
+        if (this->on_cooldown()) {
             return dot_proc;
         }
 

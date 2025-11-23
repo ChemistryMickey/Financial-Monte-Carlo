@@ -85,7 +85,7 @@ namespace fmc {
         Money current_net_worth{0.0};
 
         // Why not a uint? I don't want a negative wrap round issue
-        int n_stocks = 0;
+        long long int n_stocks = 0;
 
         // Formatting and RTTR things
         // Allows access to private members

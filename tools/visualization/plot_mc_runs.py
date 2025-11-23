@@ -79,20 +79,9 @@ def plot_mc_runs_to_html_str(out_dir: Path, report_html_str: str) -> str:
             plt.legend()
 
             report_html_str += fig2html_str(fig)
-            plt.close()
 
             # Do it again but with a logy scale
-            fig = plt.figure(figsize=(16, 8))
-            for stat in stats.columns:
-                plt.plot(stats.index, stats[stat], label=stat)
-
-            plt.title(f"{col} Statistical Enclosure Plot")
-            plt.xlabel("Date [-]")
-            plt.xticks(inds_to_plot, rotation=30)
             plt.yscale("log")
-            plt.ylabel(col)
-            plt.grid(True)
-            plt.legend()
 
             report_html_str += fig2html_str(fig)
             plt.close()

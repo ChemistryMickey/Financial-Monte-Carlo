@@ -64,10 +64,12 @@ namespace fmc {
 
             // Termination Conditions
             if (person.bankrupt()) {
-                WARN("Went bankrupt on {} with a net worth of ${} and {} stocks",
+                WARN("Went bankrupt on {} with a net worth of ${} and {} stocks ({} $/share)",
                     cur_date,
                     person.current_net_worth,
-                    person.n_stocks);
+                    person.n_stocks,
+                    stock_market.position_price
+                );
                 return;
             }
 

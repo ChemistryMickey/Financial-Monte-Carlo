@@ -14,10 +14,29 @@ RTTR_REGISTRATION{
 namespace fmc {
     AnnualInflation::AnnualInflation(const nlohmann::json& config) :
         annual_inflation_rate{config.at("rate").get<double>()},
+        initial_inflation_rate{config.at("rate").get<double>()},
         inflation_event(config.at("inflation_event")),
         deflation_event(config.at("deflation_event")) {}
 
     void AnnualInflation::update(uint days_passed) {
+        // Assuming inflation events take precidence over deflation.
+        if (this->inflation_event.in_progress()) {
+            DEBUG("Inflation event in progress");
+            this->annual_inflation_rate += this->inflation_event.effect_val;
+            this->inflation_event.update(days_passed);
+            return;
+        }
+        else if (this->deflation_event.in_progress()) {
+            DEBUG("Deflation event in progress");
+            this->annual_inflation_rate += this->deflation_event.effect_val;
+            this->deflation_event.update(days_passed);
+            return;
+        }
+        else {
+            this->annual_inflation_rate = this->initial_inflation_rate;
+        }
+
+        // Check for new events
         if (this->inflation_event.occurred()) {
             DEBUG("Inflation event proc-ed");
             this->annual_inflation_rate += this->inflation_event.effect_val;
@@ -27,6 +46,7 @@ namespace fmc {
                 this->deflation_event.probability.get_value() + this->inflation_event.probability.get_value()
             );
         }
+        this->inflation_event.update(days_passed);
 
         if (this->deflation_event.occurred()) {
             DEBUG("Deflation event proc-ed");
@@ -37,8 +57,6 @@ namespace fmc {
                 this->deflation_event.probability.get_value() + this->inflation_event.probability.get_value()
             );
         }
-
-        this->inflation_event.update(days_passed);
         this->deflation_event.update(days_passed);
     }
 }

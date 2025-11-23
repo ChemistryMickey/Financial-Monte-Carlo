@@ -42,7 +42,7 @@ namespace fmc {
 
         RefMap<Money> money_signals_to_log;
         RefMap<double> double_signals_to_log;
-        RefMap<int> int_signals_to_log;
+        RefMap<long long int> int_signals_to_log;
 
         template <typename T>
         std::string csv_header_string(const RefMap<T>&) const;

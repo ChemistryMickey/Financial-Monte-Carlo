@@ -47,8 +47,8 @@ namespace fmc {
             else if (val_type == rttr::type::get<std::reference_wrapper<const double>>()) {
                 this->double_signals_to_log.emplace(mapped_name, val_variant.get_value<std::reference_wrapper<const double>>());
             }
-            else if (val_type == rttr::type::get<std::reference_wrapper<const int>>()) {
-                this->int_signals_to_log.emplace(mapped_name, val_variant.get_value<std::reference_wrapper<const int>>());
+            else if (val_type == rttr::type::get<std::reference_wrapper<const long long int>>()) {
+                this->int_signals_to_log.emplace(mapped_name, val_variant.get_value<std::reference_wrapper<const long long int>>());
             }
             else {
                 ERROR("Type {} is not supported by the Timeseries Data Logger", val_type.get_name().to_string());
@@ -67,7 +67,7 @@ namespace fmc {
             csv_header += "," + this->csv_header_string<double>(this->double_signals_to_log);
         }
         if (!this->int_signals_to_log.empty()) {
-            csv_header += "," + this->csv_header_string<int>(this->int_signals_to_log);
+            csv_header += "," + this->csv_header_string<long long int>(this->int_signals_to_log);
         }
 
         std::ofstream f{logging_out_path, std::fstream::out}; // Completely overwrites file
@@ -125,7 +125,7 @@ namespace fmc {
             out += "," + this->signals_to_log_to_string<double>(this->double_signals_to_log);
         }
         if (!this->int_signals_to_log.empty()) {
-            out += "," + this->signals_to_log_to_string<int>(this->int_signals_to_log);
+            out += "," + this->signals_to_log_to_string<long long int>(this->int_signals_to_log);
         }
         this->buffer.push_back(out);
 

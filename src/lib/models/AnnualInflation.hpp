@@ -12,6 +12,7 @@ namespace fmc {
     ///     Inflation isn't constant and can be triggered by events.
     struct AnnualInflation : public Model, public TimeseriesLoggable {
         double annual_inflation_rate = 0.02;
+        double initial_inflation_rate = 0.02;
         Event inflation_event;
         Event deflation_event;
 

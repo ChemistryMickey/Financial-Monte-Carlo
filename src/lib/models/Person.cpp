@@ -33,6 +33,7 @@ namespace fmc {
         this->medical_event = Event{config.at("medical_event")};
         this->income_until_retirement = config.at("income_until_retirement").get<double>();
         this->yearly_raise_percent = config.at("yearly_raise_percent").get<double>();
+        this->desired_cash_on_hand = config.at("desired_cash_on_hand").get<double>();
         this->current_age = config.at("current_age").get<uint>();
         this->retirement_age = config.at("retirement_age").get<uint>();
         this->death_age = config.at("death_age").get<uint>();
@@ -81,29 +82,31 @@ namespace fmc {
 
         // Given cash on hand, liquidate assets or invest
         const Money stock_price = this->stock_market.position_price;
-        if (this->cash_on_hand < Money{0.0}) {
-            // Liquidate until you're solvent
-            int stock_to_sell = this->cash_on_hand / stock_price + 1;
-            this->n_stocks -= std::max(stock_to_sell, this->n_stocks);
-
-            this->cash_on_hand += stock_price * stock_to_sell;
-            DEBUG("Dissolving {} stock at ${}. New cash on hand: ${}", stock_to_sell, stock_price, this->cash_on_hand);
-        }
-
+        bool can_afford_stock = (this->cash_on_hand - stock_price) > this->desired_cash_on_hand;
         bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;
-        if ((this->cash_on_hand - stock_price) > stock_price && sufficient_cash_on_hand) {
-            int stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand) / stock_price + 1;
+        if (can_afford_stock) {
+            long long int stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand) / stock_price + 1;
             this->n_stocks += stock_to_buy;
 
             this->cash_on_hand -= stock_price * stock_to_buy;
         }
-
-        if (!sufficient_cash_on_hand && this->n_stocks > 0) {
-            int stock_to_sell = (this->desired_cash_on_hand - this->cash_on_hand) / stock_price + 1;
+        else if (!sufficient_cash_on_hand && this->n_stocks > 0) {
+            long long int stock_to_sell = std::min(
+                (long long int) ((this->desired_cash_on_hand - this->cash_on_hand) / stock_price) + 1,
+                this->n_stocks);
             this->n_stocks -= stock_to_sell;
 
             this->cash_on_hand += stock_price * stock_to_sell;
             DEBUG("Liquidating {} stock at ${}. New cash on hand: ${}", stock_to_sell, stock_price, this->cash_on_hand);
+        }
+
+        if (this->cash_on_hand < Money{0.0}) {
+            // Liquidate until you're solvent
+            long long int stock_to_sell = std::min((long long int) (this->cash_on_hand / stock_price) + 1, this->n_stocks);
+            this->n_stocks -= stock_to_sell;
+
+            this->cash_on_hand += stock_price * stock_to_sell;
+            DEBUG("Dissolving {} stock at ${}. New cash on hand: ${}", stock_to_sell, stock_price, this->cash_on_hand);
         }
 
         // Inflation Influenced Updates
@@ -111,7 +114,7 @@ namespace fmc {
 
         // Update yearly expenses and desired cash on hand based on inflation
         this->yearly_expenses *= inflation_multiplier;
-        this->desired_cash_on_hand *= inflation_multiplier;
+        // this->desired_cash_on_hand *= inflation_multiplier;
 
         // Update medical event probability and value
         this->medical_event.effect_val *= inflation_multiplier;

@@ -23,13 +23,26 @@ namespace fmc {
 
     void StockMarket::update(uint days_passed) {
         double effective_time_scaling_factor = this->annual_time_scaling_factor;
-        if (this->boom_scaling_event.occurred()) {
-            DEBUG("Boom event proc-ed");
+        if (this->boom_scaling_event.in_progress()) {
+            // If yer boomin' you can't be bustin'
             effective_time_scaling_factor += this->boom_scaling_event.effect_val;
+            this->boom_scaling_event.update(days_passed);
         }
-        if (this->bust_scaling_event.occurred()) {
-            DEBUG("Bust event proc-ed");
+        else if (this->bust_scaling_event.in_progress()) {
             effective_time_scaling_factor += this->bust_scaling_event.effect_val;
+            this->bust_scaling_event.update(days_passed);
+        }
+        else {
+            if (this->boom_scaling_event.occurred()) {
+                DEBUG("Boom event proc-ed");
+                effective_time_scaling_factor += this->boom_scaling_event.effect_val;
+            }
+            if (this->bust_scaling_event.occurred()) {
+                DEBUG("Bust event proc-ed");
+                effective_time_scaling_factor += this->bust_scaling_event.effect_val;
+            }
+            this->boom_scaling_event.update(days_passed);
+            this->bust_scaling_event.update(days_passed);
         }
         effective_time_scaling_factor *= days_passed / 365.0;
 
@@ -37,9 +50,6 @@ namespace fmc {
         Money volatility_adjustment = this->position_price * this->rng.normal(0, this->volatility);
 
         this->position_price += scale_adjustment + volatility_adjustment;
-
-        this->boom_scaling_event.update(days_passed);
-        this->bust_scaling_event.update(days_passed);
     }
 
     void StockMarket::initialize() {}
