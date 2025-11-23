@@ -114,7 +114,7 @@ namespace fmc {
 
         // Update yearly expenses and desired cash on hand based on inflation
         this->yearly_expenses *= inflation_multiplier;
-        // this->desired_cash_on_hand *= inflation_multiplier;
+        this->desired_cash_on_hand *= inflation_multiplier;
 
         // Update medical event probability and value
         this->medical_event.effect_val *= inflation_multiplier;
