@@ -4,6 +4,7 @@
 
 #include "Logger.hpp"
 #include "SimConfig.hpp"
+#include "SimulationController.hpp"
 #include "TimeseriesDataLogger.hpp"
 
 #include "models/Person.hpp"
@@ -21,12 +22,6 @@ namespace fmc {
         AnnualInflation inflation{config.annual_inflation_config};
         Person person{stock_market, inflation, config.person_config};
 
-        // Initialize objects
-        stock_market.initialize();
-        //bond_market.initialize();
-        inflation.initialize();
-        person.initialize();
-
         // Initialize timeseries logger
         std::chrono::sys_days cur_date = config.start_date;
         TimeseriesDataLogger ts_logger{
@@ -41,45 +36,9 @@ namespace fmc {
             }
         };
 
+        SimulationController sim_controller{cur_date, config.end_date,
+            {stock_market, inflation, person}, ts_logger};
 
-        // Simulation loop
-        uint dt = 1; // [days]
-        while (cur_date < config.end_date) {
-            DEBUG("Starting day {}", cur_date);
-            // January 1st updates
-            if (is_jan_1st(cur_date)) {
-                person.yearly_update();
-            }
-
-            // Environment
-            stock_market.update(dt);
-            // bond_market.update()
-            inflation.update(dt);
-
-            // Models
-            person.update(dt);
-
-            // Log state
-            ts_logger.log();
-
-            // Termination Conditions
-            if (person.bankrupt()) {
-                WARN("Went bankrupt on {} with a net worth of ${} and {} stocks ({} $/share)",
-                    cur_date,
-                    person.current_net_worth,
-                    person.n_stocks,
-                    stock_market.position_price
-                );
-                return;
-            }
-
-            if (person.dead()) {
-                INFO("Died on {} with ${} net worth", cur_date, person.current_net_worth);
-                return;
-            }
-
-            // Increment date
-            cur_date += std::chrono::days{dt};
-        }
+        sim_controller.run();
     }
 }

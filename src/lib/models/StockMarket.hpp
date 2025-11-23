@@ -22,8 +22,11 @@ namespace fmc {
         RNG rng;
 
         StockMarket(const nlohmann::json& config);
-        void update(uint days_passed) override;
+        void update(uint days_passed) override {}
         void initialize() override;
+        void yearly_update() override {}
+        void environment(uint t) override;
+        bool should_terminate() override { return false; }
 
         RTTR_ENABLE(TimeseriesLoggable);
         RTTR_REGISTRATION_FRIEND;

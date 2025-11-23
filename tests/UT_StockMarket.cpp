@@ -51,9 +51,9 @@ namespace fmc {
         EXPECT_EQ(stock_market.volatility, 0.1);
     }
 
-    TEST_F(Test_StockMarket, update_without_volatility) {
+    TEST_F(Test_StockMarket, environment_without_volatility) {
         stock_market.volatility = 0;
-        stock_market.update(1);
+        stock_market.environment(1);
 
         // Doubles every year, so 100 / 365 per day
         double val = 100.0;
@@ -64,19 +64,19 @@ namespace fmc {
 
         // value went up 27.5 cents
 
-        // This updates based on the current value, not the initial value
+        // This environments based on the current value, not the initial value
         val = stock_market.position_price.to_double();
         expected = Money{val + (val / 365.0)};
-        stock_market.update(1);
+        stock_market.environment(1);
 
         EXPECT_EQ(stock_market.position_price.dollars, expected.dollars);
         EXPECT_EQ(stock_market.position_price.cents, expected.cents);
     }
 
-    TEST_F(Test_StockMarket, update_without_scale) {
+    TEST_F(Test_StockMarket, environment_without_scale) {
         // This one's empiracle because it involves the RNG but it feeds into the combined test.
         stock_market.annual_time_scaling_factor = 0;
-        stock_market.update(1);
+        stock_market.environment(1);
 
         Money expected = Money{94.50};
 
@@ -86,8 +86,8 @@ namespace fmc {
         // So the first tick of the RNG hits -5.50
     }
 
-    TEST_F(Test_StockMarket, update) {
-        stock_market.update(1);
+    TEST_F(Test_StockMarket, environment) {
+        stock_market.environment(1);
 
         // The results from the two previous tests.
         Money expected = Money{100.0 - 5.50 + 0.27};
@@ -104,7 +104,7 @@ namespace fmc {
         double effective_time_scaling_factor = 2.0 / 365.0;
         Money expected{100, 0};
         for (int i = 0; i < 30; ++i) {
-            stock_market.update(1);
+            stock_market.environment(1);
             Money scale_adjustment = expected * effective_time_scaling_factor;
             expected += scale_adjustment;
 
@@ -113,7 +113,7 @@ namespace fmc {
         }
 
         // Now it should be over.
-        stock_market.update(1);
+        stock_market.environment(1);
         expected *= (1.0 + effective_time_scaling_factor);
         EXPECT_EQ(stock_market.position_price.dollars, expected.dollars); // Dollars still match
         EXPECT_NE(stock_market.position_price.cents, expected.cents);

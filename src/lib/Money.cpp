@@ -9,7 +9,7 @@ namespace fmc {
     Money::Money(double v) {
         long long int total = std::llround(v * 100);
         this->dollars = total / 100;
-        this->cents = total % 100;
+        this->cents = (int) total % 100;
         this->normalize();
     }
 
@@ -17,7 +17,7 @@ namespace fmc {
         long long int total = this->dollars * 100 + this->cents;
 
         this->dollars = total / 100;
-        this->cents = total % 100;
+        this->cents = (int) total % 100;
 
         // Sign consistency
         if (this->dollars > 0 && this->cents < 0) {
@@ -62,7 +62,7 @@ namespace fmc {
         long long int total = this->dollars * 100 + this->cents;
         total *= i;
 
-        Money result{total / 100, total % 100};
+        Money result{total / 100, (int) total % 100};
         result.normalize();
 
         return result;
@@ -71,7 +71,7 @@ namespace fmc {
         long long int total = this->dollars * 100 + this->cents;
         total *= i;
 
-        Money result{total / 100, total % 100};
+        Money result{total / 100, (int) total % 100};
         result.normalize();
 
         return result;

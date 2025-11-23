@@ -18,7 +18,7 @@ namespace fmc {
         inflation_event(config.at("inflation_event")),
         deflation_event(config.at("deflation_event")) {}
 
-    void AnnualInflation::update(uint days_passed) {
+    void AnnualInflation::environment(uint days_passed) {
         // Assuming inflation events take precidence over deflation.
         if (this->inflation_event.in_progress()) {
             DEBUG("Inflation event in progress");
@@ -58,5 +58,6 @@ namespace fmc {
             );
         }
         this->deflation_event.update(days_passed);
+
     }
 }

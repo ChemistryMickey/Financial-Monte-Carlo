@@ -19,7 +19,10 @@ namespace fmc {
         AnnualInflation(const nlohmann::json& config);
 
         void initialize() override {}
-        void update(uint) override;
+        void update(uint) override {};
+        void environment(uint) override;
+        void yearly_update() override {}
+        bool should_terminate() override { return false; }
 
         RTTR_ENABLE(TimeseriesLoggable);
     };

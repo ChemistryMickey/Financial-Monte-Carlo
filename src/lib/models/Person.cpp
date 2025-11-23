@@ -58,6 +58,25 @@ namespace fmc {
         }
     }
 
+    bool Person::should_terminate() {
+        // Termination Conditions
+        if (this->bankrupt()) {
+            WARN("Went bankrupt with a net worth of ${} and {} stocks ({} $/share)",
+                this->current_net_worth,
+                this->n_stocks,
+                stock_market.position_price
+            );
+            return true;
+        }
+
+        if (this->dead()) {
+            INFO("Died with ${} net worth", this->current_net_worth);
+            return true;
+        }
+
+        return false;
+    }
+
     void Person::update(uint days_passed) {
         // Event handling
         if (this->medical_event.occurred()) {

@@ -72,6 +72,10 @@ namespace fmc {
 
         Money value_in_stock() const;
 
+        void environment(uint t) override {}
+
+        bool should_terminate() override;
+
         bool dead() const {
             return this->current_age >= this->death_age;
         }

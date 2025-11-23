@@ -21,7 +21,7 @@ namespace fmc {
         annual_time_scaling_factor{config.at("annual_time_scaling_factor").get<double>()},
         rng{config.at("rng_seed").get<uint>()} {}
 
-    void StockMarket::update(uint days_passed) {
+    void StockMarket::environment(uint days_passed) {
         double effective_time_scaling_factor = this->annual_time_scaling_factor;
         if (this->boom_scaling_event.in_progress()) {
             // If yer boomin' you can't be bustin'
