@@ -85,11 +85,11 @@ to build and run the Google Benchmark RTTR reflection vs Map.
 There is no option to run all benchmarks because these are expensive.
 
 ## TODO / Known Bugs (in Prio order)
-- [ ] Integration testing using the `Person`. There's probably some jank in there w.r.t. updates and deciding when to enter and exit stock positions.
-- [ ] Tune the dispersions better. Right now the median stock market goes down which seems wrong. Inflation also tends deflationary which seems wrong.
+- [x] Integration testing using the `Person`. There's probably some jank in there w.r.t. updates and deciding when to enter and exit stock positions.
+- [x] Tune the dispersions better. Right now the median stock market goes down which seems wrong. Inflation also tends deflationary which seems wrong.
 - [ ] Add separate "failed run" section in MC report to further investigate reasons why you went bankrupt.
 - [ ] Add a bond market to supplement the stock market. Maybe also a non-liquid asset market such as art/long-term investments?
-- [ ] "Simulation Controller" such that `run_simulation` is controlled in a more "registration" manner than a bespoke function.
+- [x] "Simulation Controller" such that `run_simulation` is controlled in a more "registration" manner than a bespoke function.
 - [ ] Come up with a more clever way of seeding the RNGs than "42"
 
 ## Design flaws / Kinda jank
