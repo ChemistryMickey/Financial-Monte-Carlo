@@ -8,7 +8,7 @@ namespace fmc {
     constexpr uint DT = 1;
 
     struct SimulationController {
-        std::chrono::sys_days cur_date;
+        std::chrono::sys_days& cur_date;
         std::chrono::sys_days end_date;
         std::vector<std::reference_wrapper<Model>> models;
         TimeseriesDataLogger& ts_logger;
