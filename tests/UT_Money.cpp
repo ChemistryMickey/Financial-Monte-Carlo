@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "Money.hpp"
+#include <cinttypes>
 
 namespace fmc {
     TEST(Test_Money, init) {
@@ -112,14 +113,14 @@ namespace fmc {
     TEST(Test_Money, multiplication) {
         {
             Money m{42};
-            Money m2 = m * (long long int) 2;
+            Money m2 = m * (int64_t) 2;
 
             EXPECT_EQ(m2.dollars, 84);
             EXPECT_EQ(m2.cents, 0);
         }
         {
             Money m{42.5};
-            Money m2 = m * (long long int) 2;
+            Money m2 = m * (int64_t) 2;
 
             EXPECT_EQ(m2.dollars, 85);
             EXPECT_EQ(m2.cents, 0);
@@ -127,7 +128,7 @@ namespace fmc {
         {
             Money m{42, 30};
             EXPECT_EQ(m.cents, 30);
-            Money m2 = m * (long long int) 2;
+            Money m2 = m * (int64_t) 2;
 
             EXPECT_EQ(m2.dollars, 84);
             EXPECT_EQ(m2.cents, 60);

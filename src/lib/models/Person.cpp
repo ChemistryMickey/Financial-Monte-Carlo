@@ -104,14 +104,14 @@ namespace fmc {
         bool can_afford_stock = (this->cash_on_hand - stock_price) > this->desired_cash_on_hand;
         bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;
         if (can_afford_stock) {
-            long long int stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand) / stock_price + 1;
+            int64_t stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand) / stock_price + 1;
             this->n_stocks += stock_to_buy;
 
             this->cash_on_hand -= stock_price * stock_to_buy;
         }
         else if (!sufficient_cash_on_hand && this->n_stocks > 0) {
-            long long int stock_to_sell = std::min(
-                (long long int) ((this->desired_cash_on_hand - this->cash_on_hand) / stock_price) + 1,
+            int64_t stock_to_sell = std::min(
+                (int64_t) ((this->desired_cash_on_hand - this->cash_on_hand) / stock_price) + 1,
                 this->n_stocks);
             this->n_stocks -= stock_to_sell;
 
@@ -121,7 +121,7 @@ namespace fmc {
 
         if (this->cash_on_hand < Money{0.0}) {
             // Liquidate until you're solvent
-            long long int stock_to_sell = std::min((long long int) (this->cash_on_hand / stock_price) + 1, this->n_stocks);
+            int64_t stock_to_sell = std::min((int64_t) (this->cash_on_hand / stock_price) + 1, this->n_stocks);
             this->n_stocks -= stock_to_sell;
 
             this->cash_on_hand += stock_price * stock_to_sell;

@@ -4,10 +4,10 @@
 
 namespace fmc {
     struct Money {
-        long long int dollars = 0;
+        int64_t dollars = 0;
         int cents = 0;
 
-        Money(long long int dollars_, int cents_);
+        Money(int64_t dollars_, int cents_);
         Money(double v);
 
         double to_double() const;
@@ -19,7 +19,7 @@ namespace fmc {
         Money& operator-=(const Money& m);
 
         Money operator*(uint i) const;
-        Money operator*(long long int i) const;
+        Money operator*(int64_t i) const;
         Money operator*(double d) const;
         Money& operator*=(double d);
 
