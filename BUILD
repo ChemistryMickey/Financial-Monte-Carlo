@@ -35,7 +35,7 @@ cc_library(
     copts = copts(),
     linkopts = linkopts(),
     deps = [
-        "//third_party/rttr:rttr_core",
+        "//third_party/rttr_bazel:rttr_core",
         "@cli11//:cli11"
     ],
     visibility= ["//visibility:public"],
@@ -49,7 +49,7 @@ cc_binary(
     linkopts = linkopts(),
     deps = [
         "//:lib", 
-        "//third_party/rttr:rttr_core",
+        "//third_party/rttr_bazel:rttr_core",
         "@cli11//:cli11"
     ],
     linkstatic=True
