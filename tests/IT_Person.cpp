@@ -51,6 +51,7 @@ namespace fmc {
                 {"knockdown" , -0.05}
             }}
         };
+        nlohmann::json bond_market_config = {};
         nlohmann::json person_config = {
             {"current_age", 30},
             {"death_age", 90},
@@ -74,9 +75,10 @@ namespace fmc {
 
         AnnualInflation inflation;
         StockMarket stock_market;
+        BondMarket bond_market;
 
         Person person;
-        Test_Person() : inflation{inflation_config}, stock_market{stock_market_config}, person{stock_market, inflation, person_config} {
+        Test_Person() : inflation{inflation_config}, stock_market{stock_market_config}, bond_market{bond_market_config}, person{stock_market, bond_market, inflation, person_config} {
             Logger::instance().initialize(std::string(__FILE__) + ".log", 100, false);
         }
     };

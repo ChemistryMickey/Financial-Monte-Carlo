@@ -18,7 +18,7 @@ namespace fmc {
         std::filesystem::path logging_channel_def_path;
         nlohmann::json person_config;
         nlohmann::json stock_market_config;
-        // BondMarket bond_market;
+        nlohmann::json bond_market_config;
         nlohmann::json annual_inflation_config;
 
         SimConfig() = default;

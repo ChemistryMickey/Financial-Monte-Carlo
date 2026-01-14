@@ -484,5 +484,6 @@
             "initial_undispersed_value": 0.00,
             "seed": 42
         }
-    }
+    },
+    "bond_market": {}
 }

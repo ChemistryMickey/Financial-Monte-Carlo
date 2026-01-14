@@ -8,9 +8,11 @@
 #include "json.hpp"
 #include "Money.hpp"
 #include "Model.hpp"
+#include "Bond.hpp"
 #include "Event.hpp"
 #include "TimeseriesDataLogger.hpp"
 #include "StockMarket.hpp"
+#include "BondMarket.hpp"
 #include "AnnualInflation.hpp"
 
 namespace fmc {
@@ -18,9 +20,14 @@ namespace fmc {
         /// @brief Reference to the stock market from which asset prices will be calculated
         StockMarket& stock_market;
 
-        // BondMarket& bond_market;
+        /// @brief Reference to the bond market from which asset prices will be calculated
+        BondMarket& bond_market;
 
+        /// @brief Reference to the inflation model from which things like expenses will be increased
         AnnualInflation& annual_inflation;
+
+        /// @brief Bonds on hand
+        std::vector<Bond> bonds;
 
         /// @brief The amount of money currently in your wallet; not tied up in assets
         Money cash_on_hand{0.0};
@@ -48,9 +55,6 @@ namespace fmc {
         /// @brief At what age do you expect to die?
         uint death_age = 90;
 
-        /// @brief The current portfolio of stocks
-        // std::vector<SimpleStock> stock_portfolio{};
-
         /// @brief The stock/bond ratio you try to maintain each day [0, 1]. 1 means "all stocks"
         ClampedValue<double> stock_bond_ratio{0, {0, 1}};
 
@@ -58,7 +62,7 @@ namespace fmc {
 
     public:
         // Person(StockMarket& stock_market_, BondMarket& bond_market_, const nlohmann::json& config);
-        Person(StockMarket& stock_market_, AnnualInflation& annual_inflation_, const nlohmann::json& config);
+        Person(StockMarket& stock_market_, BondMarket& bond_market_, AnnualInflation& annual_inflation_, const nlohmann::json& config);
 
         /// @brief Move money from cash on hand to stocks/bonds before starting the simulation loop
         void initialize() override;

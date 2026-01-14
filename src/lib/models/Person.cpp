@@ -22,9 +22,11 @@ RTTR_REGISTRATION{
 namespace fmc {
     Person::Person(
         StockMarket& stock_market_,
+        BondMarket& bond_market_,
         AnnualInflation& annual_inflation_,
         const nlohmann::json& config) :
         stock_market{stock_market_},
+        bond_market{bond_market_},
         annual_inflation{annual_inflation_} {
 
         this->cash_on_hand = config.at("starting_money").get<double>();
