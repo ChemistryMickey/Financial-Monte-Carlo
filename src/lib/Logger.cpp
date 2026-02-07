@@ -33,6 +33,7 @@ namespace fmc {
         if (logging_level > Logger::cur_logging_level) {
             return;
         }
+        std::lock_guard<std::mutex> lock{this->mutex};
 
         std::string tagged_msg = std::format("[{}, {}, {}, {}]: {}",
             get_current_time(),

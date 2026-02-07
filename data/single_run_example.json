@@ -67,5 +67,7 @@
         "rng_seed": 42,
         "volatility": 0.01
     },
-    "bond_market": {}
+    "bond_market": {
+        "volatility": 0.01
+    }
 }

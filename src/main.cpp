@@ -1,3 +1,4 @@
+#include <omp.h>
 #include "Logger.hpp"
 #include "file_io.hpp"
 #include "CliArgs.hpp"
@@ -30,9 +31,13 @@ int main(int argc, char** argv) {
             return 0;
         }
 
-        // This should be parallelized at some point but this is pretty darn fast.
+        fmc::Logger::set_logging_level(fmc::LoggingLevel::WARNING);
+#ifdef OPTIMIZE
+#pragma omp parallel num_threads(16)
+#pragma omp parallel for
+#endif
         for (uint run = 0; run < args.runs; ++run) {
-            INFO("Beginning run {}", run);
+            WARN("Beginning run {}", run);
 
             std::filesystem::path run_dir = run_out_dir(args.out_directory, run);
             fmc::SimConfig config{read_json(run_dir / "monte_config.lock")};

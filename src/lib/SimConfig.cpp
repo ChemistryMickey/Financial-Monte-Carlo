@@ -29,6 +29,7 @@ namespace fmc {
         append_monte_var("person");
         append_monte_var("stock_market");
         append_monte_var("annual_inflation");
+        append_monte_var("bond_market");
 
         DEBUG("Created all Monte Carlo variables");
 
@@ -58,6 +59,7 @@ namespace fmc {
             output_monte_var("person", out_config);
             output_monte_var("stock_market", out_config);
             output_monte_var("annual_inflation", out_config);
+            output_monte_var("bond_market", out_config);
 
             write_json(cur_out_dir / "monte_config.lock", out_config);
         }

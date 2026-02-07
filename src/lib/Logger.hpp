@@ -3,6 +3,7 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <mutex>
 
 namespace fmc {
     enum class LoggingLevel {
@@ -36,6 +37,9 @@ namespace fmc {
         /// @param line_number 
         void log(const std::string& msg, LoggingLevel logging_level, const std::string& origin_file, size_t line_number);
         void flush();
+        static void set_logging_level(LoggingLevel l) {
+            Logger::instance().cur_logging_level = l;
+        }
 
         /// @brief Do late initialization of the logger such that there can be a global one that's configured in main
         /// @param args CLI arguments
@@ -56,6 +60,7 @@ namespace fmc {
         std::vector<std::string> buffer;
         bool initialized = false;
         const char* logging_level_to_string(LoggingLevel ll);
+        std::mutex mutex;
     };
 }
 

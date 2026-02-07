@@ -18,9 +18,13 @@ namespace fmc {
 
         // Build simulation objects
         StockMarket stock_market{config.stock_market_config};
+        DEBUG("Constructed Stock Market");
         BondMarket bond_market{config.bond_market_config};
+        DEBUG("Constructed Bond Market");
         AnnualInflation inflation{config.annual_inflation_config};
+        DEBUG("Constructed Annual Inflation");
         Person person{stock_market, bond_market, inflation, config.person_config};
+        DEBUG("Constructed Person");
 
         // Initialize timeseries logger
         std::chrono::sys_days cur_date = config.start_date;

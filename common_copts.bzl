@@ -15,7 +15,7 @@ def copts():
         "-Wformat=2",
 
         # Features
-        # "-fopenmp",
+        "-fopenmp",
 
         # Optimizer and code generation.
         #"-fwrapv",
@@ -62,7 +62,7 @@ def linkopts():
         "-lm",
         "-ldl",
         "-fuse-ld=lld",
-        # "-fopenmp",
+        "-fopenmp",
     ]
 
     linkopts += select({

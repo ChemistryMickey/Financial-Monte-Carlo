@@ -485,5 +485,17 @@
             "seed": 42
         }
     },
-    "bond_market": {}
+    "bond_market": {
+        "volatility": {
+            "dispersion": {
+                "lower": 0,
+                "mean": 0,
+                "standard_deviation": 0.1,
+                "upper": 0
+            },
+            "dispersion_type": "truncated_gaussian",
+            "initial_undispersed_value": 0.00,
+            "seed": 42
+        }
+    }
 }
