@@ -106,7 +106,7 @@ namespace fmc {
         bool can_afford_stock = (this->cash_on_hand - stock_price) > this->desired_cash_on_hand;
         bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;
         if (can_afford_stock) {
-            int64_t stock_to_buy = (this->cash_on_hand - this->desired_cash_on_hand) / stock_price + 1;
+            int64_t stock_to_buy = static_cast<int64_t>((this->cash_on_hand - this->desired_cash_on_hand) / stock_price) + 1;
             this->n_stocks += stock_to_buy;
 
             this->cash_on_hand -= stock_price * stock_to_buy;

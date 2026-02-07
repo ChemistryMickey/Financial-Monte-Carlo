@@ -8,6 +8,8 @@ def copts():
         "-Wall",
         "-Wpedantic",
         "-Wextra",
+        "-Wshadow",
+        "-Wswitch-enum",
         "-Wnull-dereference",
         "-Wconversion",
         "-Wformat=2",
@@ -20,19 +22,11 @@ def copts():
 
         # Csv support
         "-Wno-stringop-truncation",
-
-        # Turn off warnings associated with RTTR so you can see a goddamn thing.
-        # This also enables using Werror
-        "-Wno-unused-parameter",
-        "-Wno-deprecated-declarations",
-        "-Wno-pessimizing-move",
-        "-Wno-float-conversion",
-        "-Wno-shadow"
     ]
 
     copts += select({
         "//:unit_testing": [
-            "-fsanitize=address,undefined",
+            "-fsanitize=address,undefined,leak",
             "-fno-sanitize-recover",
             "-Werror",
             "-DUNIT_TESTING",
@@ -73,7 +67,7 @@ def linkopts():
 
     linkopts += select({
         "//:unit_testing": [
-            "-fsanitize=address,undefined",
+            "-fsanitize=address,undefined,leak",
             "-fno-sanitize-recover",
             "-Werror",
         ],

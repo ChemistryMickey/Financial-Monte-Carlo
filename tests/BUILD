@@ -3,7 +3,7 @@ load("//tests:generate_tests.bzl", "generate_tests")
 
 deps = [
     "//:lib",
-    "//third_party/rttr:rttr_core",
+    "//third_party/rttr_bazel:rttr_core",
     "@cli11//:cli11",
     "@googletest//:gtest",
     "@googletest//:gtest_main"

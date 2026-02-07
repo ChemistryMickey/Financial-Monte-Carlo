@@ -237,7 +237,7 @@ namespace fmc {
             Money m2{10, 0};
 
             // Because this is how you resolve how many stock to dissolve
-            int div = m1 / m2 + 1;
+            int div = static_cast<int>(m1 / m2) + 1;
             EXPECT_EQ(div, 1);
         }
         {
@@ -245,7 +245,7 @@ namespace fmc {
             Money m2{2, 0};
 
             // Because this is how you resolve how many stock to dissolve
-            int div = m1 / m2 + 1;
+            int div = static_cast<int>(m1 / m2) + 1;
             EXPECT_EQ(div, 6);
         }
     }

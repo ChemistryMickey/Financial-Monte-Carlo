@@ -76,7 +76,9 @@ namespace fmc {
 
         Money value_in_stock() const;
 
-        void environment(uint t) override {}
+        void environment(uint t) override {
+            static_cast<void>(t);
+        }
 
         bool should_terminate() override;
 

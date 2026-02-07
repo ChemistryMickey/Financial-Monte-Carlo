@@ -22,7 +22,9 @@ namespace fmc {
         RNG rng;
 
         StockMarket(const nlohmann::json& config);
-        void update(uint days_passed) override {}
+        void update(uint days_passed) override {
+            static_cast<void>(days_passed);
+        }
         void initialize() override;
         void yearly_update() override {}
         void environment(uint t) override;
