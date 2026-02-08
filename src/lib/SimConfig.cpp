@@ -5,7 +5,7 @@ namespace fmc {
         start_date{string2sys_days(config.at("start_date").get<std::string>())},
         end_date{string2sys_days(config.at("end_date").get<std::string>())},
         logging_channel_def_path{config.at("logging_channels").get<std::string>()},
-        person_config(config.at("person")), // This is a "most vexing parse". This must be parentheses
+        person_config(config.at("person")),
         stock_market_config(config.at("stock_market")),
         bond_market_config(config.at("bond_market")),
         annual_inflation_config(config.at("annual_inflation")) {}
@@ -15,7 +15,7 @@ namespace fmc {
         auto append_monte_var = [&](const char* root_key) {
             for (auto& [key, var] : config.at(root_key).items()) {
                 DEBUG("Attempting to disperse {} with value {}", key, var.dump(3));
-                if (key.contains("event")) {
+                if (key.contains("event") || key.contains("T_")) {
                     for (auto& [event_key, event_var] : var.items()) {
                         monte_vars.emplace(key + "_" + event_key, event_var);
                     }
@@ -35,7 +35,7 @@ namespace fmc {
 
         auto output_monte_var = [&](const char* root_key, nlohmann::json& out_config) {
             for (auto& [key, var] : config.at(root_key).items()) {
-                if (key.contains("event")) {
+                if (key.contains("event") || key.contains("T_")) {
                     for (auto& [event_key, _] : var.items()) {
                         out_config[root_key][key][event_key] = monte_vars.at(key + "_" + event_key).next_value();
                     }

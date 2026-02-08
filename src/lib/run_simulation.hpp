@@ -21,7 +21,7 @@ namespace fmc {
         // Build simulation objects
         StockMarket stock_market{config.stock_market_config};
         DEBUG("Constructed Stock Market");
-        BondMarket bond_market{config.bond_market_config};
+        BondMarket bond_market{config.bond_market_config, config.start_date};
         DEBUG("Constructed Bond Market");
         AnnualInflation inflation{config.annual_inflation_config};
         DEBUG("Constructed Annual Inflation");

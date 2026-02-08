@@ -12,7 +12,7 @@ namespace fmc {
         /// @brief Treasury bill with coupon payments specified as part of the bill.
         T_Note,
         /// @brief Treasury Inflation-Protected Securities. Principal adjusts with inflation as measured by the Consumer Price Index.
-        TIPS,
+        T_IPS,
         /// @brief Floating Rate Notes. Interest rate fluctuates based on a benchmark index (usually 3-month T-bill rate) plus a spread.
         // FRN // Not gonna do this one for now. Too complicated.
     };

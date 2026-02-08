@@ -9,8 +9,6 @@
 #include <rttr/type>
 #include <rttr/registration_friend>
 
-/// TODO:
-///     - Add events that shock the stock market. Ideally every 20 years or so.
 
 namespace fmc {
     struct StockMarket : public TimeseriesLoggable, public Model {

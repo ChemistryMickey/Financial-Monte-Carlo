@@ -80,7 +80,7 @@
             "coupon_award_rate": 1e-5,
             "coupon_proc_rate_months": 6
         },
-        "TIPS": {
+        "T_IPS": {
             "volatility": 0.003,
             "face_value": 100.0,
             "interest_rate": 0.001
