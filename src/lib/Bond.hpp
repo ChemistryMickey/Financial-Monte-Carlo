@@ -28,7 +28,7 @@ namespace fmc {
         std::chrono::sys_days next_coupon_payment_date = std::chrono::sys_days::max();
 
         /// @brief The interval between which coupon payments are made (only applies to security types with coupons)
-        std::chrono::days coupon_payment_interval_days = std::chrono::days::max();
+        std::chrono::days coupon_payment_interval_days = std::chrono::days{static_cast<size_t>(1e12)}; // Don't want MAX so we don't get rollover
 
         /// @brief The proportion of the current market value of the security you get as a coupon payment (not a percent)
         double coupon_interest_rate = 0.0;
@@ -53,7 +53,7 @@ namespace fmc {
             std::chrono::sys_days maturation_date,
             const Money& face_value,
             double interest_rate,
-            std::chrono::days coupone_payment_interval_days = std::chrono::days::max(),
+            std::chrono::days coupon_payment_interval_days = std::chrono::days{static_cast<size_t>(1e12)},
             double coupon_interest_rate = 0.0,
             SecurityType security_type = SecurityType::T_Bill
         );

@@ -11,7 +11,9 @@ namespace fmc {
     }
 
     void BondMarket::environment(unsigned int days_passed) {
-        cur_day += std::chrono::days{1};
+        cur_day += std::chrono::days{days_passed};
+
+        /// TODO: Update interest rates based on volatility
     }
 
 

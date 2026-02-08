@@ -84,18 +84,20 @@ to build and run the Google Benchmark RTTR reflection vs Map.
 
 There is no option to run all benchmarks because these are expensive.
 
-## TODO / Known Bugs (in Prio order)
+## TODO / Known Bugs
 - [x] Integration testing using the `Person`. There's probably some jank in there w.r.t. updates and deciding when to enter and exit stock positions.
 - [x] Tune the dispersions better. Right now the median stock market goes down which seems wrong. Inflation also tends deflationary which seems wrong.
 - [ ] Add separate "failed run" section in MC report to further investigate reasons why you went bankrupt.
-- [ ] Add a bond market to supplement the stock market. Maybe also a non-liquid asset market such as art/long-term investments?
+- [/] Add a bond market to supplement the stock market. Maybe also a non-liquid asset market such as art/long-term investments?
+    - [ ] Make the bond market respond to the stock market / inflation
 - [x] "Simulation Controller" such that `run_simulation` is controlled in a more "registration" manner than a bespoke function.
 - [ ] Come up with a more clever way of seeding the RNGs than "42"
+- [ ] More Monte Carlo visualization (functions marked as Not Yet Implemented)
 
 ## Design flaws / Kinda jank
 - Adding a dispersion is very manual. Gotta add it to the object config parse, then add it to the SimConfig.cpp parse.
 - Adding a loggable is also quite manual. It can probably be wrapped in a couplea macros.
-- Setup/envvars is kinda jank.
+- Setup/envvars is kinda jank. It'd be nice if this was containerized.
 
 ## Lessons Learned
 - RTTR is nice but I don't think it's significantly more ergonomic than something like a Loggable struct that defines a series of `std::map<std::string, std::reference_wrapper<T>>` which each model would have and then a `TimeseriesDataLogger` which takes a map of these loggables. Then, at registration time, the TimeseriesDataLogger just has a small map of those enabled signals rather than the master map of all the possible loggable signals. The only potential downside I see to this scheme is that the maps would increase the size of the model objects by N reference wrapper sizes (which is pretty negligable?).

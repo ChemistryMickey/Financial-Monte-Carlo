@@ -66,6 +66,7 @@ namespace fmc {
     }
 
     void Person::buy_bonds(const Money& cash) {
+        static_cast<void>(cash);
         /// TODO: Buy other kinds of bonds, not just T_BILLs
     }
 
