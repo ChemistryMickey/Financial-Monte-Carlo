@@ -488,10 +488,10 @@
     "bond_market": {
         "volatility": {
             "dispersion": {
-                "lower": 0,
+                "lower": -0.5,
                 "mean": 0,
                 "standard_deviation": 0.1,
-                "upper": 0
+                "upper": 0.5
             },
             "dispersion_type": "truncated_gaussian",
             "initial_undispersed_value": 0.00,

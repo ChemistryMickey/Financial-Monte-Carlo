@@ -34,7 +34,9 @@ namespace fmc {
             // Termination conditions
             for (auto& model : models) {
                 if (model.get().should_terminate()) {
+#ifndef OPTIMIZE
                     WARN("Terminating on {}", cur_date);
+#endif
                     return;
                 }
             }

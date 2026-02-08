@@ -64,7 +64,13 @@ namespace fmc {
     };
 }
 
+#ifndef OPTIMIZE
 #define DEBUG(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::DEBUG, __FILE__, __LINE__) 
+#else
+// Get ridda the debug option altogether so the comparison doesn't even happen. SPEED
+#define DEBUG(pattern, ...) {}
+#endif
+
 #define INFO(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::INFO, __FILE__, __LINE__) 
 #define WARN(pattern, ...) fmc::Logger::instance().log(std::format((pattern) __VA_OPT__(,) __VA_ARGS__), fmc::LoggingLevel::WARNING, __FILE__, __LINE__) 
 #define ERROR(pattern, ...) {std::string err_msg = std::format((pattern) __VA_OPT__(,) __VA_ARGS__); fmc::Logger::instance().log(err_msg, fmc::LoggingLevel::ERROR, __FILE__, __LINE__); fmc::Logger::instance().flush(); throw std::runtime_error(err_msg);}

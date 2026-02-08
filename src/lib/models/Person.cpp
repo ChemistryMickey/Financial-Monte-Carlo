@@ -63,7 +63,7 @@ namespace fmc {
     bool Person::should_terminate() {
         // Termination Conditions
         if (this->bankrupt()) {
-            WARN("Went bankrupt with a net worth of ${} and {} stocks ({} $/share)",
+            INFO("Went bankrupt with a net worth of ${} and {} stocks ({} $/share)",
                 this->current_net_worth,
                 this->n_stocks,
                 stock_market.position_price
@@ -98,8 +98,11 @@ namespace fmc {
         // Add income
         if (this->current_age < this->retirement_age) {
             Money daily_income{this->income_until_retirement.to_double() / 365.0};
-            this->cash_on_hand += daily_income;
+            this->cash_on_hand += daily_income * days_passed;
         }
+
+        // Update bonds
+
 
         // Given cash on hand, liquidate assets or invest
         const Money stock_price = this->stock_market.position_price;

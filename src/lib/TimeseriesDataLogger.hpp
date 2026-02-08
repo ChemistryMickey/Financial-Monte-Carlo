@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <mutex>
 
 #include "Money.hpp"
 
@@ -34,6 +35,7 @@ namespace fmc {
         std::chrono::sys_days& clock;
         std::filesystem::path log_out_path;
         std::vector<std::string> buffer;
+        std::mutex mutex;
 
         // Loggable types. These must be const reference wrappers for property_readonly RTTR values
         //      (and the logger should only ever be readonly)

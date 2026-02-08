@@ -68,6 +68,22 @@
         "volatility": 0.01
     },
     "bond_market": {
-        "volatility": 0.01
+        "T_Bill": {
+            "volatility": 0.01,
+            "face_value": 100.0,
+            "interest_rate": 0.01
+        },
+        "T_Note": {
+            "volatility": 0.005,
+            "face_value": 100.0,
+            "interest_rate": 0.003,
+            "coupon_award_rate": 1e-5,
+            "coupon_proc_rate_months": 6
+        },
+        "TIPS": {
+            "volatility": 0.003,
+            "face_value": 100.0,
+            "interest_rate": 0.001
+        }
     }
 }

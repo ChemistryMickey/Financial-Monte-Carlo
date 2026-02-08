@@ -115,6 +115,8 @@ namespace fmc {
     }
 
     void TimeseriesDataLogger::log() {
+        std::lock_guard<std::mutex> lock{this->mutex};
+
         std::string out = std::format("{}", this->clock);
 
         /// WARNING: This MUST be in the same order as the header function or else columns won't line up!

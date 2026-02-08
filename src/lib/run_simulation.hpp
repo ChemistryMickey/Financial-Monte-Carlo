@@ -12,6 +12,8 @@
 #include "models/BondMarket.hpp"
 #include "models/AnnualInflation.hpp"
 
+#define VARIABLE_NAME_PAIR(var) {#var, var}
+
 namespace fmc {
     inline void run_simulation(const std::filesystem::path& out_dir, const SimConfig& config) {
         DEBUG("Executing simulation with config:\n{}", config);
@@ -32,16 +34,16 @@ namespace fmc {
             cur_date,
             config.logging_channel_def_path,
             out_dir / "timeseries_data.csv",
-            // The following key/value pairs must match EXACTLY
             {
-                {"person", person},
-                {"stock_market", stock_market},
-                {"inflation", inflation}
+                VARIABLE_NAME_PAIR(person),
+                VARIABLE_NAME_PAIR(stock_market),
+                VARIABLE_NAME_PAIR(bond_market),
+                VARIABLE_NAME_PAIR(inflation),
             }
         };
 
         SimulationController sim_controller{cur_date, config.end_date,
-            {stock_market, inflation, person}, ts_logger};
+            {stock_market, inflation, person, bond_market}, ts_logger};
 
         sim_controller.run();
     }

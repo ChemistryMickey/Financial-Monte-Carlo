@@ -33,7 +33,6 @@ int main(int argc, char** argv) {
 
         fmc::Logger::set_logging_level(fmc::LoggingLevel::WARNING);
 #ifdef OPTIMIZE
-#pragma omp parallel num_threads(16)
 #pragma omp parallel for
 #endif
         for (uint run = 0; run < args.runs; ++run) {
