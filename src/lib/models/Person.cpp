@@ -45,10 +45,28 @@ namespace fmc {
         return this->stock_market.position_price * this->n_stocks;
     }
 
+    Money Person::value_in_bonds() const {
+        Money bond_values{0.0};
+        for (auto& bond : this->bonds) {
+            bond_values += bond.face_value;
+        }
+
+        return bond_values;
+    }
+
     void Person::initialize() {
-        // Until you have a bond market, just drop all your cash in stocks.
-        this->n_stocks = (int) (this->cash_on_hand.to_double() / this->stock_market.position_price.to_double());
+        // Drop cash on stocks according to the desired proportion
+        Money cash_for_stocks = this->cash_on_hand.to_double() * this->stock_bond_ratio.get_value();
+        Money cash_for_bonds = this->cash_on_hand.to_double() * (1 - this->stock_bond_ratio.get_value());
+
+        this->n_stocks = (int) (cash_for_stocks / this->stock_market.position_price.to_double());
         this->cash_on_hand -= this->stock_market.position_price * this->n_stocks;
+
+        this->buy_bonds(cash_for_bonds);
+    }
+
+    void Person::buy_bonds(const Money& cash) {
+        /// TODO: Buy other kinds of bonds, not just T_BILLs
     }
 
     void Person::yearly_update() {

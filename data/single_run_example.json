@@ -39,7 +39,7 @@
         },
         "retirement_age": 75,
         "starting_money": 250000,
-        "stock_bond_ratio": 1,
+        "stock_bond_ratio": 0.75,
         "yearly_raise_percent": 0.0
     },
     "start_date": "2026-01-01",

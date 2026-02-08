@@ -75,6 +75,11 @@ namespace fmc {
         void yearly_update();
 
         Money value_in_stock() const;
+        Money value_in_bonds() const;
+
+        /// @brief Buy bonds from the bond market with the provided money
+        /// @param Max amount to spend on the bond market
+        void buy_bonds(const Money&);
 
         void environment(uint t) override {
             static_cast<void>(t);

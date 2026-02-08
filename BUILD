@@ -36,7 +36,8 @@ cc_library(
     linkopts = linkopts(),
     deps = [
         "//third_party/rttr_bazel:rttr_core",
-        "@cli11//:cli11"
+        "@cli11//:cli11",
+        "@magic_enum//:magic_enum"
     ],
     visibility= ["//visibility:public"],
     linkstatic=True
@@ -50,7 +51,8 @@ cc_binary(
     deps = [
         "//:lib", 
         "//third_party/rttr_bazel:rttr_core",
-        "@cli11//:cli11"
+        "@cli11//:cli11",
+        "@magic_enum//:magic_enum"
     ],
     linkstatic=True
 )
