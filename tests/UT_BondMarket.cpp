@@ -6,16 +6,17 @@ namespace fmc {
     class TestBondMarket : public ::testing::Test {
     public:
         nlohmann::json config = {
+            {"rng_seed", 42},
             {
                 "T_Bill", {
-                    {"volatitlity", 0},
+                    {"volatility", 0.0001},
                     {"face_value", 100},
                     {"interest_rate", 0.01}
                 }
             },
             {
                 "T_Note", {
-                    {"volatitlity", 0},
+                    {"volatility", 0.00001},
                     {"face_value", 100},
                     {"interest_rate", 0.001},
                     {"coupon_award_rate", 1e-5},
@@ -24,7 +25,7 @@ namespace fmc {
             },
             {
                 "T_IPS", {
-                    {"volatitlity", 0},
+                    {"volatility", 0.000001},
                     {"face_value", 100},
                     {"interest_rate", 0.001}
                 }
@@ -136,5 +137,13 @@ namespace fmc {
 
         market.cur_day += std::chrono::days{2};
         EXPECT_EQ(market.calc_coupon_payments(bonds), Money{0.001 * 100.0});
+    }
+
+    TEST_F(TestBondMarket, VolatilityUpdate) {
+        std::unordered_map<SecurityType, double> cur_interest = market.security_interest_rates;
+        market.environment(1);
+        for (auto& [security_type, market_interest] : market.security_interest_rates) {
+            EXPECT_NE(market_interest, cur_interest[security_type]);
+        }
     }
 }

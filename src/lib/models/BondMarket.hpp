@@ -7,7 +7,9 @@
 #include "include/json.hpp"
 #include "Bond.hpp"
 #include "Model.hpp"
+#include "Money.hpp"
 #include "Bond.hpp"
+#include "math.hpp"
 #include "TimeseriesDataLogger.hpp"
 
 namespace fmc {
@@ -19,9 +21,22 @@ namespace fmc {
             {SecurityType::T_Note, 0.0},
             {SecurityType::T_IPS, 0.0}
         };
+        std::unordered_map<SecurityType, double> security_volatility{
+            {SecurityType::T_Bill, 0.0},
+            {SecurityType::T_Note, 0.0},
+            {SecurityType::T_IPS, 0.0}
+        };
+        std::unordered_map<SecurityType, Money> security_face_value{
+            {SecurityType::T_Bill, Money{0.0}},
+            {SecurityType::T_Note, Money{0.0}},
+            {SecurityType::T_IPS, Money{0.0}}
+        };
 
         /// @brief The current simulation day such that this can check if a bond should mature/coupon pay out
         std::chrono::sys_days cur_day;
+
+        /// @brief Random Number Generator for interest rate volatility
+        RNG rng;
 
         BondMarket(const nlohmann::json& config, const std::chrono::sys_days& start_date);
         void initialize() override {}

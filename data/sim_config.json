@@ -486,6 +486,15 @@
         }
     },
     "bond_market": {
+        "rng_seed": {
+            "dispersion": {
+                "lower": -42,
+                "upper": 10000000
+            },
+            "dispersion_type": "uniform",
+            "initial_undispersed_value": 42,
+            "seed": 42
+        },
         "T_Bill": {
             "volatility": {
                 "dispersion": {

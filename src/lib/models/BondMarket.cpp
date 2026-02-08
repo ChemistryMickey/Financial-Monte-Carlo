@@ -4,16 +4,29 @@
 #include "utils.hpp"
 
 namespace fmc {
-    BondMarket::BondMarket(const nlohmann::json& config, const std::chrono::sys_days& start_date_) : cur_day{start_date_} {
+    BondMarket::BondMarket(const nlohmann::json& config, const std::chrono::sys_days& start_date_) :
+        cur_day{start_date_},
+        rng{config["rng_seed"].get<uint>()} {
         for (auto& [bill_type, subconfig] : config.items()) {
-            this->security_interest_rates[magic_enum::enum_cast<SecurityType>(bill_type).value()] = subconfig["interest_rate"].get<double>();
+            if (!bill_type.contains("T_")) {
+                // Then it's not a Treasury Bill type
+                continue;
+            }
+
+            SecurityType security_type = magic_enum::enum_cast<SecurityType>(bill_type).value();
+            this->security_interest_rates.at(security_type) = subconfig["interest_rate"].get<double>();
+            this->security_volatility.at(security_type) = subconfig["volatility"].get<double>();
+            this->security_face_value.at(security_type) = Money{subconfig["face_value"].get<double>()};
         }
     }
 
     void BondMarket::environment(unsigned int days_passed) {
         cur_day += std::chrono::days{days_passed};
 
-        /// TODO: Update interest rates based on volatility
+        for (auto& [bill_type, interest_rate] : this->security_interest_rates) {
+            interest_rate *= (1 + this->rng.normal(0, this->security_volatility[bill_type]));
+            interest_rate = std::max(0.0, interest_rate); // Is this a good assumption? I think so
+        }
     }
 
 
