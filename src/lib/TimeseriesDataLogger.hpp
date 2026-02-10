@@ -5,10 +5,12 @@
 #include <filesystem>
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <mutex>
 
 #include "Money.hpp"
+#include "Bond.hpp"
 
 /// TODO:
 ///     - More elegant way of logging multiple types
@@ -40,7 +42,7 @@ namespace fmc {
         // Loggable types. These must be const reference wrappers for property_readonly RTTR values
         //      (and the logger should only ever be readonly)
         template <typename T>
-        using RefMap = std::map <std::string, std::reference_wrapper<const T>>;
+        using RefMap = std::map<std::string, std::reference_wrapper<const T>>;
 
         RefMap<Money> money_signals_to_log;
         RefMap<double> double_signals_to_log;

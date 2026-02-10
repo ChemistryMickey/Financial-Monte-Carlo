@@ -9,6 +9,7 @@
 
 #include "TimeseriesDataLogger.hpp"
 #include "Logger.hpp"
+#include "magic_enum/magic_enum.hpp"
 #include "file_io.hpp"
 
 namespace fmc {

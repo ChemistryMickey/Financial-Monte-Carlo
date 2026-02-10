@@ -7,6 +7,7 @@ namespace fmc {
         int64_t dollars = 0;
         int cents = 0;
 
+        Money() = default;
         Money(int64_t dollars_, int cents_);
         Money(double v);
 

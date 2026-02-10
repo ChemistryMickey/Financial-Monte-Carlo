@@ -66,8 +66,16 @@ namespace fmc {
     }
 
     void Person::buy_bonds(const Money& cash) {
-        static_cast<void>(cash);
+        DEBUG("Buying bonds");
         /// TODO: Buy other kinds of bonds, not just T_BILLs
+        /// TODO: Buy a more complex T_BILL portfolio rather than just 1 Year bonds.
+        size_t n_bonds = (size_t) std::floor(cash / this->bond_market.security_face_value[SecurityType::T_Bill]);
+        for (size_t n = 0; n < n_bonds; ++n) {
+            this->bonds.push_back(this->bond_market.buy_bond(BondDuration_days::TwelveMonth));
+            this->cash_on_hand -= this->bonds.back().face_value;
+        }
+
+        DEBUG("Purchased {} bonds", this->bonds.size());
     }
 
     void Person::yearly_update() {
@@ -91,7 +99,7 @@ namespace fmc {
         }
 
         if (this->dead()) {
-            INFO("Died with ${} net worth", this->current_net_worth);
+            INFO("Died with ${} net worth at {} years old", this->current_net_worth, this->current_age);
             return true;
         }
 
@@ -121,9 +129,19 @@ namespace fmc {
         }
 
         // Update bonds
+        this->bond_market.set_bonds_maturity(this->bonds);
+        for (size_t i = this->bonds.size() - 1; i > 0; --i) {
+            auto& bond = this->bonds.at(i);
+            if (bond.should_mature) {
+                DEBUG("Liquidating bond {}", bond);
+                this->current_net_worth += bond.maturation_value;
+                this->bonds.erase(this->bonds.begin() + i);
+            }
+        }
 
 
         // Given cash on hand, liquidate assets or invest
+        /// TODO: Transition to also using bonds
         const Money stock_price = this->stock_market.position_price;
         bool can_afford_stock = (this->cash_on_hand - stock_price) > this->desired_cash_on_hand;
         bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;

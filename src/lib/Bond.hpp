@@ -4,6 +4,7 @@
 #include <numeric>
 
 #include "Money.hpp"
+#include "magic_enum/magic_enum.hpp"
 
 namespace fmc {
     enum class SecurityType : uint8_t {
@@ -15,6 +16,14 @@ namespace fmc {
         T_IPS,
         /// @brief Floating Rate Notes. Interest rate fluctuates based on a benchmark index (usually 3-month T-bill rate) plus a spread.
         // FRN // Not gonna do this one for now. Too complicated.
+    };
+
+    enum class BondDuration_days : uint64_t {
+        SixMonth = 30 * 6,
+        TwelveMonth = 365,
+        FiveYear = 365 * 5,
+        TenYear = 365 * 10,
+        TwentyYear = 365 * 20
     };
 
     struct Bond {
@@ -49,8 +58,8 @@ namespace fmc {
         SecurityType security_type = SecurityType::T_Bill;
 
         Bond(
-            std::chrono::sys_days purchsed_date,
-            std::chrono::sys_days maturation_date,
+            std::chrono::sys_days purchased_date,
+            BondDuration_days bond_duration,
             const Money& face_value,
             double interest_rate,
             std::chrono::days coupon_payment_interval_days = std::chrono::days{static_cast<size_t>(1e12)},
@@ -59,3 +68,24 @@ namespace fmc {
         );
     }; // James Bond
 }
+
+namespace std {
+    template <>
+    struct formatter<fmc::Bond> {
+        constexpr auto parse(format_parse_context& ctx) {
+            return ctx.begin();
+        }
+
+        template <typename FormatContext>
+        auto format(const fmc::Bond& b, FormatContext& ctx) const {
+            return format_to(ctx.out(), "Bond:\n\tPurchase Date: {}, Maturation Date: {}\n\tFace Value: ${}, Maturation Value: ${}\n\tInterest Rate: {}, Type: {}",
+                b.purchased_date,
+                b.maturation_date,
+                b.face_value,
+                b.maturation_value,
+                b.interest_rate,
+                magic_enum::enum_name<fmc::SecurityType>(b.security_type)
+            );
+        }
+    };
+} // namespace std

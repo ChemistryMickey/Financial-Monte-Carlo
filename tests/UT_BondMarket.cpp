@@ -39,38 +39,38 @@ namespace fmc {
 
     TEST_F(TestBondMarket, init) {
         EXPECT_EQ(market.cur_day, string2sys_days("2020-01-01"));
-        EXPECT_EQ(market.security_interest_rates[SecurityType::T_IPS], 0.001);
+        EXPECT_EQ(market.T_IPS_interest_rate, 0.001);
     }
 
     TEST_F(TestBondMarket, SetBondMaturity) {
         std::vector<Bond> bonds{
             Bond {
                 string2sys_days("2020-01-01"),
-                string2sys_days("2020-07-01"),
+                BondDuration_days::SixMonth,
                 Money{100.0},
                 0.01,
             },
             Bond {
-                string2sys_days("2020-01-01"),
-                string2sys_days("2020-08-01"),
+                string2sys_days("2020-02-01"),
+                BondDuration_days::SixMonth,
                 Money{100.0},
                 0.01,
             },
             Bond {
-                string2sys_days("2020-01-01"),
-                string2sys_days("2020-09-01"),
+                string2sys_days("2020-03-01"),
+                BondDuration_days::SixMonth,
                 Money{100.0},
                 0.01,
             },
             Bond {
-                string2sys_days("2020-01-01"),
-                string2sys_days("2020-10-01"),
+                string2sys_days("2020-04-01"),
+                BondDuration_days::SixMonth,
                 Money{100.0},
                 0.01,
             },
         };
 
-        market.cur_day = string2sys_days("2020-06-30");
+        market.cur_day = string2sys_days("2020-06-28");
         market.set_bonds_maturity(bonds);
         for (auto& bond : bonds) {
             EXPECT_FALSE(bond.should_mature);
@@ -100,13 +100,13 @@ namespace fmc {
         std::vector<Bond> bonds{
             Bond {
                 string2sys_days("2020-01-01"),
-                string2sys_days("2021-01-01"),
+                BondDuration_days::TwelveMonth,
                 Money{100.0},
                 0.01,
             },
             Bond {
                 string2sys_days("2020-01-01"),
-                string2sys_days("2021-01-01"),
+                BondDuration_days::TwelveMonth,
                 Money{100.0},
                 0.001,
                 std::chrono::days{30},
@@ -115,7 +115,7 @@ namespace fmc {
             },
             Bond {
                 string2sys_days("2020-01-01"),
-                string2sys_days("2021-01-01"),
+                BondDuration_days::TwelveMonth,
                 Money{100.0},
                 0.001,
                 std::chrono::days{32},
@@ -124,7 +124,7 @@ namespace fmc {
             },
             Bond {
                 string2sys_days("2020-01-01"),
-                string2sys_days("2021-01-01"),
+                BondDuration_days::TwelveMonth,
                 Money{100.0},
                 0.01,
             },
@@ -140,10 +140,19 @@ namespace fmc {
     }
 
     TEST_F(TestBondMarket, VolatilityUpdate) {
-        std::unordered_map<SecurityType, double> cur_interest = market.security_interest_rates;
+        std::unordered_map<SecurityType, double> cur_interest{
+            {SecurityType::T_Bill, market.T_Bill_interest_rate},
+            {SecurityType::T_Note, market.T_Note_interest_rate},
+            {SecurityType::T_IPS, market.T_IPS_interest_rate}
+        };
+        std::unordered_map<SecurityType, double*> interest_ptrs{
+            {SecurityType::T_Bill, &market.T_Bill_interest_rate},
+            {SecurityType::T_Note, &market.T_Note_interest_rate},
+            {SecurityType::T_IPS, &market.T_IPS_interest_rate}
+        };
         market.environment(1);
-        for (auto& [security_type, market_interest] : market.security_interest_rates) {
-            EXPECT_NE(market_interest, cur_interest[security_type]);
+        for (auto& [security_type, market_interest] : cur_interest) {
+            EXPECT_NE(market_interest, *interest_ptrs[security_type]);
         }
     }
 }

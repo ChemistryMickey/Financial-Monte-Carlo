@@ -510,7 +510,7 @@
             "face_value": {
                 "dispersion": {
                     "lower": 0,
-                    "mean": 100,
+                    "mean": 0,
                     "standard_deviation": 0.1,
                     "upper": 0
                 },
@@ -545,7 +545,7 @@
             "face_value": {
                 "dispersion": {
                     "lower": 0,
-                    "mean": 100,
+                    "mean": 0,
                     "standard_deviation": 0.1,
                     "upper": 0
                 },
@@ -602,7 +602,7 @@
             "face_value": {
                 "dispersion": {
                     "lower": 0,
-                    "mean": 100,
+                    "mean": 0,
                     "standard_deviation": 0.1,
                     "upper": 0
                 },

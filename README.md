@@ -93,6 +93,9 @@ There is no option to run all benchmarks because these are expensive.
 - [x] "Simulation Controller" such that `run_simulation` is controlled in a more "registration" manner than a bespoke function.
 - [ ] Come up with a more clever way of seeding the RNGs than "42"
 - [ ] More Monte Carlo visualization (functions marked as Not Yet Implemented)
+- Bond Market
+    - [ ] Implement trading. It's not just a place to buy bonds.
+    - [ ] Make the interest rate of the bond a function of the duration of the bond; the longer the duration, the higher the interest rate
 
 ## Design flaws / Kinda jank
 - Adding a dispersion is very manual. Gotta add it to the object config parse, then add it to the SimConfig.cpp parse.
