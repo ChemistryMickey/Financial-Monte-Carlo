@@ -37,7 +37,7 @@
             "rng_seed": 42,
             "scaling_factor": 1.001
         },
-        "retirement_age": 75,
+        "retirement_age": 65,
         "starting_money": 250000,
         "stock_bond_ratio": 0.75,
         "yearly_raise_percent": 0.0

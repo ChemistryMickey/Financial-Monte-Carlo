@@ -55,5 +55,5 @@ set -xe
 bazel run //:main $optimize -- --config $config_path $dry --runs $runs -o $output_path $verbose
 
 if [[ $visualize == 1 ]]; then
-    plot-timeseries --output_dir $output_path --save_dir "$output_path/visualization" $use_logy
+    uv run python $PROJECT_HOME/tools/visualization/plot_timeseries_data.py --output_dir $output_path --save_dir "$output_path/visualization" $use_logy
 fi

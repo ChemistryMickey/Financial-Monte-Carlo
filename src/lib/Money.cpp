@@ -76,6 +76,15 @@ namespace fmc {
 
         return result;
     }
+    Money Money::operator*(uint64_t i) const {
+        int64_t total = this->dollars * 100 + this->cents;
+        total *= i;
+
+        Money result{total / 100, (int) total % 100};
+        result.normalize();
+
+        return result;
+    }
 
     Money Money::operator*(double d) const {
         return this->to_double() * d;

@@ -21,6 +21,7 @@ namespace fmc {
 
         Money operator*(uint i) const;
         Money operator*(int64_t i) const;
+        Money operator*(uint64_t i) const;
         Money operator*(double d) const;
         Money& operator*=(double d);
 

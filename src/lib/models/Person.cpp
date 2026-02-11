@@ -133,25 +133,38 @@ namespace fmc {
         for (size_t i = this->bonds.size() - 1; i > 0; --i) {
             auto& bond = this->bonds.at(i);
             if (bond.should_mature) {
-                DEBUG("Liquidating bond {}", bond);
+                DEBUG("Bond Matured:\n{}", bond);
                 this->current_net_worth += bond.maturation_value;
                 this->bonds.erase(this->bonds.begin() + i);
             }
         }
 
-
         // Given cash on hand, liquidate assets or invest
-        /// TODO: Transition to also using bonds
+        const Money excess_cash = this->cash_on_hand - this->desired_cash_on_hand;
         const Money stock_price = this->stock_market.position_price;
-        bool can_afford_stock = (this->cash_on_hand - stock_price) > this->desired_cash_on_hand;
-        bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;
-        if (can_afford_stock) {
-            int64_t stock_to_buy = static_cast<int64_t>((this->cash_on_hand - this->desired_cash_on_hand) / stock_price) + 1;
-            this->n_stocks += stock_to_buy;
+        const Money stock_available_cash = excess_cash * this->stock_bond_ratio.get_value();
+        int64_t n_stock_to_buy = (int64_t) std::floor(stock_available_cash / stock_price);
 
-            this->cash_on_hand -= stock_price * stock_to_buy;
+        const Money bond_face_value = this->bond_market.security_face_value[SecurityType::T_Bill];
+        const Money bond_available_cash = (excess_cash * (1 - this->stock_bond_ratio.get_value()));
+        int64_t n_bonds_to_buy = (int64_t) std::floor(bond_available_cash / bond_face_value);
+
+        // Now buy stock
+        if (n_stock_to_buy > 0) {
+            this->n_stocks += n_stock_to_buy;
+
+            this->cash_on_hand -= stock_price * n_stock_to_buy;
         }
-        else if (!sufficient_cash_on_hand && this->n_stocks > 0) {
+
+        // Now buy bonds
+        if (n_bonds_to_buy > 0) {
+            DEBUG("Purchasing {} bonds on {}", n_bonds_to_buy, this->bond_market.cur_day);
+            this->bonds.push_back(this->bond_market.buy_bond(BondDuration_days::TwelveMonth));
+        }
+
+        // Now make sure you're solvent
+        bool sufficient_cash_on_hand = this->cash_on_hand > this->desired_cash_on_hand;
+        if (!sufficient_cash_on_hand && this->n_stocks > 0) {
             int64_t stock_to_sell = std::min(
                 (int64_t) ((this->desired_cash_on_hand - this->cash_on_hand) / stock_price) + 1,
                 this->n_stocks);
@@ -169,6 +182,7 @@ namespace fmc {
             this->cash_on_hand += stock_price * stock_to_sell;
             DEBUG("Dissolving {} stock at ${}. New cash on hand: ${}", stock_to_sell, stock_price, this->cash_on_hand);
         }
+
 
         // Inflation Influenced Updates
         double inflation_multiplier = (1 + this->annual_inflation.annual_inflation_rate / 365.0);

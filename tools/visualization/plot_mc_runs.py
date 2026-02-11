@@ -17,7 +17,7 @@ def plot_mc_runs_to_html_str(out_dir: Path, report_html_str: str) -> str:
     cols = list(timeseries_data.values())[0].columns
 
     report_html_str += """
-<h2> Run Subsets and Statistical Enclosures </h2>
+<h2> Timeseries Data </h2>
 <details>
 """
     run_inds = sorted([int(run.stem.split("_")[1]) for run in runs])
@@ -39,6 +39,10 @@ def plot_mc_runs_to_html_str(out_dir: Path, report_html_str: str) -> str:
             )
 
             # First, plot a subset of the runs for that column
+            report_html_str += """
+<h4> Run Subset </h4>
+<details>
+"""
             fig = plt.figure(figsize=(16, 8))
             plt.plot(df[cols_to_plot], label=cols_to_plot)
             plt.title(f"{col} Run subset")
@@ -54,8 +58,13 @@ def plot_mc_runs_to_html_str(out_dir: Path, report_html_str: str) -> str:
 
             report_html_str += fig2html_str(fig)
             plt.close()
+            report_html_str += """</details>"""
 
             # Then, plot the statistical enclosures for that column
+            report_html_str += """
+<h4> Statistical Enclosure </h4>
+<details>
+"""
             fig = plt.figure(figsize=(16, 8))
             df = df.T
 
@@ -85,6 +94,7 @@ def plot_mc_runs_to_html_str(out_dir: Path, report_html_str: str) -> str:
 
             report_html_str += fig2html_str(fig)
             plt.close()
+            report_html_str += """</details>"""
 
         except Exception as e:  # noqa: E722
             print(f"\nFailed to plot {col}: {e}")
