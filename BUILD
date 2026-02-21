@@ -56,3 +56,11 @@ cc_binary(
     ],
     linkstatic=True
 )
+
+# Useful aliases
+
+## Create "compile_commands.json" such that VSCode can find includes paths based on bazel pulls, not system headers
+alias(
+    name = "compile_commands",
+    actual = "@wolfd_bazel_compile_commands//:generate_compile_commands",
+)

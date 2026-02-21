@@ -1,5 +1,5 @@
 load("//:common_copts.bzl", "copts", "linkopts") 
-load("//tests:generate_tests.bzl", "generate_tests")
+load("//:generate_tests.bzl", "generate_tests")
 
 deps = [
     "//:lib",
