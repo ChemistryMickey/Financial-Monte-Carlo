@@ -8,82 +8,70 @@
 #include <GLFW/glfw3.h>
 
 #include "Percentiles.hpp"
+#include "csv.hpp"
 
-#include <filesystem>
-#include <fstream>
-#include <sstream>
 #include <vector>
 #include <string>
 #include <iostream>
+#include <filesystem>
 #include <map>
 
-
-// ============================================================
-// Data Structures
-// ============================================================
-
-struct TimeSeriesFile {
-    std::vector<double> time;
-    std::vector<std::string> columnNames;
-    std::vector<std::vector<double>> columns;
+static const std::map<const char*, ImVec4> color_map = {
+    {"blue", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"red", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"green", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"yellow", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"orange", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"white", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"black", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"grey", {0.0f, 0.0f, 0.0f, 1.0f}},
 };
-
-
-// ============================================================
-// CSV Loader
-// ============================================================
-
-TimeSeriesFile LoadCSV(const std::string& path) {
-    TimeSeriesFile result;
-    std::ifstream file(path);
-    std::string line;
-
-    if (!file.is_open()) return result;
-
-    // Read header
-    std::getline(file, line);
-    std::stringstream header(line);
-    std::vector<std::string> headers;
-    {
-        std::string cell;
-
-        while (std::getline(header, cell, ',')) {
-            headers.push_back(cell);
-        }
-    }
-
-    // First column is time
-    result.columnNames.assign(headers.begin() + 1, headers.end());
-
-    while (std::getline(file, line)) {
-        std::stringstream ss(line);
-        std::string cell;
-        std::vector<double> row;
-
-        while (std::getline(ss, cell, ',')) {
-            row.push_back(std::stod(cell));
-        }
-
-        if (result.columns.empty()) {
-            result.columns.resize(row.size() - 1);
-        }
-
-        result.time.push_back(row[0]);
-        for (size_t i = 1; i < row.size(); ++i) {
-            result.columns[i - 1].push_back(row[i]);
-        }
-    }
-
-    return result;
-}
-
-// ============================================================
-// Main
-// ============================================================
+static const std::map<const char*, const char*> percentile_to_color_map = {
+        {"Min", "grey"},
+        {"5th Percentile", "green"},
+        {"25th Percentile", "orange"},
+        {"50th Percentile (Median)", "blue"},
+        {"75th Percentile", "orange"},
+        {"95th Percentile", "green"},
+        {"Max", "grey"},
+};
 
 int main(int argc, char** argv) {
     static_cast<void>(argc);
 
+
+    // Do all the loading and math up front. This way it can be offloaded to a thread later.
+    // Recursively load CSV files
+    std::vector<fmc::TimeSeriesFile> runs{};
+    std::string rootDir = argv[1];
+    size_t files_read = 0;
+    for (auto& p : std::filesystem::recursive_directory_iterator(rootDir)) {
+        if (p.path().extension() == ".csv") {
+            std::cout << "[" << files_read << "]: Loading " << p << "\n";
+            runs.push_back(fmc::loadCsv(p.path().string()));
+            files_read += 1;
+    }
+}
+
+    if (runs.empty()) {
+        std::cerr << "No CSV files found!\n";
+        return 1;
+    }
+
+    auto& time = runs[0].time;
+    size_t numCols = runs[0].columns.size();
+    std::vector<fmc::PercentileStats> columnStats(numCols);
+
+    // Precompute stats
+    for (size_t c = 0; c < numCols; ++c) {
+        std::vector<std::vector<double>> allRuns;
+        for (auto& run : runs) {
+            allRuns.push_back(run.columns[c]);
+        }
+        columnStats[c] = fmc::computeStats(allRuns);
+    }
+
+    // Make window
     glfwInit();
     GLFWwindow* window = glfwCreateWindow(1280, 720, "IMPlot Monte Carlo Visualizer", NULL, NULL);
     glfwMakeContextCurrent(window);
@@ -96,46 +84,26 @@ int main(int argc, char** argv) {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
-    std::vector<TimeSeriesFile> runs;
+    // Options
+    // Timeseries data
+    // Why are these strings? Because of sorting/hashing
+    std::map<std::string, bool> timeseries_options = {
+        {"Raw Data", false},
+        {"Min", true},
+        {"5th Percentile", true},
+        {"25th Percentile", true},
+        {"50th Percentile (Median)", true},
+        {"75th Percentile", true},
+        {"95th Percentile", true},
+        {"Max", true},
+        {"Log Y Axis", false}
+    };
 
-    // Recursively load CSV files
-    std::string rootDir = argv[1];
-    for (auto& p : std::filesystem::recursive_directory_iterator(rootDir)) {
-        if (p.path().extension() == ".csv") {
-            runs.push_back(LoadCSV(p.path().string()));
-        }
-    }
+    // Dispersions
+    // TODO
 
-    if (runs.empty()) {
-        std::cerr << "No CSV files found!\n";
-        return 1;
-    }
-
-    size_t selectedColumn = 0;
-    bool showRaw = true;
-    bool showMedian = true;
-    bool showP5 = true;
-    bool showP95 = true;
-    bool showP50 = true;
-    bool logY = false;
-
-    auto& time = runs[0].time;
-    size_t numCols = runs[0].columns.size();
-
-    std::vector<fmc::PercentileStats> columnStats(numCols);
-
-    // Precompute stats
-    for (size_t c = 0; c < numCols; ++c) {
-        std::vector<std::vector<double>> allRuns;
-        for (auto& run : runs)
-            allRuns.push_back(run.columns[c]);
-        columnStats[c] = fmc::ComputeStats(allRuns);
-    }
-
-    // ========================================================
     // Render Loop
-    // ========================================================
-
+    size_t selectedColumn = 0;
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
@@ -143,6 +111,7 @@ int main(int argc, char** argv) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        // Timeseries plot controls
         ImGui::Begin("Controls");
         if (ImGui::BeginCombo("Y Axis", runs[0].columnNames[selectedColumn].c_str())) {
             for (size_t i = 0; i < numCols; ++i) {
@@ -154,28 +123,50 @@ int main(int argc, char** argv) {
             }
             ImGui::EndCombo();
         }
-        ImGui::Checkbox("Raw Runs", &showRaw);
-        ImGui::Checkbox("Median", &showMedian);
-        ImGui::Checkbox("P5", &showP5);
-        ImGui::Checkbox("P95", &showP95);
-        ImGui::Checkbox("P50", &showP50);
-        ImGui::Checkbox("Log Y", &logY);
+        for (auto& [name, show] : timeseries_options) {
+            ImGui::Checkbox(name.c_str(), &show);
+
+        }
         ImGui::End();
 
+        // Timeseries plot
         ImGui::Begin("Plot");
-
         if (ImPlot::BeginPlot("Time Series")) {
 
             auto& stats = columnStats[selectedColumn];
+            std::map<const char*, double*> stats_name_map = {
+                {"Min", stats.min.data()},
+                {"5th Percentile", stats.p5.data()},
+                {"25th Percentile", stats.p25.data()},
+                {"50th Percentile (Median)", stats.p50.data()},
+                {"75th Percentile", stats.p75.data()},
+                {"95th Percentile", stats.p95.data()},
+                {"Max", stats.max.data()},
+            };
+
             const auto& colName = runs[0].columnNames[selectedColumn];
 
             ImPlot::SetupAxes("Time", colName.c_str());
-            ImPlot::SetupAxisScale(ImAxis_Y1, logY ? ImPlotScale_Log10 : ImPlotScale_Linear);
+            ImPlot::SetupAxisScale(ImAxis_Y1, timeseries_options["Log Y Axis"] ? ImPlotScale_Log10 : ImPlotScale_Linear);
 
-            // -------------------------
+            auto show_data = [&](bool show, ImVec4 color, const char* name, double* data, float lineweight = 3.0f) {
+                if (show) {
+                    ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, lineweight);
+                    ImPlot::PushStyleColor(ImPlotCol_Line, color);
+
+                    ImPlot::PlotLine(name,
+                        time.data(),
+                        data,
+                        (int) time.size());
+
+                    ImPlot::PopStyleColor();
+                    ImPlot::PopStyleVar();
+                }
+
+                };
+
             // Raw runs
-            // -------------------------
-            if (showRaw) {
+            if (timeseries_options["Raw Data"]) {
                 ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 1.0f);
                 ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(0.7f, 0.7f, 0.7f, 0.4f));
 
@@ -193,45 +184,10 @@ int main(int argc, char** argv) {
                 ImPlot::PopStyleVar();
             }
 
-            // -------------------------
-            // Median
-            // -------------------------
-            if (showMedian) {
-                ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 3.0f);
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-                ImPlot::PlotLine("Median",
-                    time.data(),
-                    stats.p50.data(),
-                    (int) time.size());
-
-                ImPlot::PopStyleColor();
-                ImPlot::PopStyleVar();
+            for (auto& [name, data_ptr] : stats_name_map) {
+                show_data(timeseries_options.at(name), color_map.at(percentile_to_color_map.at(name)), name, data_ptr);
             }
 
-            // -------------------------
-            // P5
-            // -------------------------
-            if (showP5) {
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
-                ImPlot::PlotLine("P5",
-                    time.data(),
-                    stats.p5.data(),
-                    (int) time.size());
-                ImPlot::PopStyleColor();
-            }
-
-            // -------------------------
-            // P95
-            // -------------------------
-            if (showP95) {
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
-                ImPlot::PlotLine("P95",
-                    time.data(),
-                    stats.p95.data(),
-                    (int) time.size());
-                ImPlot::PopStyleColor();
-            }
 
             ImPlot::EndPlot();
         }

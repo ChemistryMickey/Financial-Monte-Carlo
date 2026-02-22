@@ -9,5 +9,7 @@ build:benchmarking --define=BENCHMARKING=true
 
 build:optimized --define=OPTIMIZED=true
 
+build:debug --define=DEBUG=true
+
 build:profile --define=PROFILE=true
 build:profile-optimized --define=PROFILE_OPTIMIZED=true

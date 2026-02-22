@@ -24,7 +24,7 @@ namespace fmc {
             // Parse it up
             app.parse(argc, argv);
 
-            this->out_directory = project_path("output" / this->out_directory);
+            this->out_directory = project_path(this->out_directory);
         }
 
     private:

@@ -2,8 +2,6 @@ def copts():
     copts = [
         # C++ standard
         "-std=c++23",
-        # Debugging
-        "-ggdb3",
         # Compiler warnings
         "-Wall",
         "-Wpedantic",
@@ -39,6 +37,11 @@ def copts():
         "//:optimized": [
             "-O3",
             "-DOPTIMIZE"
+        ],
+        "//:debug": [
+            # Debugging
+            "-g",
+            "-ggdb3",
         ],
         "//:profile": [
             "-fno-omit-frame-pointer",
@@ -78,6 +81,10 @@ def linkopts():
         "//:optimized": [
             "-flto",
             "-O3"
+        ],
+        "//:debug": [
+            "-g",
+            "-ggdb3",
         ],
         "//:profile": [
             "-fno-omit-frame-pointer",

@@ -19,12 +19,12 @@ TEST(TestPercentiles, EmptyData) {
 
 TEST(TestPercentiles, RepeatedData) {
     const std::vector<std::vector<double>> allRuns = {
-        {0, 0, 0},
-        {1, 1, 1},
-        {2, 2, 2}
+        {0, 1, 2},
+        {0, 1, 2},
+        {0, 1, 2}
     };
-    fmc::PercentileStats stats = fmc::ComputeStats(allRuns);
+    fmc::PercentileStats stats = fmc::computeStats(allRuns);
 
 
-    // EXPECT_EQ(stats.max[0], 0);
+    EXPECT_EQ(stats.max[0], 0);
 }

@@ -10,12 +10,15 @@ config_setting(
     name="optimized",
     define_values = {"OPTIMIZED": "true"}
 )
+config_setting(
+    name="debug",
+    define_values = {"DEBUG": "true"}
+)
 
 config_setting(
     name="profile",
     define_values = {"PROFILE": "true"}
 )
-
 config_setting(
     name="profile_optimized",
     define_values = {"PROFILE_OPTIMIZED": "true"}
