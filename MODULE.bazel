@@ -12,3 +12,9 @@ bazel_dep(name = "imgui", version = "1.91.8")
 bazel_dep(name = "implot", version = "0.16")
 bazel_dep(name = "glfw", version = "3.3.9")
 bazel_dep(name = "wolfd_bazel_compile_commands", version = "0.5.2")
+
+bazel_dep(name = "indicators")
+local_path_override(
+    module_name = "indicators",
+    path = "third_party/indicators"
+)

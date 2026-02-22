@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 namespace fmc {
     static inline std::string trim(const std::string& s) {
@@ -75,6 +76,7 @@ namespace fmc {
                 result.columns[i - 1].push_back(row[i]);
             }
         }
+
         return result;
     }
 

@@ -9,22 +9,24 @@
 
 #include "Percentiles.hpp"
 #include "csv.hpp"
+#include "indicators.hpp"
 
 #include <vector>
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <algorithm>
 #include <map>
 
 static const std::map<const char*, ImVec4> color_map = {
-    {"blue", {0.0f, 0.0f, 0.0f, 1.0f}},
-    {"red", {0.0f, 0.0f, 0.0f, 1.0f}},
-    {"green", {0.0f, 0.0f, 0.0f, 1.0f}},
-    {"yellow", {0.0f, 0.0f, 0.0f, 1.0f}},
-    {"orange", {0.0f, 0.0f, 0.0f, 1.0f}},
-    {"white", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"blue", {0.0f, 0.0f, 1.0f, 1.0f}},
+    {"red", {1.0f, 0.0f, 0.0f, 1.0f}},
+    {"green", {0.0f, 1.0f, 0.0f, 1.0f}},
+    {"yellow", {0.5f, 0.5f, 0.0f, 1.0f}},
+    {"orange", {0.5f, 0.25f, 0.25f, 1.0f}},
+    {"white", {1.0f, 1.0f, 1.0f, 1.0f}},
     {"black", {0.0f, 0.0f, 0.0f, 1.0f}},
-    {"grey", {0.0f, 0.0f, 0.0f, 1.0f}},
+    {"grey", {0.5f, 0.5f, 0.5f, 0.5f}},
 };
 static const std::map<const char*, const char*> percentile_to_color_map = {
         {"Min", "grey"},
@@ -37,30 +39,59 @@ static const std::map<const char*, const char*> percentile_to_color_map = {
 };
 
 int main(int argc, char** argv) {
+    using namespace indicators;
+    using namespace fmc;
     static_cast<void>(argc);
-
 
     // Do all the loading and math up front. This way it can be offloaded to a thread later.
     // Recursively load CSV files
-    std::vector<fmc::TimeSeriesFile> runs{};
     std::string rootDir = argv[1];
-    size_t files_read = 0;
-    for (auto& p : std::filesystem::recursive_directory_iterator(rootDir)) {
-        if (p.path().extension() == ".csv") {
-            std::cout << "[" << files_read << "]: Loading " << p << "\n";
-            runs.push_back(fmc::loadCsv(p.path().string()));
-            files_read += 1;
+    std::vector<std::filesystem::directory_entry> entries;
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(rootDir)) {
+        if (entry.path().extension() == ".csv") {
+            entries.push_back(entry);
+        }
     }
-}
 
-    if (runs.empty()) {
+    size_t n_filesFound = entries.size();
+    if (n_filesFound == 0) {
         std::cerr << "No CSV files found!\n";
         return 1;
     }
 
+    std::vector<TimeSeriesFile> runs{};
+    runs.reserve(n_filesFound);
+
+    ProgressBar bar{
+        option::BarWidth{50},
+        option::Start{"["},
+        option::Fill{"="},
+        option::Lead{">"},
+        option::Remainder{" "},
+        option::End{"]"},
+        option::PostfixText{"Loading CSVs"},
+        option::ForegroundColor{Color::green},
+        option::ShowPercentage{true},
+        option::FontStyles{std::vector<FontStyle>{FontStyle::bold}}
+    };
+    {
+        size_t fileIdx = 0;
+        for (const auto& f : entries) {
+            runs.push_back(loadCsv(f.path().string()));
+
+            fileIdx += 1;
+            bar.set_progress((double) fileIdx / (double) n_filesFound * 100.0);
+        }
+    }
+    if (runs.size() == 0) {
+        throw std::runtime_error("No CSV files loaded!");
+    }
+
+
+
     auto& time = runs[0].time;
     size_t numCols = runs[0].columns.size();
-    std::vector<fmc::PercentileStats> columnStats(numCols);
+    std::vector<PercentileStats> columnStats(numCols);
 
     // Precompute stats
     for (size_t c = 0; c < numCols; ++c) {

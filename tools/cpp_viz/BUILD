@@ -25,7 +25,8 @@ cc_binary(
         "@imgui//:imgui",
         "@imgui//backends:platform-glfw",
         "@imgui//backends:renderer-opengl3",
-        "@glfw//:glfw"
+        "@glfw//:glfw",
+        "@indicators//:indicators"
     ],
     linkstatic=True
 )
