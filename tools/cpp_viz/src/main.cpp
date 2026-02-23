@@ -19,27 +19,42 @@
 #include <map>
 
 static const std::map<const char*, ImVec4> color_map = {
-    {"blue", {0.0f, 0.0f, 1.0f, 1.0f}},
-    {"red", {1.0f, 0.0f, 0.0f, 1.0f}},
-    {"green", {0.0f, 1.0f, 0.0f, 1.0f}},
-    {"yellow", {0.5f, 0.5f, 0.0f, 1.0f}},
-    {"orange", {0.5f, 0.25f, 0.25f, 1.0f}},
+    {"blue", {0.0f, 0.0f, 0.8f, 1.0f}},
+    {"red", {0.8f, 0.0f, 0.0f, 1.0f}},
+    {"green", {0.0f, 0.8f, 0.0f, 1.0f}},
+    {"yellow", {0.8f, 0.8f, 0.0f, 1.0f}},
+    {"orange", {1.0f, 0.5f, 0.0f, 1.0f}},
     {"white", {1.0f, 1.0f, 1.0f, 1.0f}},
     {"black", {0.0f, 0.0f, 0.0f, 1.0f}},
     {"grey", {0.5f, 0.5f, 0.5f, 0.5f}},
 };
 static const std::map<const char*, const char*> percentile_to_color_map = {
-        {"Min", "grey"},
-        {"5th Percentile", "green"},
+        {"Min", "black"},
+        {"5th Percentile", "red"},
         {"25th Percentile", "orange"},
-        {"50th Percentile (Median)", "blue"},
+        {"50th Percentile (Median)", "green"},
         {"75th Percentile", "orange"},
-        {"95th Percentile", "green"},
-        {"Max", "grey"},
+        {"95th Percentile", "red"},
+        {"Max", "black"},
 };
 
-int main(int argc, char** argv) {
+indicators::ProgressBar make_simple_progress_bar(const char* postfix) {
     using namespace indicators;
+    return ProgressBar{
+        option::BarWidth{50},
+        option::Start{"["},
+        option::Fill{"="},
+        option::Lead{">"},
+        option::Remainder{" "},
+        option::End{"]"},
+        option::PostfixText{postfix},
+        option::ForegroundColor{Color::green},
+        option::ShowPercentage{true},
+        option::FontStyles{std::vector<FontStyle>{FontStyle::bold}}
+    };
+}
+
+int main(int argc, char** argv) {
     using namespace fmc;
     static_cast<void>(argc);
 
@@ -61,21 +76,9 @@ int main(int argc, char** argv) {
 
     std::vector<TimeSeriesFile> runs{};
     runs.reserve(n_filesFound);
-
-    ProgressBar bar{
-        option::BarWidth{50},
-        option::Start{"["},
-        option::Fill{"="},
-        option::Lead{">"},
-        option::Remainder{" "},
-        option::End{"]"},
-        option::PostfixText{"Loading CSVs"},
-        option::ForegroundColor{Color::green},
-        option::ShowPercentage{true},
-        option::FontStyles{std::vector<FontStyle>{FontStyle::bold}}
-    };
     {
         size_t fileIdx = 0;
+        auto bar = make_simple_progress_bar("Loading CSVs");
         for (const auto& f : entries) {
             runs.push_back(loadCsv(f.path().string()));
 
@@ -87,19 +90,21 @@ int main(int argc, char** argv) {
         throw std::runtime_error("No CSV files loaded!");
     }
 
-
-
     auto& time = runs[0].time;
     size_t numCols = runs[0].columns.size();
     std::vector<PercentileStats> columnStats(numCols);
 
     // Precompute stats
-    for (size_t c = 0; c < numCols; ++c) {
-        std::vector<std::vector<double>> allRuns;
-        for (auto& run : runs) {
-            allRuns.push_back(run.columns[c]);
+    {
+        auto bar = make_simple_progress_bar("Computing Statistics");
+        for (size_t c = 0; c < numCols; ++c) {
+            std::vector<std::vector<double>> allRuns;
+            for (auto& run : runs) {
+                allRuns.push_back(run.columns[c]);
+            }
+            columnStats[c] = fmc::computeStats(allRuns);
+            bar.set_progress((double) (c + 1) / (double) numCols * 100);
         }
-        columnStats[c] = fmc::computeStats(allRuns);
     }
 
     // Make window
@@ -118,17 +123,20 @@ int main(int argc, char** argv) {
     // Options
     // Timeseries data
     // Why are these strings? Because of sorting/hashing
-    std::map<std::string, bool> timeseries_options = {
+    std::map<std::string, bool> timeseries_checkboxes = {
         {"Raw Data", false},
-        {"Min", true},
+        {"Single Run", false},
+        {"Min", false},
         {"5th Percentile", true},
         {"25th Percentile", true},
         {"50th Percentile (Median)", true},
         {"75th Percentile", true},
         {"95th Percentile", true},
-        {"Max", true},
+        {"Max", false},
         {"Log Y Axis", false}
     };
+    int rawRunRange[2] = {0, 10};
+    int singleRunInd = 0;
 
     // Dispersions
     // TODO
@@ -147,22 +155,31 @@ int main(int argc, char** argv) {
         if (ImGui::BeginCombo("Y Axis", runs[0].columnNames[selectedColumn].c_str())) {
             for (size_t i = 0; i < numCols; ++i) {
                 bool is_selected = (selectedColumn == i);
-                if (ImGui::Selectable(runs[0].columnNames[i].c_str(), is_selected))
+                if (ImGui::Selectable(runs[0].columnNames[i].c_str(), is_selected)) {
                     selectedColumn = i;
-                if (is_selected)
+                }
+                if (is_selected) {
                     ImGui::SetItemDefaultFocus();
+                }
             }
             ImGui::EndCombo();
         }
-        for (auto& [name, show] : timeseries_options) {
+        for (auto& [name, show] : timeseries_checkboxes) {
             ImGui::Checkbox(name.c_str(), &show);
-
         }
+        ImGui::SeparatorText("Numerical Input Options");
+        ImGui::InputInt2("Raw Data Run Range", rawRunRange);
+        ImGui::InputInt("Single Run Index", &singleRunInd);
         ImGui::End();
 
+        // Validate Inputs
+        rawRunRange[0] = std::clamp(rawRunRange[0], 0, rawRunRange[1]);
+        rawRunRange[1] = std::clamp(rawRunRange[1], rawRunRange[0], (int) n_filesFound - 1);
+        singleRunInd = std::clamp(singleRunInd, 0, (int) n_filesFound - 1);
+
         // Timeseries plot
-        ImGui::Begin("Plot");
-        if (ImPlot::BeginPlot("Time Series")) {
+        ImGui::Begin("Timeseries Plots");
+        if (ImPlot::BeginPlot("Time Series", ImVec2{-1, -1})) {
 
             auto& stats = columnStats[selectedColumn];
             std::map<const char*, double*> stats_name_map = {
@@ -178,7 +195,7 @@ int main(int argc, char** argv) {
             const auto& colName = runs[0].columnNames[selectedColumn];
 
             ImPlot::SetupAxes("Time", colName.c_str());
-            ImPlot::SetupAxisScale(ImAxis_Y1, timeseries_options["Log Y Axis"] ? ImPlotScale_Log10 : ImPlotScale_Linear);
+            ImPlot::SetupAxisScale(ImAxis_Y1, timeseries_checkboxes["Log Y Axis"] ? ImPlotScale_Log10 : ImPlotScale_Linear);
 
             auto show_data = [&](bool show, ImVec4 color, const char* name, double* data, float lineweight = 3.0f) {
                 if (show) {
@@ -197,17 +214,17 @@ int main(int argc, char** argv) {
                 };
 
             // Raw runs
-            if (timeseries_options["Raw Data"]) {
+            if (timeseries_checkboxes["Raw Data"]) {
                 ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 1.0f);
                 ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(0.7f, 0.7f, 0.7f, 0.4f));
 
-                for (size_t r = 0; r < runs.size(); ++r) {
+                for (size_t r = rawRunRange[0]; r <= rawRunRange[1]; ++r) {
                     ImPlot::PlotLine(
                         ("Run " + std::to_string(r)).c_str(),
                         time.data(),
                         runs[r].columns[selectedColumn].data(),
                         (int) time.size(),
-                        ImPlotLegendFlags_None
+                        ImPlotFlags_None
                     );
                 }
 
@@ -216,15 +233,15 @@ int main(int argc, char** argv) {
             }
 
             for (auto& [name, data_ptr] : stats_name_map) {
-                show_data(timeseries_options.at(name), color_map.at(percentile_to_color_map.at(name)), name, data_ptr);
+                show_data(timeseries_checkboxes.at(name), color_map.at(percentile_to_color_map.at(name)), name, data_ptr);
             }
-
+            show_data(timeseries_checkboxes.at("Single Run"), color_map.at("white"), ("Run " + std::to_string(singleRunInd)).c_str(), runs[singleRunInd].columns[selectedColumn].data());
 
             ImPlot::EndPlot();
         }
         ImGui::End();
 
-
+        // Render
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
