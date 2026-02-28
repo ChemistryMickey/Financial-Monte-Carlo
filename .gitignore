@@ -6,6 +6,7 @@ task-list.md
 perf.*
 *.svg
 external
+compile_commands.json
 
 finance_monte_carlo.egg-info
 __pycache__
