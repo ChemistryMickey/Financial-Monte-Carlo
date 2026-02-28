@@ -90,7 +90,6 @@ int main(int argc, char** argv) {
         throw std::runtime_error("No CSV files loaded!");
     }
 
-    auto& time = runs[0].time;
     size_t numCols = runs[0].columns.size();
     std::vector<PercentileStats> columnStats(numCols);
 
@@ -197,15 +196,17 @@ int main(int argc, char** argv) {
             ImPlot::SetupAxes("Time", colName.c_str());
             ImPlot::SetupAxisScale(ImAxis_Y1, timeseries_checkboxes["Log Y Axis"] ? ImPlotScale_Log10 : ImPlotScale_Linear);
 
-            auto show_data = [&](bool show, ImVec4 color, const char* name, double* data, float lineweight = 3.0f) {
+            auto show_data = [&](bool show, ImVec4 color, const char* name, double* time, double* data, int size, float lineweight = 3.0f) {
                 if (show) {
                     ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, lineweight);
                     ImPlot::PushStyleColor(ImPlotCol_Line, color);
 
-                    ImPlot::PlotLine(name,
-                        time.data(),
+                    ImPlot::PlotLine(
+                        name,
+                        time,
                         data,
-                        (int) time.size());
+                        size
+                    );
 
                     ImPlot::PopStyleColor();
                     ImPlot::PopStyleVar();
@@ -221,9 +222,9 @@ int main(int argc, char** argv) {
                 for (size_t r = rawRunRange[0]; r <= rawRunRange[1]; ++r) {
                     ImPlot::PlotLine(
                         ("Run " + std::to_string(r)).c_str(),
-                        time.data(),
+                        runs[r].time.data(),
                         runs[r].columns[selectedColumn].data(),
-                        (int) time.size(),
+                        (int) runs[r].time.size(),
                         ImPlotFlags_None
                     );
                 }
@@ -233,9 +234,22 @@ int main(int argc, char** argv) {
             }
 
             for (auto& [name, data_ptr] : stats_name_map) {
-                show_data(timeseries_checkboxes.at(name), color_map.at(percentile_to_color_map.at(name)), name, data_ptr);
+                show_data(
+                    timeseries_checkboxes.at(name),
+                    color_map.at(percentile_to_color_map.at(name)),
+                    name,
+                    runs[0].time.data(),
+                    data_ptr,
+                    (int) runs[0].time.size()
+                );
             }
-            show_data(timeseries_checkboxes.at("Single Run"), color_map.at("white"), ("Run " + std::to_string(singleRunInd)).c_str(), runs[singleRunInd].columns[selectedColumn].data());
+            show_data(timeseries_checkboxes.at("Single Run"),
+                color_map.at("white"),
+                ("Run " + std::to_string(singleRunInd)).c_str(),
+                runs[singleRunInd].time.data(),
+                runs[singleRunInd].columns[selectedColumn].data(),
+                (int) runs[singleRunInd].time.size()
+            );
 
             ImPlot::EndPlot();
         }
