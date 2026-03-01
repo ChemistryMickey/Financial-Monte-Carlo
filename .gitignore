@@ -5,6 +5,7 @@ output/
 task-list.md
 perf.*
 *.svg
+external
 
 finance_monte_carlo.egg-info
 __pycache__
