@@ -35,10 +35,15 @@ namespace fmc {
         /// @brief If you encounter this event, what's the effect of it?
         double effect_val = 0.0;
 
+        /// @brief The seed for the RNG object
+        uint rng_seed = 42;
+
         /// @brief The RNG used to determine if this event occurs on a given day
         RNG rng{};
 
-        Event() = default;
+        Event() {
+            this->rng.reseed(this->rng_seed);
+        }
         Event(const nlohmann::json& config);
 
         /// @brief Has this event occurred?
@@ -60,8 +65,12 @@ namespace fmc {
 
         RTTR_ENABLE(TimeseriesLoggable);
         RTTR_REGISTRATION_FRIEND;
+
+        // This allows us to immediately serialize and deserialize an Event
+        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Event, cooldown, duration, effect_val, knockdown, probability, scaling_factor, rng_seed);
     };
 }
+
 
 namespace std {
     template <>

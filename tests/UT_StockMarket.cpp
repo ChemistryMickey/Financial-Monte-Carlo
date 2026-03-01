@@ -14,22 +14,46 @@ namespace fmc {
             {"volatility", 0.1},
             {"rng_seed", 42},
             {"boom_scaling_event", {
-                {"event_val", 1.0},
-                {"probability" , 0.0},
+                {"effect_val", 1.0},
+                {"probability", {
+                    {"value", 0},
+                    {"lower", 0},
+                    {"upper", 1}}
+                },
                 {"rng_seed" , 42},
-                {"scaling_factor" , 1.1},
+                {"scaling_factor", {
+                    {"value", 1.1},
+                    {"lower", 0},
+                    {"upper", 100}}
+                },
                 {"duration" , 30},
                 {"cooldown" , 1800},
-                {"knockdown" , -0.05}
+                {"knockdown", {
+                    {"value", -0.05},
+                    {"lower", -1},
+                    {"upper", 1}}
+                }
             }},
             {"bust_scaling_event", {
-                {"event_val", -1.0},
-                {"probability" , 0.0},
+                {"effect_val", -1.0},
+                {"probability", {
+                    {"value", 0},
+                    {"lower", 0},
+                    {"upper", 1}}
+                },
                 {"rng_seed" , 42},
-                {"scaling_factor" , 1.1},
+                {"scaling_factor", {
+                    {"value", 1.1},
+                    {"lower", 0},
+                    {"upper", 100}}
+                },
                 {"duration" , 30},
                 {"cooldown" , 1800},
-                {"knockdown" , -0.05}
+                {"knockdown", {
+                    {"value", -0.05},
+                    {"lower", -1},
+                    {"upper", 1}}
+                }
             }}
         };
 

@@ -10,16 +10,9 @@ RTTR_REGISTRATION{
 
 namespace fmc {
     Event::Event(const nlohmann::json& config) {
-        this->probability = {config.at("probability").get<double>(), this->probability.get_limits()};
-        this->initial_probability = {config.at("probability").get<double>(), this->probability.get_limits()};
-        this->scaling_factor = {config.at("scaling_factor").get<double>(), this->scaling_factor.get_limits()};
-        this->effect_val = config.at("event_val").get<double>();
-        this->knockdown = config.at("knockdown").get<double>();
-        this->duration = config.at("duration").get<uint>();
-        this->cooldown = config.at("cooldown").get<uint>();
+        this->from_json(config, *this);
 
-        this->rng.reseed(config.at("rng_seed").get<uint>());
-
+        this->rng.reseed(this->rng_seed);
         this->arm_event();
     }
 

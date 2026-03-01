@@ -6,13 +6,25 @@
 namespace fmc {
     struct Test_Event : public ::testing::Test {
         nlohmann::json config{
-            {"event_val", 100},
-            {"probability", 0},
+            {"effect_val", 100},
+            {"probability", {
+                {"value", 0},
+                {"lower", 0},
+                {"upper", 1}}
+            },
             {"rng_seed", 42},
-            {"scaling_factor", 1.1},
+            {"scaling_factor", {
+                {"value", 1.1},
+                {"lower", 0},
+                {"upper", 100}}
+            },
             {"duration", 0},
             {"cooldown", 10},
-            {"knockdown", -0.05}
+            {"knockdown", {
+                {"value", -0.05},
+                {"lower", -1},
+                {"upper", 1}}
+            }
         };
         Event event{config};
     };

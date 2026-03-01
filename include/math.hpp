@@ -5,6 +5,7 @@
 #include <concepts>
 #include <type_traits>
 #include <format>
+#include "json.hpp"
 
 template <typename T>
 concept Numeric = std::integral<T> || std::floating_point<T>;
@@ -155,5 +156,30 @@ namespace fmc {
     private:
         /// @brief I really want to communicate that you must go through the setter for this or else it's not clamped.
         T value;
+    };
+
+}
+namespace nlohmann {
+    template<Numeric T>
+    struct adl_serializer<fmc::ClampedValue<T>> {
+        static fmc::ClampedValue<T> from_json(const json& j) {
+            return fmc::ClampedValue<T>(
+                j.at("value").get<T>(), {j.at("lower").get<T>(), j.at("upper").get<T>()}
+            );
+        }
+
+        static void from_json(const json& j, fmc::ClampedValue<T>& cv) {
+            j.at("lower").get_to(cv.lower);
+            j.at("upper").get_to(cv.upper);
+            cv.set_value(j.at("value").get<T>());
+        }
+
+        static void to_json(json& j, const fmc::ClampedValue<T>& c) {
+            j = json{
+                {"value", c.get_value()},
+                {"lower", c.lower},
+                {"upper", c.upper}
+            };
+        }
     };
 }
