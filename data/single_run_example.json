@@ -3,20 +3,44 @@
         "deflation_event": {
             "cooldown": 120,
             "duration": 30,
-            "event_val": -0.002,
-            "knockdown": -0.30,
-            "probability": 1e-05,
+            "effect_val": -0.002,
+            "knockdown": {
+                "value": -0.30,
+                "lower": -1,
+                "upper": 1
+            },
+            "probability": {
+                "value": 1e-05,
+                "lower": 0,
+                "upper": 1
+            },
             "rng_seed": 42,
-            "scaling_factor": 1.00001
+            "scaling_factor": {
+                "value": 1.00001,
+                "lower": 0,
+                "upper": 100
+            }
         },
         "inflation_event": {
             "cooldown": 120,
             "duration": 365,
-            "event_val": 0.001,
-            "knockdown": -0.30,
-            "probability": 1e-05,
+            "effect_val": 0.001,
+            "knockdown": {
+                "value": -0.30,
+                "lower": -1,
+                "upper": 1
+            },
+            "probability": {
+                "value": 1e-05,
+                "lower": 0,
+                "upper": 1
+            },
             "rng_seed": 42,
-            "scaling_factor": 1.00001
+            "scaling_factor": {
+                "value": 1.00001,
+                "lower": 0,
+                "upper": 100
+            }
         },
         "rate": 0.02
     },
@@ -31,11 +55,23 @@
         "medical_event": {
             "cooldown": 30,
             "duration": 0,
-            "event_val": 5000.0,
-            "knockdown": -0.25,
-            "probability": 1e-06,
+            "effect_val": 5000.0,
+            "knockdown": {
+                "value": -0.25,
+                "lower": -1,
+                "upper": 1
+            },
+            "probability": {
+                "value": 1e-06,
+                "lower": 0,
+                "upper": 1
+            },
             "rng_seed": 42,
-            "scaling_factor": 1.001
+            "scaling_factor": {
+                "value": 1.0001,
+                "lower": 0,
+                "upper": 100
+            }
         },
         "retirement_age": 65,
         "starting_money": 250000,
@@ -48,20 +84,44 @@
         "boom_scaling_event": {
             "cooldown": 1800,
             "duration": 90,
-            "event_val": 0.15,
-            "knockdown": -0.5,
-            "probability": 0.001,
+            "effect_val": 0.15,
+            "knockdown": {
+                "value": -0.5,
+                "lower": -1,
+                "upper": 1
+            },
+            "probability": {
+                "value": 0.001,
+                "lower": 0,
+                "upper": 1
+            },
             "rng_seed": 42,
-            "scaling_factor": 1.0001
+            "scaling_factor": {
+                "value": 1.0001,
+                "lower": 0,
+                "upper": 100
+            }
         },
         "bust_scaling_event": {
             "cooldown": 90,
             "duration": 30,
-            "event_val": -0.5,
-            "knockdown": -0.05,
-            "probability": 1e-04,
+            "effect_val": -0.5,
+            "knockdown": {
+                "value": -0.05,
+                "lower": -1,
+                "upper": 1
+            },
+            "probability": {
+                "value": 1e-4,
+                "lower": 0,
+                "upper": 1
+            },
             "rng_seed": 42,
-            "scaling_factor": 1.001
+            "scaling_factor": {
+                "value": 1.001,
+                "lower": 0,
+                "upper": 100
+            }
         },
         "position_price": 200.0,
         "rng_seed": 42,
