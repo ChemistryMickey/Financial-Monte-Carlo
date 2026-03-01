@@ -4,7 +4,7 @@
 #include "Event.hpp"
 
 namespace fmc {
-    struct Test_Event : public ::testing::Test {
+    struct TestEvent : public ::testing::Test {
         nlohmann::json config{
             {"effect_val", 100},
             {"probability", {
@@ -26,10 +26,10 @@ namespace fmc {
                 {"upper", 1}}
             }
         };
-        Event event{config};
+        Event event = Event::from_json(config);
     };
 
-    TEST_F(Test_Event, init) {
+    TEST_F(TestEvent, init) {
         // Just confirm that things transferred properly
         EXPECT_EQ(event.effect_val, 100);
         EXPECT_EQ(event.probability.get_value(), 0);
@@ -39,14 +39,14 @@ namespace fmc {
         EXPECT_EQ(event.knockdown.get_value(), -0.05);
     }
 
-    TEST_F(Test_Event, update) {
+    TEST_F(TestEvent, update) {
         event.probability.set_value(0.1);
 
         event.update(1);
         EXPECT_NEAR(event.probability.get_value(), 0.1 * 1.1 * (1 + 1.0 / 365.0), 1e-6);
     }
 
-    TEST_F(Test_Event, proc) {
+    TEST_F(TestEvent, proc) {
         event.probability.set_value(100); // This should get clamped to 1
         EXPECT_EQ(event.probability.get_value(), 1);
         EXPECT_TRUE(event.occurred());
@@ -56,7 +56,7 @@ namespace fmc {
         EXPECT_FALSE(event.occurred());
     }
 
-    TEST_F(Test_Event, cooldown) {
+    TEST_F(TestEvent, cooldown) {
         event.days_since_last_proc = 0; // Puts this on cooldown
         event.probability.set_value(1); // Set guaranteed natural proc
 
@@ -66,7 +66,7 @@ namespace fmc {
         EXPECT_TRUE(event.occurred());
     }
 
-    TEST_F(Test_Event, dot) {
+    TEST_F(TestEvent, dot) {
         event.days_since_last_proc = 0; // Was recently triggered
         event.duration = 3; // Will DoT for 3 days
         // No natural prob necessary. Should dot proc.
@@ -104,11 +104,22 @@ namespace fmc {
         EXPECT_EQ(event.days_since_last_proc, 4);
     }
 
-    TEST_F(Test_Event, knockdown) {
+    TEST_F(TestEvent, knockdown) {
         event.probability.set_value(1);
         event.knockdown.set_value(-0.5);
 
         event.occurred();
         EXPECT_EQ(event.probability.get_value(), 0.5);
+    }
+
+    TEST_F(TestEvent, serialize) {
+        nlohmann::json j = event;
+        std::cout << j.dump(4) << "\n";
+    }
+
+    TEST_F(TestEvent, deserialize) {
+        nlohmann::json j = event;
+        Event deserializedEvent = Event::from_json(j);
+        EXPECT_DOUBLE_EQ(deserializedEvent.effect_val, event.effect_val);
     }
 }

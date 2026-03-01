@@ -9,11 +9,11 @@ RTTR_REGISTRATION{
 }
 
 namespace fmc {
-    Event::Event(const nlohmann::json& config) {
-        this->from_json(config, *this);
-
-        this->rng.reseed(this->rng_seed);
-        this->arm_event();
+    Event Event::from_json(const nlohmann::json& j) {
+        Event e = j;
+        e.rng.reseed(e.rng_seed);
+        e.arm_event();
+        return e;
     }
 
     void Event::arm_event() {

@@ -44,7 +44,7 @@ namespace fmc {
         Event() {
             this->rng.reseed(this->rng_seed);
         }
-        Event(const nlohmann::json& config);
+        static Event from_json(const nlohmann::json& config);
 
         /// @brief Has this event occurred?
         /// @return true if the event has occurred and it should be handled. false if the event hasn't occurred
@@ -66,8 +66,8 @@ namespace fmc {
         RTTR_ENABLE(TimeseriesLoggable);
         RTTR_REGISTRATION_FRIEND;
 
-        // This allows us to immediately serialize and deserialize an Event
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Event, cooldown, duration, effect_val, knockdown, probability, scaling_factor, rng_seed);
+        // This allows us to immediately serialize and deserialize an Event.
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Event, cooldown, duration, effect_val, knockdown, probability, scaling_factor, rng_seed);
     };
 }
 
