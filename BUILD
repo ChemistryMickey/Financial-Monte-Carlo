@@ -23,6 +23,17 @@ config_setting(
 
 load("//:common_copts.bzl", "copts", "linkopts")
 
+proto_library(
+    name = "protos",
+    srcs = glob(["src/protos/*.proto"])
+)
+
+cc_proto_library(
+    name = "proto_cpps",
+    deps = [":protos"],
+    visibility = ["//visibility:public"]
+)
+
 cc_library(
     name = "lib",
     srcs = glob([
@@ -37,7 +48,8 @@ cc_library(
     deps = [
         "//third_party/rttr_bazel:rttr_core",
         "@cli11//:cli11",
-        "@magic_enum//:magic_enum"
+        "@magic_enum//:magic_enum",
+        ":proto_cpps"
     ],
     visibility= ["//visibility:public"],
     linkstatic=True

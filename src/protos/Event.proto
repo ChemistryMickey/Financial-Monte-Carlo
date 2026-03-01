@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message Event{
+    uint64 cooldown = 1;
+    uint64 duration = 2;
+    double event_val = 3;
+    double knockdown = 4;
+    double probability = 5;
+    uint64 rng_seed = 6;
+    double scaling_factor = 7;
+}

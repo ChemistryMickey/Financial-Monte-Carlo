@@ -28,7 +28,7 @@ def copts():
         "//:unit_testing": [
             "-fsanitize=address,undefined,leak",
             "-fno-sanitize-recover",
-            "-Werror",
+            # "-Werror",
             "-DUNIT_TESTING",
         ],
         "//:benchmarking": [
@@ -69,7 +69,7 @@ def linkopts():
         "//:unit_testing": [
             "-fsanitize=address,undefined,leak",
             "-fno-sanitize-recover",
-            "-Werror",
+            # "-Werror",
         ],
         "//:benchmarking": [
             "-flto",

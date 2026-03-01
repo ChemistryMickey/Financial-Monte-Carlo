@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "src/protos/Money.proto";
+import "src/protos/Event.proto";
+
+message PersonConfig {
+  uint64 current_age = 1;
+  uint64 death_age = 2;
+  Money desired_cash_on_hand = 3;
+  Money income_until_retirement = 4;
+  Money initial_yearly_expenses = 5;
+  Event medical_event = 6;
+  uint64 retirement_age = 7;
+  Money starting_money = 8;
+  double stock_bond_ratio = 9;
+  double yearly_raise_percent = 10;
+}

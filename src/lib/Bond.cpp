@@ -3,14 +3,14 @@
 
 namespace fmc {
     Bond::Bond(
-        std::chrono::sys_days purchsed_date_,
+        std::chrono::sys_days purchased_date_,
         BondDuration_days bond_duration_,
         const Money& face_value_,
         double interest_rate_,
         std::chrono::days coupon_payment_interval_days_,
         double coupon_interest_rate_,
         SecurityType security_type_
-    ) : purchased_date{purchsed_date_},
+    ) : purchased_date{purchased_date_},
         coupon_payment_interval_days{coupon_payment_interval_days_},
         coupon_interest_rate{coupon_interest_rate_},
         face_value{face_value_},

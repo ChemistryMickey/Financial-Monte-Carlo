@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Money{
+    uint64 dollars = 1;
+    uint64 cents = 2;
+}

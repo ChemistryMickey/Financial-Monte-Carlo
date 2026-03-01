@@ -6,7 +6,9 @@ deps = [
     "//third_party/rttr_bazel:rttr_core",
     "@cli11//:cli11",
     "@googletest//:gtest",
-    "@googletest//:gtest_main"
+    "@googletest//:gtest_main",
+    "@protobuf//:protobuf",
+    "//:proto_cpps"
 ]
 # Unit tests
 UT_test_glob_matcher = "UT_*.cpp"

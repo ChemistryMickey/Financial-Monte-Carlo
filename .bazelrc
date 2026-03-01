@@ -11,3 +11,6 @@ build:optimized --define=OPTIMIZED=true
 
 build:profile --define=PROFILE=true
 build:profile-optimized --define=PROFILE_OPTIMIZED=true
+
+build --per_file_copt=external/.*@-Wno-error
+build --per_file_copt=bazel-out/k8-fastbuild/bin/external/.*@-Wno-error
