@@ -11,6 +11,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <type_traits>
+#include <magic_enum/magic_enum.hpp>
+#include "json.hpp"
 
 // Strings
 inline std::vector<std::string> split(const std::string& s, char delimiter) {
@@ -48,6 +51,29 @@ inline void print_vector(const std::vector<T>& v) {
         }
     }
     std::cout << "\n";
+}
+
+// Enum serialization
+namespace nlohmann {
+    template <typename E>
+        requires std::is_enum_v<E>
+    struct adl_serializer<E> {
+
+        static void to_json(json& j, E e) {
+            j = std::string(magic_enum::enum_name(e));
+        }
+
+        static void from_json(const json& j, E& e) {
+            auto str = j.get<std::string>();
+            auto opt = magic_enum::enum_cast<E>(str);
+
+            if (!opt) {
+                throw std::invalid_argument("Invalid enum value: " + str);
+            }
+
+            e = *opt;
+        }
+    };
 }
 
 // Environment && Path

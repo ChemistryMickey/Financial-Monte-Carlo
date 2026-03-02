@@ -1,5 +1,6 @@
 #include "include/json.hpp"
 #include "gtest/gtest.h"
+#include "utils.hpp"
 
 #include <string>
 #include <fstream>
@@ -64,4 +65,20 @@ TEST(JSON_tests, read_json_file) {
     }
     EXPECT_EQ(j["width"], 42);
     EXPECT_EQ(j["name"], "Foobar");
+}
+
+enum class FooEnum {
+    a,
+    b,
+    c,
+    d
+};
+
+TEST(JSON_tests, EnumSerialization) {
+    // Serialize
+    nlohmann::json j = FooEnum::a;
+    // Deserialize
+    FooEnum foo = j;
+
+    EXPECT_EQ(foo, FooEnum::a);
 }
